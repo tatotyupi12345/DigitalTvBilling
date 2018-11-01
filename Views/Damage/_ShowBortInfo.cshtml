@@ -1,0 +1,129 @@
+﻿@model IPagedList<Damage>
+
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "დაზიანებები";
+
+    
+    var user_id = ViewBag.selectedUserFilter;
+    List<User> execUsers = ViewBag.ExecutorUsers;
+    List<User> operatorUsers = ViewBag.OperatorUsers;
+    List<Customer> _custumers = ViewBag.Custumers;
+    List<OperatorGroupUser> group = ViewBag.GroupUser;
+
+}
+
+@section head {
+   
+    <script type="text/javascript" src="~/Static/Scripts/View/damage.js"></script>
+   
+}
+    <div class="modal fade" id="subscr_modal">
+        <style type="text/css">
+            .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+                margin-right: -40px;
+            }
+
+            .bootstrap-select.form-control:not([class*=col-]) {
+                width: 70%;
+            }
+            /* table and column width, table max height, alignments */
+            /*div.scroll {
+                width: 50%;
+            }*/
+            .textbox {
+                border: 1px solid #c4c4c4;
+                height: 30px;
+                width: 70px;
+                font-size: 13px;
+                padding: 4px 4px 4px 4px;
+                border-radius: 4px;
+                -moz-border-radius: 4px;
+                -webkit-border-radius: 4px;
+                box-shadow: 0px 0px 8px #d9d9d9;
+                -moz-box-shadow: 0px 0px 8px #d9d9d9;
+                -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+            }
+
+                .textbox:focus {
+                    outline: none;
+                    border: 1px solid #7bc1f7;
+                    box-shadow: 0px 0px 8px #7bc1f7;
+                    -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                    -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+                }
+
+            .forPass {
+                background-color: lightgray;
+            }
+
+            .passed {
+                background-color: #a4ff7e;
+            }
+
+            .passedWithError {
+                background-color: #fce14b;
+            }
+
+            .problem {
+                background-color: #e82966;
+            }
+
+            .called {
+                background-color: #1FF0FF;
+            }
+
+            /*table tr:hover {
+                background-color: #c4ffab;
+            }*/
+            table tr, th {
+                text-align: center;
+            }
+        </style>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="width:1400px; margin-left:-140px;">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">@ViewBag.Bort_name</h4>
+                </div>
+                <div class="modal-body scroll">
+                    <div class="row">
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-info" value="0">დასაწყისი</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-success" value="1">დასრულება</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-warning" value="2">პროცესი</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-danger" value="3">ბორტის დამონტაჟებული</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-danger" style="background-color:#347718" value="4">დამთავრებული სხვის მიერ</button>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" id="show_modal_bort" class="btn btn-primary" value="5">შემოსული პრობლემები</button>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" id="modal_bort">
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">დახურვა</button>
+                        @*<button type="button" id="save" class="btn btn-success" disabled>შენახვა</button>*@
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

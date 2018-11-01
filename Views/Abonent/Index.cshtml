@@ -1,0 +1,140 @@
+﻿@model AsyncRawQueryPagedList<AbonentList>
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "აბონენტები";
+
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+    ViewBag.AddAbonent = Utils.GetPermission("ABONENT_ADD");
+    ViewBag.FilterAbonent = Utils.GetPermission("ABONENT_FILTER");
+    ViewBag.OfficeCards = Utils.GetPermission("OFFICE_CARDS");
+    ViewBag.AutoChangeSubscribs = Utils.GetPermission("AUTO_CHANGE_SUBSCRIB");
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_index.js"></script>
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-sm-2">
+        @if (ViewBag.AddAbonent)
+        {
+            @Html.ActionLink("ახალი აბონენტი", "New", "Abonent", null, new { @class = "btn btn-xs btn-primary", style= "height: 30px; line-height: 25px;" })
+        }
+    </div>
+    <div class="col-sm-2">
+        @*@if (ViewBag.OfficeCards)
+                {
+                    @Html.ActionLink("ოფისის ბარათები", "OfficeCards", "Utils", null, new { @class = "btn btn-xs btn-success", style = "height: 30px; line-height: 25px;" })
+        }*@
+    </div>
+    <div class="col-sm-2">
+        @if (ViewBag.AutoChangeSubscribs)
+                {
+                    @Html.ActionLink("ავტომატური პაკეტები", "AutoSubscribs", "Utils", null, new { @class = "btn btn-xs btn-success", style = "height: 30px; line-height: 25px;" })
+        }
+    </div>
+    @if (ViewBag.FilterAbonent)
+                {
+        <div class="col-sm-3" style="padding-right: 0px;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+                <input type="search" class="form-control" id="txt_filter" />
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm pull-left">
+                <select class="form-control" id="drp_filter">
+                    <option value="cr.doc_num">№</option>
+                    <option value="c.lastname+c.name">აბონენტი</option>
+                    <option value="c.code">პ/ნ</option>
+                    <option value="c.city">სოფელი/ქალაქი</option>
+                    <option value="c.district">უბანი</option>
+                    <option value="cr.abonent_num">აბონენტის №</option>
+                    <option value="cr.card_num">ბარათის №</option>
+                    <option value="cr.status">სტატუსი</option>
+                    <option value="c.phone1">ტელეფონი</option>
+                    <option value="cr.tower_id">ანძები</option>
+                    <option value="c.type">ტიპი</option>
+                </select>
+            </div>
+
+
+            <button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+            </button>
+        </div>
+    }
+</div>
+<div class="row" style="margin-top: 8px; overflow: scroll;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 15%;">აბონენტი
+                </th>
+                <th style="width: 10%;">ტიპი
+                </th>
+                <th style="width: 8%;">ქალაქი
+                </th>
+                <th style="width: 8%;">ტელეფონი
+                </th>
+                <th style="width: 8%;">აბონენტის №
+                </th>
+                <th style="width: 8%;">ბარათის №
+                </th>
+                <th style="width: 8%;">სტატუსი
+                </th>
+                <th style="width: 10%;">პაკეტი
+                </th>
+                <th style="width: 12%;">პირადი №
+                </th>
+                <th style="width: 10%;">ხელშ. №
+                </th>
+                @*<th style="width: 2%;">
+                </th>*@
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (DigitalTVBilling.Models.AbonentList abonent in Model)
+            {
+                <tr data-id="@abonent.Id" data-card ="@abonent.CardNum">
+                    <td>@abonent.Name
+                        @*<br />[DisplayName("ტიპი:")]
+                        <small>@abonent.Code</small></td>*@
+                    <td>@Html.GetCustomerTypeDesc(abonent.Type)</td>
+                    <td>@abonent.City</td>
+                    <td>@abonent.Phone</td>
+                    <td id="abonent_num">@abonent.Num</td>
+                    <td>@abonent.CardNum</td>
+                    <td>@Html.GetCardStatus(@abonent.Status)</td>
+                    <td >@abonent.ActivePacket</td>
+                    <td>@abonent.Code</td>
+                    <td>@abonent.DocNum</td>
+                    <td id="edit_abonent"><a href=""><span class="glyphicon glyphicon-edit" id="edit_abonent"></span></a></td>
+                    @*<td id="remove_abonent"><a href=""><span class="glyphicon glyphicon-remove" id="remove_abonent"></span></a></td>*@
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+</div>
+
+

@@ -1,0 +1,135 @@
+﻿@model PaymentData
+@{
+    ViewBag.EditPayment = Utils.GetPermission("PAYMENT_EDIT");
+    ViewBag.AddPayment = Utils.GetPermission("PAYMENT_ADD");
+}
+<div class="modal fade" id="payment_modal">
+    <style type="text/css">
+        p {
+            margin: 0 0 1px;
+        }
+    </style>
+    <div class="modal-dialog">
+      <form action="/Payment/NewPayment" class="form-horizontal" enctype="multipart/form-data" method="post" id="payment_form" role="form">
+        @Html.AntiForgeryToken()
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ახალი გადახდა</h4>
+            </div>
+            <div class="modal-body">
+                @if (Model.Id == 0)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">ძებნა:</label>
+                                <div class="col-md-4">
+                                    <select class="form-control input-sm" id="find_by">
+                                        <option value="1">პირადი ნომრით</option>
+                                        <option value="0">ხელშ. ნომრით</option>
+                                        <option selected="selected" value="2">აბონენტის ნომრით</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="payment_find" autocomplete="off">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" id="find">
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-md-7 col-md-offset-3">
+                        <div class="form-group">
+                            <div id="cards_info">
+                                @for (int i = 0; i < @Model.Cards.Count; i++)
+                                {
+                                    @Html.HiddenFor(m => m.Cards[i]);
+                                }
+                            </div>
+                            <div id="abonent_area">
+                                @if (ViewBag.Customer != "")
+                                {
+                                    <div class="alert alert-success" role="alert">@ViewBag.Customer</div>
+                                }
+                            </div>
+                            <span style="color: red;" id="card_message"></span>
+                            <div class="btn-group-vertical" role="group" id="cards_area" style="padding-left:15px;">
+                                @if (ViewBag.CardNames != null)
+                                {
+                                    <button type="button" class="btn active btn-primary btn-sm" data-id="@Html.Raw(String.Join(",", Model.Cards))">@Html.Raw(String.Join("<br />", ((List<string>)ViewBag.CardNames)))</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.HiddenFor(m => m.Logging)
+                        @*@Html.HiddenFor(model => model.PayType)*@
+
+
+                        @*<div class="form-group">
+                            @Html.LabelFor(model => model.Amount, new { @class = "control-label col-md-3" })
+                            <div class="col-md-2">
+                                @if (Model.Id == 0)
+                                {
+                                    @Html.TextBoxFor(model => model.Amount, new { @class = "form-control input-sm" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Amount, new { @class = "form-control input-sm", data_tag = Model.Amount })
+                                }
+                                @Html.ValidationMessageFor(model => model.Amount)
+                            </div>
+                        </div>*@
+                        @*@if (Model.Id == 0)
+                        {
+                        <div class="form-group">
+                            <label class="control-label col-md-3">გადახდის სახეობა:</label>
+                            <div class="col-md-7">
+                                <!--<input type="text" name="fl" class="form-control input-sm" />-->
+                                <select class="form-control input-sm" name="PayType">
+                                    <option selected="selected" value="2">ნაღდი</option>
+                                    <option value="10">საბანკო</option>
+                                </select>
+                            </div>
+                        </div>
+                        }
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-3">თანხის დაბრუნება:</label>
+                                <div class="col-md-1">
+                                    <button type="button" id="btn_return_money" class="btn btn-default btn-xs">
+                                        <span class="glyphicon glyphicon-random"></span>
+                                    </button>
+                                </div>
+                                <div class="col-md-2" style="display:none;" id="return_money_summ">
+
+                                </div>
+                            </div>
+                        }*@
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                @if ((Model.Id > 0 && ViewBag.EditPayment) || (Model.Id == 0 && ViewBag.AddPayment))
+                {
+                    <input type="button" id="choosebtn" class="btn btn-primary btn-xs" value="არჩევა" />
+                }
+            </div>
+        </div>
+    </form>
+
+</div>
+</div>

@@ -1,0 +1,104 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital TV</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: auto;
+            font-size: 12px;
+            font-family: "Lucida Grande", sans-serif;
+        }
+
+        * {
+            line-height: 1.2em;
+            margin: 0;
+            padding: 0;
+            outline: 0;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/Static/Styles/bootstrap.min.css" />
+    <script type="text/javascript">
+        function window_load() {
+            var time = document.querySelector('#time');
+            var input_second = document.querySelector('#second');
+            var input_minute = document.querySelector('#minute');
+
+            var second = input_second.value;
+            var minute = input_minute.value;
+
+            time.innerHTML = minute + ':' + second;
+
+            var intervalID = setInterval(function () {
+                second -= 1;
+                if (minute === 0 && second == 0) {
+                    location.href = location.href;
+                }
+                if (second === 0) {
+                    minute--;
+                    second = 60;
+                }
+                input_second.value = second;
+                input_minute.value = minute;
+                time.innerHTML = minute + ':' + second;
+            }, 1000);
+        }
+
+        function disableF5(e) { if ((e.which || e.keyCode) == 116) e.preventDefault(); };
+        document.addEventListener("keydown", disableF5);
+    </script>
+</head>
+<body onload="window_load()">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="panel panel-primary" style="margin-top: 70px;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ავტორიზაციის SMS დადასტურება</h3>
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("SmsAutorize", "Login", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="submit" name="submitBtn" value="refresh"><span class="glyphicon glyphicon-refresh"></span></button>
+                                        </span>
+                                        <input type="text" name="Sms" placeholder="SMS კოდი" class="form-control input-sm" maxlength="4" autocomplete="off" autofocus />
+                                    </div>
+                                    <input type="hidden" name="UserId" value="@ViewBag.UserId" />
+                                    <input type="hidden" name="Minute" id="minute" value="@ViewBag.Minute" />
+                                    <input type="hidden" name="Second" id="second" value="@ViewBag.Second" />
+                                </div>
+                                <div class="col-md-2">
+                                    <span id="time" style="margin-left:5px;"></span>
+                                </div>
+                                <div class="col-md-5">
+                                    <button type="submit" name="submitBtn" class="btn btn-success btn-xs">დადასტურება</button>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:15px;">
+                                @if (ViewBag.Error != null)
+                                {
+                                    <div class="alert alert-danger">
+                                        @ViewBag.Error
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

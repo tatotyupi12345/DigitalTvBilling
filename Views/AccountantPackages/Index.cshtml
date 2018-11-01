@@ -1,0 +1,260 @@
+﻿del IPagedList<DigitalTVBilling.Models.Card>
+    @using DigitalTVBilling.ListModels
+    @using DigitalTVBilling.Utils
+    @using DigitalTVBilling.Helpers
+    @using System.Web.Mvc
+    @using System.Web.Mvc.Html
+    @using PagedList;
+    @using PagedList.Mvc;
+    @{
+        ViewBag.Title = "მარეგურირებელი";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+        List<Card> cards6 = ViewBag.cards6;
+        List<Card> cards12 = ViewBag.cards12;
+        List<Card> cards15 = ViewBag.cards15;
+        List<Card> cards8 = ViewBag.cards8;
+        List<Card> cardsPromo15= ViewBag.cardsPromo15;
+
+        DateTime dateFrom = ViewBag.dtFrom;
+        DateTime dateTo = ViewBag.dtTo;
+
+        //decimal cards6ChargesSum = cards6.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+        //decimal cards8charges15Sum = cards8.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+        //decimal cards8ChargesSum = ViewBag.pack8charges;//cards8.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+        //decimal cards12ChargesSum = cards12.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+        //decimal cards15ChargesSum = cards15.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+        //cards15ChargesSum = cards15ChargesSum + (cards8charges15Sum - cards8ChargesSum);
+        decimal cards12FirstMonthCharge = cards12.Sum(c => c.CardCharges.Select(cc => cc.Amount).Take(30).DefaultIfEmpty().Sum());
+
+    }
+
+    @section head {
+        <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+        <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+        <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+        <script type="text/javascript">
+
+            $(function () {
+                $(".datepickers").datePickers({ prefix: "picker" });
+            });
+        </script>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+            }
+        </style>
+    }
+    @*cards6ChargesSum - (cards6ChargesSum * (50m / 100m))) + cards12ChargesSum + (cards15ChargesSum - (cards15ChargesSum * (20m / 100m))) + (cards8ChargesSum - (cards8ChargesSum * (37.5m / 100m)))*@
+    @*(cards6ChargesSum - (cards6ChargesSum * (50m / 100m))) + (cards15ChargesSum - (cards15ChargesSum * (80m / 100m))) +(cards8ChargesSum - (cards8ChargesSum * (62.5m / 100m)))*@
+    <div class="row">
+
+        <div class="col-sm-5 pull-right">
+            @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+        </div>
+        <div class="col-sm-1">
+            <h4>
+                <span class="label label-default" id="sumPrice">ჯამში აბონენტები: @(cards6.Count + cards12.Count + cards15.Count + cards8.Count)</span>
+                <span class="label label-default" id="sumPrice">დარიცხვა ბუღალტრულად: @(ViewBag.CheckoutPhysical.Bonus + ViewBag.CheckoutJuridical.Bonus + cards12FirstMonthCharge + (ViewBag.Employee.Bonus * 4))</span>
+                <span class="label label-default" id="sumPrice">იჯარა: @(ViewBag.CheckoutPhysical.Lease+ ViewBag.CheckoutJuridical.Lease+ ViewBag.Employee.Lease) </span>
+                <span class="label label-default" id="sumPrice">უფასო: @(cards12FirstMonthCharge) </span>
+            </h4>
+        </div>
+        <table class="table" style="border-collapse: collapse;">
+            <thead style="text-align:center;">
+                <tr>
+                    <th style="border: 1px solid black; text-align:center;" colspan="3">6 ლარიანი პაკეტი</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="2">12 ლარიანი პაკეტი</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="3">15 ლარიანი პაკეტი</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="3">8 ლარიანი პაკეტი</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="3">პრომო პაკეტი</th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                <tr>
+                    <td>აბონენტები</td>
+                    <td>მომსახურება</td>
+                    <td>იჯარა</td>
+                    <td>აბონენტები</td>
+                    <td>მომსახურება</td>
+                    <td>აბონენტები</td>
+                    <td>მომსახურება</td>
+                    <td>იჯარა</td>
+                    <td>აბონენტები</td>
+                    <td>მომსახურება</td>
+                    <td>იჯარა</td>
+                    <td>აბონენტები</td>
+                    <td>მომსახურება</td>
+                    <td>იჯარა</td>
+                </tr>
+                <tr>
+                    <td>@cards6.Count</td>
+                    <td>
+                        @*@((cards6ChargesSum * (150m/100m)) - ((cards6ChargesSum * (150m / 100m)) * (20m/100m)))*@
+                        @(ViewBag.Employee.Bonus * 4)
+                    </td>
+                    <td>@ViewBag.Employee.Lease</td>
+                    <td>@cards12.Count</td>
+                    <td>@ViewBag.Packcharges12.Bonus</td>
+                    <td>@cards15.Count</td>
+                    <td>@ViewBag.Packcharges15.Bonus</td>
+                    <td>@(ViewBag.Packcharges15.Lease + ViewBag.Packcharges12.Lease)</td>
+                    <td>@cards8.Count</td>
+                    <td>@ViewBag.Packcharges8.Bonus</td>
+                    <td>@ViewBag.Packcharges8.Lease</td>
+                    <td>@cardsPromo15.Count</td>
+                    <td>@ViewBag.PackchargesPromo15.Bonus</td>
+                    <td>@ViewBag.PackchargesPromo15.Lease</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <br />
+    <br />
+    <div class="row" style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
+        <table class="table" style="border-collapse: collapse;">
+
+            <thead style="text-align:center;">
+                <tr>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1"></th>
+
+                    <th style="border: 1px solid black; text-align:center;" colspan="4">ფიზიკური პირები</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="4">იურდიულლი</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="4">თანამშრომელი ( X 3)</th>
+                    <th style="border: 1px solid black;text-align:center;" colspan="1">გადაუხდელი</th>
+                </tr>
+            </thead>
+
+            <tbody style="text-align:center;">
+                <tr>
+                    <td></td>
+                    <td>დარიცხვა</td>
+                    <td>ბალასინდან</td>
+                    <td>ნაღდი</td>
+                    <td>უნაღდო</td>
+
+                    <td>დარიცხვა</td>
+                    <td>ბალასინდან</td>
+                    <td>ნაღდი</td>
+                    <td>უნაღდო</td>
+
+                    <td>დარიცხვა</td>
+                    <td>ბალასინდან</td>
+                    <td>ნაღდი</td>
+                    <td>უნაღდო</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>სააბონენტო</td>
+                    <td>@ViewBag.CheckoutPhysical.Bonus</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.CheckoutJuridical.Bonus</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@(ViewBag.Employee.Bonus * 4)</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td valign="top">იჯარა</td>
+                    <td>@ViewBag.CheckoutPhysical.Lease</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.CheckoutJuridical.Lease</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.Employee.Lease</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    @*<td>0</td>*@
+                </tr>
+                <tr>
+                    <td valign="top">საკომისიო</td>
+                    <td> @ViewBag.CheckoutPhysical.ReturnComm</td>
+                    <td>0</td>
+                    <td>@ViewBag.CashPhysical</td>
+                    <td>@ViewBag.CashlessPhysical</td>
+                    <td> @ViewBag.CheckoutJuridical.ReturnComm</td>
+                    <td>0</td>
+                    <td>@ViewBag.CashJuridical</td>
+                    <td>@ViewBag.CashlessJuridical</td>
+                    <td> @ViewBag.Employee.ReturnComm</td>
+                    <td>0</td>
+                    <td>@ViewBag.CashTechnical</td>
+                    <td>@ViewBag.CashlessTechnical</td>
+                    <td style="color:red;">@ViewBag.Payamount</td>
+                </tr>
+                <tr>
+                    <td valign="top">ჯარიმა აქსესუარი</td>
+                    <td> @ViewBag.CheckoutPhysical.AccessoryCharge</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.CheckoutJuridical.AccessoryCharge</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td> @ViewBag.Employee.AccessoryCharge</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td valign="top">ჯარიმა დაპაუზების</td>
+                    <td> @ViewBag.CheckoutPhysical.Pause</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.CheckoutJuridical.Pause</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td> @ViewBag.Employee.Pause</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td valign="top">ჯარიმა დაბლოკვის</td>
+                    <td>@ViewBag.CheckoutPhysical.Blocked</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.CheckoutJuridical.Blocked</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.Employee.Blocked</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row" style="margin-top: 8px; overflow: scroll;">
+        <div id="paging">
+            @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, abonent = Request.QueryString["abonent"], abonent_select = Request.QueryString["abonent_select"], abonentType = Request.QueryString["abonentType"], package = Request.QueryString["package"], saleType = Request.QueryString["saleType"], region = Request.QueryString["region"], abonentName = Request.QueryString["abonentName"], abonentStatus = Request.QueryString["abonentName"], date_from = Request.QueryString["date_from"], date_to = Request.QueryString["date_to"] }), PagedListRenderOptions.ClassicPlusFirstAndLast)*@
+        </div>
+    </div>

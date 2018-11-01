@@ -1,0 +1,1013 @@
+﻿@model DigitalTVBilling.Models.Abonent
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+    ViewBag.CardHistoryShow = Utils.GetPermission("CARD_HISTORY_SHOW");
+    ViewBag.BalanceShow = Utils.GetPermission("ABONENT_BALANCE_SHOW");
+    ViewBag.CardPackageChange = Utils.GetPermission("CARD_PACKAGE_CHANGE");
+    ViewBag.CardServiceAdd = Utils.GetPermission("CARD_SERVICE_ADD");
+    ViewBag.CardCancel = Utils.GetPermission("CARD_CANCEL");
+    ViewBag.CardDeal = Utils.GetPermission("CARD_DEAL");
+    ViewBag.EntitlementRefresh = Utils.GetPermission("ENTITLEMENT_REFRESH");
+}
+<link href="~/Static/Styles/styles.css" rel="stylesheet" />
+
+@section head {
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+
+}
+@if (ViewBag.Count == null)
+{
+    for (int i = 0; i < Model.Cards.Count; i++)
+    {
+        if (ViewBag.CurrentCard != Model.Cards[i].CardNum && Model.Cards[i].Id != 0)
+        {
+            @Html.Raw("<div class=\"panel panel-default\"><div class=\"panel-heading\" role=\"tab\"><h4 class=\"panel-title\"><a data-toggle=\"collapse\" href=\"#collapse_" + @Model.Cards[i].CardNum + "\" aria-expanded=\"true\">" + @Model.Cards[i].AbonentNum + "/" + @Model.Cards[i].DocNum + "/" + @Html.GetCardStatus(Model.Cards[i].CardStatus) + "</a></h4></div><div id=\"collapse_" + @Model.Cards[i].CardNum + "\" class=\"panel-collapse collapse\" role=\"tabpanel\">")
+        }
+        <div class="well well-sm" style="@if (ViewBag.CurrentCard == Model.Cards[i].CardNum && Model.Cards[i].Id != 0)
+                                     { @Html.Raw("background-color:#d6d6d6;") }
+                                     else
+                                     {@Html.Raw("background-color:#fafafa;")}">
+            @Html.HiddenFor(model => model.Cards[i].Id)
+            <div class="row">
+                <div class="col-md-7">
+                    @if (Model.Customer.Id == 0)
+                    {
+                        @Html.HiddenFor(model => model.Cards[i].CustomerId, new { value = "0" })
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(model => model.Cards[i].CustomerId)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].Tdate, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <h3 class="label label-default">@Html.SetDateDisplay(Model.Cards[i].Tdate)</h3>
+                            </div>
+                        </div>
+                    }
+                    <input type="hidden" id="cnt_@i" value="@i" />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].Tdate, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Cards[i].Tdate, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].DocNum, new { @class = "control-label col-md-4" })
+                            <div class="col-md-5">
+                                @if (Model.Cards[i].Id == 0)
+                                {
+                                    @Html.TextBoxFor(model => model.Cards[i].DocNum, new { @class = "form-control input-sm" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Cards[i].DocNum, new { @class = "form-control input-sm", data_tag = Model.Cards[i].DocNum })
+                                }
+                                @Html.ValidationMessageFor(model => model.Cards[i].DocNum)
+                            </div>
+                        </div>*@
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].AbonentNum, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                <div>
+                                    @if (Model.Cards[i].Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Cards[i].AbonentNum, new { @class = "form-control input-sm", onblur = "CardCheck(this, " + Model.Cards[i].Id + ")" })
+                                    }
+                                    else
+                                    {
+                                        <div class="input-group input-group-sm">
+                                            @Html.TextBoxFor(model => model.Cards[i].AbonentNum, new { @class = "form-control input-sm", @readonly = true, data_tag = Model.Cards[i].AbonentNum, onblur = "CardCheck(this, " + Model.Cards[i].Id + ")" })
+                                            <div class="input-group-btn">
+                                                <button class="btn btn-sm" onclick="if (!onEnable(this)) return false;"><span class="glyphicon glyphicon-edit"></span></button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                @Html.ValidationMessageFor(model => model.Cards[i].AbonentNum)
+                            </div>
+                        </div>*@
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].CardNum, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @if (Model.Cards[i].Id == 0)
+                            {
+                                @Html.TextBoxFor(model => model.Cards[i].CardNum, new { @class = "form-control input-sm", onblur = "CardCheck(this, 0)" })
+                            }
+                            else
+                            {
+                                <div class="input-group input-group-sm">
+                                    @if (ViewBag.CurrentCard == Model.Cards[i].CardNum)
+                                    {
+                                        @Html.TextBoxFor(model => model.Cards[i].CardNum, new { @class = "form-control input-sm", @readonly = true, data_tag = Model.Cards[i].CardNum, data_current = true, onblur = "CardCheck(this, " + Model.Cards[i].Id + ")" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Cards[i].CardNum, new { @class = "form-control input-sm", @readonly = true, data_tag = Model.Cards[i].CardNum, onblur = "CardCheck(this, " + Model.Cards[i].Id + ")" })
+                                    }
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-sm" onclick="if (!onEnable(this)) return false;"><span class="glyphicon glyphicon-edit"></span></button>
+                                    </div>
+                                </div>
+                            }
+                            @Html.ValidationMessageFor(model => model.Cards[i].CardNum)
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].City, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @if (Model.Cards[i].Id == 0)
+                            {
+                                @Html.TextBoxFor(model => model.Cards[i].City, new { @class = "form-control input-sm", autocomplete = "off" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Cards[i].City, new { @class = "form-control input-sm", data_tag = Model.Cards[i].City, autocomplete = "off" })
+                            }
+                            @Html.ValidationMessageFor(model => model.Cards[i].City)
+                            @Html.HiddenFor(m => m.Cards[i].Village)
+                            @Html.HiddenFor(m => m.Cards[i].Region)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].Address, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            <div class="input-group input-group-sm">
+                                @if (Model.Cards[i].Id == 0)
+                                {
+                                    @Html.TextBoxFor(model => model.Cards[i].Address, new { @class = "form-control input-sm" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(model => model.Cards[i].Address, new { @class = "form-control input-sm", data_tag = Model.Cards[i].Address })
+                                }
+                                <div class="input-group-btn" onclick="if(!CardAddressCopy(this,@i)) return false;">
+                                    <button class="btn btn-sm"><span class="glyphicon glyphicon-retweet"></span></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Cards[i].Address)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].ReceiverId, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @if (Model.Cards[i].Id == 0)
+                            {
+                                @Html.DropDownListFor(model => model.Cards[i].ReceiverId, new SelectList((List<IdName>)ViewBag.Receivers, "Id", "Name", Model.Cards[i].ReceiverId), "", new { @class = "form-control input-sm" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.Cards[i].ReceiverId, new SelectList((List<IdName>)ViewBag.Receivers, "Id", "Name", Model.Cards[i].ReceiverId), "", new { @class = "form-control input-sm", data_tag = Model.Cards[i].ReceiverId })
+                            }
+                            @Html.ValidationMessageFor(model => model.Cards[i].ReceiverId)
+                        </div>
+                    </div>
+                    @*towers*@
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].TowerId, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @if (Model.Cards[i].Id == 0)
+                            {
+                                @Html.DropDownListFor(model => model.Cards[i].TowerId, new SelectList((List<IdName>)ViewBag.Towers, "Id", "Name", Model.Cards[i].TowerId), " ", new { @class = "form-control selectpicker show-tick", data_show_subtext = "true", data_live_search = "true" })
+                            }
+                            else
+                            {
+                                @Html.DropDownListFor(model => model.Cards[i].TowerId, new SelectList((List<IdName>)ViewBag.Towers, "Id", "Name", Model.Cards[i].TowerId), " ", new { @class = "form-control selectpicker show-tick", data_show_subtext = "true", data_live_search = "true", data_tag = Model.Cards[i].TowerId, })
+                            }
+                            @Html.ValidationMessageFor(model => model.Cards[i].TowerId)
+                        </div>
+                    </div>
+                    <div class="form-group" style="display:block;" id="show_mux">
+                        <label class="control-label col-md-4" for="Cards_1__MUX">მუქსები:</label>
+
+                        <div class=" col-lg-6">
+                            <div class="input-group">
+                                @*<span class="input-group-btn">
+                                        <button class="btn btn-secondary " id="MUX1" type="button">0</button>
+                                    </span>*@
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary muxButton" type="button">MUX 1</button>
+                                </span>
+
+                                <div class="wrap">
+                                    <div class="mat-div is-completed">
+                                        <div>
+                                            <label for="mux1_level" class="mat-label">დონე</label>
+                                            <input type="tel" class="mat-input" data-val="true" maxlength="3" id="mux1_level" name="Cards[@i].mux1_level" value="@Model.Cards[i].mux1_level">
+                                        </div>
+                                        <div style="margin-left: 100px;  margin-top: -50px;">
+                                            <label for="mux1_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" data-val="true" maxlength="3" id="mux1_quality" name="Cards[@i].mux1_quality" value="@Model.Cards[i].mux1_quality">
+                                        </div>
+                                    </div>
+                                    @*<div class="mat-div is-completed">
+                                            <label for="mux1_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" data-val="true" maxlength="3" id="mux1_quality" name="@Model.Cards[i].mux1_quality" value="@Model.Cards[i].mux1_quality">
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="control-label col-md-4" for="Cards_2__MUX"></label>
+
+                        <div class=" col-md-8">
+                            <div class="input-group">
+                                @*<span class="input-group-btn">
+                                        <button class="btn btn-secondary" id="MUX2" type="button">0</button>
+                                    </span>*@
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary muxButton" type="button">MUX 2</button>
+                                </span>
+
+                                <div class="wrap">
+                                    <div class="mat-div is-completed">
+                                        <div>
+                                            <label for="mux2_level" class="mat-label">დონე</label>
+                                            <input type="tel" class="mat-input" id="mux2_level" maxlength="3" name="Cards[@i].mux2_level" value="@Model.Cards[i].mux2_level">
+                                        </div>
+                                        <div style="margin-left: 100px;  margin-top: -50px;">
+                                            <label for="mux2_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" id="mux2_quality" maxlength="3" name="Cards[@i].mux2_quality" value="@Model.Cards[i].mux2_quality">
+                                        </div>
+                                    </div>
+                                    @*<div class="mat-div is-completed">
+                                            <label for="mux2_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" id="mux2_quality" maxlength="3" name="@Model.Cards[i].mux2_quality" value="@Model.Cards[i].mux2_quality">
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <label class="control-label col-md-4" for="Cards_3__MUX"></label>
+                        <div class=" col-lg-6">
+                            <div class="input-group">
+                                @*<span class="input-group-btn">
+                                        <button class="btn btn-secondary" id="MUX3" type="button">0</button>
+                                    </span>*@
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary muxButton" type="button">MUX 3</button>
+                                </span>
+
+                                <div class="wrap">
+                                    <div class="mat-div is-completed">
+                                        <div>
+                                            <label for="mux3_level" class="mat-label">დონე</label>
+                                            <input type="tel" class="mat-input" id="mux3_level" maxlength="3" name="Cards[@i].mux3_level" value="@Model.Cards[i].mux3_level">
+                                        </div>
+                                        <div style="margin-left: 100px;  margin-top: -50px;">
+                                            <label for="mux3_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" id="mux3_quality" maxlength="3" name="Cards[@i].mux3_quality" value="@Model.Cards[i].mux3_quality">
+                                        </div>
+                                    </div>
+                                    @*<div class="mat-div is-completed">
+                                            <label for="mux3_quality" class="mat-label">ხარისხი</label>
+                                            <input type="tel" class="mat-input" id="mux3_quality" maxlength="3" name="@Model.Cards[i].mux3_quality" value="@Model.Cards[i].mux3_quality">
+                                        </div>*@
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].CardStatus, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8">
+                                @Html.EnumDropDownListFor(model => model.Cards[i].CardStatus, new { @class = "form-control input-sm" })
+                                @Html.ValidationMessageFor(model => model.Cards[i].CardStatus)
+                            </div>
+                        </div>*@
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Cards[i].Discount, new { @class = "control-label col-md-4" })
+                        <div class="col-md-3">
+                            @if (Model.Cards[i].Id == 0)
+                            {
+                                @Html.TextBoxFor(model => model.Cards[i].Discount, new { @class = "form-control input-sm" })
+                            }
+                            else
+                            {
+                                @Html.TextBoxFor(model => model.Cards[i].Discount, new { @class = "form-control input-sm", data_tag = Model.Cards[i].Discount })
+                            }
+                            @Html.ValidationMessageFor(model => model.Cards[i].Discount)
+                        </div>
+                        @Html.LabelFor(model => model.Cards[i].Group, new { @class = "control-label col-md-2" })
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(model => model.Cards[i].Group, new { @class = "form-control input-sm", type = "number" })
+                        </div>
+                    </div>
+                    @if (Model.Cards[i].Id == 0)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].HasFreeDays, new { @class = "control-label col-md-4" })
+                            <div class="col-md-2">
+                                @*@Html.CheckBoxFor(m => m.Cards[i].HasFreeDays, new { @class = "form-control input-sm" })*@
+                                @Html.CheckBoxFor(m => m.Cards[i].HasFreeDays, new { @class = "form-control input-sm" })
+                            </div>
+
+
+                            <div class="col-md-3">
+                                @ViewBag.FreeDays &nbsp;&nbsp;&nbsp; @Model.Cards[i].Tdate.AddDays(ViewBag.FreeDays != null ? (int)ViewBag.FreeDays : 0).ToShortDateString()
+                            </div>
+
+
+                            @*@Html.Label("fn",((int)@ViewBag.FreeDays).ToString() + "    დას:", new { @class = "control-label col-md-2", style = "width:80px;" })
+                                <div class="col-md-3">
+                                    @Html.TextBox("_finish_date", Model.Cards[i].Tdate.AddDays((int)ViewBag.FreeDays).ToShortDateString(), new { @class = "form-control input-sm", style = "margin-left:10px;width:80px;" })
+                                </div>*@
+                        </div>
+                    }
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].AutoInvoice, new { @class = "control-label col-md-4" })
+                            <div class="col-md-2">
+                                @Html.CheckBoxFor(m => m.Cards[i].AutoInvoice, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>*@
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.Cards[i].ClosedIsPen, new { @class = "control-label col-md-4" })
+                            <div class="col-md-2">
+                                @Html.CheckBoxFor(m => m.Cards[i].ClosedIsPen, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>*@
+                </div>
+                @if (Model.Cards[i].Id > 0)
+                {
+                    <div class="col-md-5 card-details">
+                        @if (ViewBag.BalanceShow)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">ბალანსი</label>
+                                <div class="col-md-7">
+                                    <h3 class="label label-default"> @Html.Raw(((List<IdName>)ViewBag.Balances).First(c => c.Id == Model.Cards[i].Id).Name) ლარი</h3>
+                                </div>
+
+                            </div>
+                            if (Utils.GetPermission("RENT_ACCRUALS"))
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-5">იჯარა-ბალანსი</label>
+                                    <div class="col-md-7">
+                                        <h3 class="label label-default">@Model.AbonentDetailInfo.RentBalanse ლარი</h3>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                <label class="control-label col-md-5">კოეფიციენტი:</label>
+                                <div class="col-md-7">
+                                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                                    {
+                                        if (Model.Cards[i].CardStatus == CardStatus.Rent)
+                                        {
+                                            <h3 class="label label-default"> @Html.RentCoeff() ლარი</h3>
+                                        }
+                                        else
+                                        {
+                                            <h3 class="label label-default"> @Html.GetCoeff(Model.Cards[i].Discount, (decimal)Model.Cards[i].Subscribtions.FirstOrDefault(s => s.Status).Amount) ლარი</h3>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <h3 class="label label-default"> @Html.GetCoeff(Model.Cards[i].Discount, (decimal)Model.Cards[i].Subscribtions.FirstOrDefault(s => s.Status).Amount) ლარი</h3>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        @if (@Model.Cards[i].CardStatus != CardStatus.Blocked)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">გათ. თარიღი</label>
+                                <div class="col-md-7">
+                                    <h3 class="label label-default">
+
+                                        @if (@Model.Cards[i].CardStatus != CardStatus.Closed)
+                                        {
+                                            @Html.SetDateDisplay(Model.Cards[i].FinishDate)
+                                        }
+                                        else
+                                        {
+                                            @Html.SetDateDisplay(Model.Cards[i].CloseDate)
+                                        }
+                                    </h3>
+                                </div>
+                            </div>
+                        }
+                        @if (@Model.Cards[i].CardStatus != CardStatus.Blocked && Model.Cards[i].CardStatus == CardStatus.Rent && Utils.GetPermission("RENT_ACCRUALS"))
+                        {
+                            <div class="form-group">
+
+                                <label class="control-label col-md-5">იჯარა.გათ. თარიღი</label>
+
+                                <div class="col-md-7">
+                                    <h3 class="label label-default">
+
+                                        @if (@Model.Cards[i].CardStatus == CardStatus.Rent)
+                                        {
+                                            @Html.SetDateDisplay(Model.Cards[i].RentFinishDate)
+                                        }
+
+                                        else
+                                        {
+                                            @Html.SetDateDisplay(Model.Cards[i].CloseDate)
+                                        }
+
+
+
+                                    </h3>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="control-label col-md-5">სტატუსი</label>
+                            <div class="col-md-7">
+                                <h3 class="label label-default" id="lbl_card_status">@Html.GetCardStatus(Model.Cards[i].CardStatus)</h3>
+                                @if (@Model.Cards[i].CardStatus != CardStatus.Canceled)
+                                {
+                                    if (ViewBag.CardCancel)
+                                    {
+
+                                        <button type="button" class="btn btn-primary btn-xs" style="padding: 0px 4px;" data-id="@Model.Cards[i].Id" @*data-toggle="modal"*@ @*data-target="#card_cancel_modal"*@ id="return_card_modal">
+                                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                        </button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        @{ViewBag.Days = Utils.GetServicesDays(@Model.Cards[i], @ViewBag.ServiceDays);
+                            if (ViewBag.Days >= 0)
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-1"></label>
+                                    <div class="col-md-8">
+                                        <h3 class="label label-default">მომსახურება დაერიცხება @Html.Raw(ViewBag.Days == 0 ? "დღეს" : ViewBag.Days + " დღეში")</h3>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        @if (@Model.Cards[i].CardStatus == CardStatus.Active)
+                        {
+                            if (@Model.Cards[i].Mode == 1)
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-5"></label>
+                                    <div class="col-md-7">
+                                        <h3 class="label label-default">კრედიტშია</h3>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                        @if (@Model.Cards[i].CardStatus == CardStatus.Paused)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-4"></label>
+                                <div class="col-md-8">
+                                    <h3 class="label label-default">დარჩენილია @Html.Raw((Model.Cards[i].PauseDate.AddDays(Model.Cards[i].PauseDays).Date - DateTime.Now.Date).Days) დღე</h3>
+                                </div>
+                            </div>
+                        }
+                        @if (@Model.Cards[i].CardStatus == CardStatus.Closed)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5">ჯარიმის თანხა:</label>
+                                <div class="col-md-7">
+                                    <h3 class="label label-default">@Html.GetCloseCardAmount(@Model.Cards[i].CloseDate, @Model.Cards[i].Id) ლარი</h3>
+                                </div>
+                            </div>
+                            if (ViewBag.CardDeal)
+                            {
+                                if (@Model.Cards[i].Mode == 0)
+                                {
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5"></label>
+                                        <div class="col-md-7">
+                                            <button type="button" class="btn btn-default btn-xs" onclick="card_credit(@Model.Cards[i].Id)">
+                                                <span class="glyphicon glyphicon-credit-card"></span> კრედიტის გაცემა
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                        @if (@Model.Cards[i].CardStatus == CardStatus.Paused)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-4"></label>
+                                <div class="col-md-8">
+                                    <h3 class="label label-default">ბარათი დაბლოკილია</h3>
+                                </div>
+                            </div>
+                        }
+
+                        @if (@Model.Cards[i].CardDamages.Any(c => c.Status != CardDamageStatus.Executed))
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-4"></label>
+                                <div class="col-md-7">
+                                    <h3 class="label label-danger">დაზიანებაა (@Model.Cards[i].CardDamages.Select(c => Utils.GetEnumDescription(c.Status)).FirstOrDefault())</h3>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            if (ViewBag.CardDeal)
+                            {
+                                <div class="form-group">
+                                    <label class="control-label col-md-5"></label>
+                                    <div class="col-md-7">
+                                        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#damageModal" data-id="@Model.Cards[i].Id">
+                                            <span class="glyphicon glyphicon-wrench"></span> დაზიანება
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        <div class="form-group">
+                            <label class="control-label col-md-5"></label>
+                            <div class="col-md-7">
+                                <button type="button" id="send_osd" onclick="if (!sendOSD('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                    OSD გაგზავნა
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5"></label>
+                            <div class="col-md-7">
+                                <button type="button" id="send_reset" onclick="if (!sendFactoryReset('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                    Factory Reset
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5"></label>
+                            <div class="col-md-7">
+                                <button type="button" id="send_show_info" onclick="if (!sendShowInfo('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                    Show Info
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5">
+
+                            </label>
+                            <div class="col-md-7">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <button type="button" id="send_pin_reset" onclick="if (!sendPinReset('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                                Pin Change
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <input id="old_pin" type="text" class="form-control input-sm" value="12345678" placeholder="Default Pin..." />
+                                            <input id="new_pin" type="text" class="form-control input-sm" value="87654321" placeholder="New Pin..." />
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </div>
+
+
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5"></label>
+                            <div class="col-md-7">
+                                <button type="button" id="send_pin_rdefault" onclick="if (!sendPinDef('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                        Pin Reset
+                                    </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-5"></label>
+                            <div class="col-md-7">
+                                @*<button type="button" id="send_pin_rdefault" onclick="if (!sendPinDef('@Model.Cards[i].CardNum')) return false;" class="btn btn-default btn-xs">
+                                        Pin Reset
+                                    </button>*@
+                                <button style="background-color:forestgreen; font-size:15px;" onclick="sendSMSAbonentNum(@Model.Cards[i].AbonentNum,@Model.Customer.Phone1)" id="sent_sms_abonent" class="btn btn-success btn-sm">SMS-@Model.Cards[i].AbonentNum</button>
+                            </div>
+                        </div>
+                        @if (ViewBag.EntitlementRefresh)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5"></label>
+                                <div class="col-md-7">
+                                    <button type="button" id="refresh_entitlement" onclick="if (!refreshEntitlement('@Model.Cards[i].CardNum', @Model.Cards[i].Id)) return false;" class="btn btn-default btn-xs">
+                                        Entitl. განახლება
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        @if (ViewBag.EntitlementRefresh)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-md-5"></label>
+                                <div class="col-md-7">
+                                    <button type="button" id="cancel_entitlement" onclick="if (!cancelEntitlement('@Model.Cards[i].CardNum', @Model.Cards[i].Id)) return false;" class="btn btn-default btn-xs">
+                                        Entitl. წაშლა
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-3">
+                    @if (ViewBag.CardPackageChange)
+                    {
+                        if (Model.Cards[i].Subscribtions != null && Model.Cards[i].Id == 0) //შეკვეთა
+                        {
+                            for (int k = 0; k < Model.Cards[i].Subscribtions.First().SubscriptionPackages.Count; k++)
+                            {
+                                <input type="hidden" name="Cards[@i].Subscribtions[0].SubscriptionPackages[@k].PackageId" value="@Model.Cards[i].Subscribtions.First().SubscriptionPackages.ElementAt(k).PackageId">
+                            }
+                        }
+
+                        <span onclick="add_subscription(this, @i)" style="cursor: pointer;">
+                            <span class="glyphicon glyphicon-shopping-cart"></span>
+                            <span>ახალი პაკეტი</span>
+                        </span>
+                    }
+
+
+
+
+                    @if (Model.Cards[i].Subscribtions != null && Model.Cards[i].Subscribtions.First().SubscriptionPackages.Where(s => s.PackageId == 304086).Select(c => c.PackageId).FirstOrDefault() == 304086)
+                    {
+                        <span style="margin-left:40px; color:forestgreen; font-size:30px;" class="glyphicon glyphicon-ok-circle" id=""></span>
+                    }
+                    else
+                    {
+
+                        <span style="margin-left:40px; color:red; font-size:30px;" class="glyphicon glyphicon-remove-circle" id=""></span>
+                    }
+
+                </div>
+                @*<div class="col-md-3">
+            @if (ViewBag.CardServiceAdd)
+            {
+                <span onclick="onAddCardService(@i)" style="cursor: pointer;">
+                    <span class="glyphicon glyphicon-tasks"></span>
+                    <span> მომსახურება</span>
+                </span>
+            }
+        </div>*@
+                <div class="col-md-3">
+                    @if (ViewBag.CardDeal)
+                    {
+                        if (Model.Cards[i].Id > 0)
+                        {
+                            if (Model.Cards[i].CardStatus == CardStatus.Paused)
+                            {
+                                <span onclick="pause_card_reset(@Model.Cards[i].Id)" style="cursor: pointer;">
+                                    <span class="glyphicon glyphicon-pause"></span>
+                                    <span>პაუზის მოხსნა</span>
+                                </span>
+                            }
+                            else if (Model.Cards[i].CardStatus == CardStatus.Closed || Model.Cards[i].CardStatus == CardStatus.Active)
+                            {
+                                <span onclick="pause_card(@Model.Cards[i].Id)" style="cursor: pointer;">
+                                    <span class="glyphicon glyphicon-pause"></span>
+                                    <span>დაპაუზება</span>
+                                </span>
+                            }
+                        }
+                    }
+                </div>
+                <div class="col-md-3">
+                    @if (ViewBag.CardDeal)
+                    {
+                        if (Model.Cards[i].Id > 0)
+                        {
+                            if (Model.Cards[i].CardStatus != DigitalTVBilling.Models.CardStatus.Canceled && Model.Cards[i].CardStatus != DigitalTVBilling.Models.CardStatus.Blocked)
+                            {
+                                <span onclick="block_card(@Model.Cards[i].Id)" style="cursor: pointer;">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    <span>დაბლოკვა</span>
+                                </span>
+                            }
+                            else if (Model.Cards[i].CardStatus == DigitalTVBilling.Models.CardStatus.Blocked)
+                            {
+                                <span onclick="block_card_reset(@Model.Cards[i].Id)" style="cursor: pointer;">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    <span>ბლოკის მოხსნა</span>
+                                </span>
+                            }
+                        }
+                    }
+              
+                </div>
+                <div class="col-md-3">
+                    @if (Model.autoSubscribChange != null)
+                    {
+                        <span style="color:#6e7ce6; font-size:18px; margin-left: -50px">@Model.autoSubscribChange.PackageNames</span>
+                    }
+                </div>
+            </div>
+            <div class="row" style="margin-top:8px;">
+                <div id="services_data_@i">
+                    @if (Model.Cards[i].Id == 0)
+                    {
+                        if (Model.Cards[i].CardServices != null)
+                        {
+                            for (int k = 0; k < Model.Cards[i].CardServices.Count; k++)
+                            {
+                                <input type="hidden" name="Cards[@i].CardServices[@k].ServiceId" value="@Model.Cards[i].CardServices.ElementAt(k).ServiceId" />
+                                <input type="hidden" name="Cards[@i].CardServices[@k].Amount" value="@Model.Cards[i].CardServices.ElementAt(k).Amount" />
+                                <input type="hidden" name="Cards[@i].CardServices[@k].PayType" value="@Model.Cards[i].CardServices.ElementAt(k).PayType" />
+                            }
+                        }
+                    }
+                </div>
+                <div class="col-md-12">
+                    @if (Model.Cards[i].Subscribtions != null)
+                    {
+                        if (Model.Cards[i].Id > 0)
+                        {
+                            <span class="packets">@Html.SetPackageNames(Model.Cards[i].Subscribtions.Where(s => s.Status).Select(c => c.SubscriptionPackages.Select(s => s.Package.Name).ToList()).FirstOrDefault())</span>
+                            if (ViewBag.CardHistoryShow)
+                            {
+                                <button type="button" class="btn btn-default btn-xs pull-right" id="btn_get_history" data-card-id="@Model.Cards[i].Id">
+                                    <span class="glyphicon glyphicon-tasks"></span> ისტორია
+                                </button>
+                            }
+                        }
+                        else //შეკვეთა
+                        {
+                            <span class="packets">@Html.SetPackageNames(Utils.GetPackageNames(Model.Cards[i].Subscribtions.Select(c => c.SubscriptionPackages.Select(s => s.PackageId).ToList()).FirstOrDefault()))</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="packets"></span>
+                    }
+                </div>
+            </div>
+        </div>
+        if (ViewBag.CurrentCard != Model.Cards[i].CardNum && Model.Cards[i].Id != 0)
+        {
+            @Html.Raw("</div></div>")
+        }
+    }
+}
+else
+{
+    <div class="well well-sm">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <input data-val="true" data-val-number="The field აბონენტი must be a number." data-val-required="აირჩიეთ აბონენტი" id="Cards_@Html.Raw(@ViewBag.Count)__CustomerId" name="Cards[@ViewBag.Count].CustomerId" type="hidden" value="0" />
+        <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Cards_@Html.Raw(@ViewBag.Count)__Id" name="Cards[@ViewBag.Count].Id" type="hidden" value="0" />
+        <input type="hidden" id="cnt_@ViewBag.Count" value="@ViewBag.Count" />
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__Tdate">თარიღი:</label>
+                    <div class="col-md-8">
+                        <input class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__Tdate" name="Cards[@ViewBag.Count].Tdate" type="datetime" value="@DateTime.Now" />
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__DocNum">ხელშეკრ. №:</label>
+                        <div class="col-md-5">
+                            <input class="form-control input-sm" data-val="true" data-val-required="შეიყვანეთ ხელშეკრ. №" id="Cards_@Html.Raw(@ViewBag.Count)__DocNum" name="Cards[@ViewBag.Count].DocNum" />
+                            <span class="field-validation-valid" data-valmsg-for="Cards[@ViewBag.Count].DocNum" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>*@
+                @*<div class="form-group">
+                        <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__AbonentNum">აბონენტის №:</label>
+                        <div class="col-md-8">
+                            <div class="input-group input-group-sm">
+                                <input class="form-control input-sm" data-val="true" onblur="CardCheck(this, 0)" data-val-length="The field აბონენტის №: must be a string with a maximum length of 255." data-val-length-max="255" data-val-regex="აბონენტის № არასწორია" data-val-regex-pattern="^[A-Z]+\d{5}$" data-val-required="შეიყვანეთ აბონენტის №" id="Cards_@Html.Raw(@ViewBag.Count)__AbonentNum" name="Cards[@ViewBag.Count].AbonentNum" type="text" />
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm" onclick="if (!CardAbonentNumGenerate(this,@ViewBag.Count)) return false;"><span class="glyphicon glyphicon-retweet"></span></button>
+                                </div>
+                            </div>
+                            <span class="field-validation-valid" data-valmsg-for="Cards[@ViewBag.Count].AbonentNum" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__CardNum">ბარათის №:</label>
+                    <div class="col-md-8">
+                        <input class="form-control input-sm" data-val="true" onblur="CardCheck(this, 8)" data-val-length="ველი ბარათის №: უნდა იყოს სიმებიანი მაქსიმალური სიგრძე 8." data-val-length-max="8" data-val-required="შეიყვანეთ ბარათის №" id="Cards_@Html.Raw(@ViewBag.Count)__CardNum" name="Cards[@ViewBag.Count].CardNum" type="text" value="" />
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@ViewBag.Count].CardNum" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__City">სოფელი/ქალაქი:</label>
+                    <div class="col-md-8">
+                        <input class="form-control input-sm valid" data-val="true" data-val-required="შეიყვანეთ სოფელი/ქალაქი" id="Cards_@Html.Raw(@ViewBag.Count)__City" name="Cards[@ViewBag.Count].City" type="text" value="">
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@ViewBag.Count].City" data-valmsg-replace="true"></span>
+                        <input id="Cards_@Html.Raw(@ViewBag.Count)__Village" name="Cards[@ViewBag.Count].Village" type="hidden" value="">
+                        <input id="Cards_@Html.Raw(@ViewBag.Count)__Region" name="Cards[@ViewBag.Count].Region" type="hidden" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__Address">მისამართი:</label>
+                    <div class="col-md-8">
+                        <div class="input-group input-group-sm">
+                            <input class="form-control input-sm" data-val="true" data-val-length="The field მისამართი: must be a string with a maximum length of 255." data-val-length-max="255" data-val-required="შეიყვანეთ მისამართი" id="Cards_@Html.Raw(@ViewBag.Count)__Address" name="Cards[@ViewBag.Count].Address" type="text" value="" />
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm" onclick="if (!CardAddressCopy(this, @ViewBag.Count)) return false;"><span class="glyphicon glyphicon-retweet"></span></button>
+                            </div>
+                        </div>
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@ViewBag.Count].Address" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__ReceiverId">რესივერი:</label>
+                    <div class="col-md-8">
+                        <select class="form-control input-sm" data-val="true" data-val-number="The field რესივერი: must be a number." data-val-required="აირჩიეთ რესივერი" id="Cards_@Html.Raw(@ViewBag.Count)__ReceiverId" name="Cards[@Html.Raw(@ViewBag.Count)].ReceiverId">
+                            <option value=""></option>
+                            @foreach (IdName item in (List<IdName>)ViewBag.Receivers)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@Html.Raw(@ViewBag.Count)].ReceiverId" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                @*  *@
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__TowerId">ანძა:</label>
+                    <div class="col-md-8">
+                        <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" id="Cards_@Html.Raw(@ViewBag.Count)__TowerId" name="Cards[@Html.Raw(@ViewBag.Count)].TowerId">
+                            <option value=""></option>
+                            @foreach (IdName item in (List<IdName>)ViewBag.Towers)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@Html.Raw(@ViewBag.Count)].TowerId" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__CardStatus">ბარათის სტატუსი:</label>
+                        <div class="col-md-8">
+
+                            <select class="form-control input-sm" data-val="true" data-val-number="The field ბარათის სტატუსი: must be a number." data-val-required="აირჩიეთ ბარათის სტატუსი" id="Cards_@Html.Raw(@ViewBag.Count)__CardStatus" name="Cards[@Html.Raw(@ViewBag.Count)].CardStatus">
+
+                                @foreach (IdName item in (List<IdName>)ViewBag.CardStatus)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            </select>
+                            <span class="field-validation-valid" data-valmsg-for="Cards[@Html.Raw(@ViewBag.Count)].CardStatus" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>*@
+                <div class="form-group" style="display: block;" id="show_mux">
+                    <label class="control-label col-md-4" for="Cards_1__MUX">მუქსები:</label>
+
+                    <div class=" col-lg-6">
+                        <div class="input-group">
+
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary muxButton" type="button">MUX 1</button>
+                            </span>
+                            <div class="wrap">
+                                <div class="mat-div is-completed">
+                                    <div id="">
+                                        <label for="mux1_level" class="mat-label">დონე</label>
+                                        <input type="tel" class="mat-input" data-val="true" maxlength="3" id="mux1_level" name="Cards[@ViewBag.Count][mux1_level]" value="">
+                                    </div>
+                                    <div id="" style="margin-left: 100px;  margin-top: -50px;">
+                                        <label for="mux1_quality" class="mat-label">ხარისხი</label>
+                                        <input type="tel" class="mat-input" data-val="true" maxlength="3" id="mux1_quality" name="Cards[@ViewBag.Count][mux1_quality]" value="">
+                                    </div>
+                                </div>
+                                <!--                                        <div class="mat-div">
+                                                <label for="mux1_quality" class="mat-label">ხარისხი</label>
+                                                <input type="tel" class="mat-input"  data-val="true" maxlength="3" id="mux1_quality" name="Cards[0][mux1_quality]" value="">
+                                              </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="control-label col-md-4" for="Cards_2__MUX"></label>
+
+                    <div class=" col-md-8">
+                        <div class="input-group">
+
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary muxButton" type="button">MUX 2</button>
+                            </span>
+                            <div class="wrap">
+                                <div class="mat-div is-completed">
+                                    <div>
+                                        <label for="mux2_level" class="mat-label">დონე</label>
+                                        <input type="tel" class="mat-input" id="mux2_level" maxlength="3" name="Cards[@ViewBag.Count][mux2_level]">
+                                    </div>
+
+                                    <div id="" style="margin-left: 100px;  margin-top: -50px;">
+                                        <label for="mux2_quality" class="mat-label">ხარისხი</label>
+                                        <input type="tel" class="mat-input" id="mux2_quality" maxlength="3" name="Cards[@ViewBag.Count][mux2_quality]">
+                                    </div>
+
+                                </div>
+                                <!--                                        <div class="mat-div">
+                                                <label for="mux2_quality" class="mat-label">ხარისხი</label>
+                                                <input type="tel" class="mat-input" id="mux2_quality" maxlength="3" name="Cards[0][mux2_quality]">
+                                              </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <label class="control-label col-md-4" for="Cards_3__MUX"></label>
+
+                    <div class=" col-lg-6">
+                        <div class="input-group">
+
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary muxButton" type="button">MUX 3</button>
+                            </span>
+                            <div class="wrap">
+                                <div class="mat-div is-completed">
+                                    <div>
+                                        <label for="mux3_level" class="mat-label">დონე</label>
+                                        <input type="tel" class="mat-input" id="mux3_level" maxlength="3" name="Cards[@ViewBag.Count][mux3_level]">
+                                    </div>
+                                    <div id="" style="margin-left: 100px;  margin-top: -50px;">
+                                        <label for="mux3_quality" class="mat-label">ხარისხი</label>
+                                        <input type="tel" class="mat-input" id="mux3_quality" maxlength="3" name="Cards[@ViewBag.Count][mux3_quality]">
+                                    </div>
+                                </div>
+                                <!--                                        <div class="mat-div">
+                                                <label for="mux3_quality" class="mat-label">ხარისხი</label>
+                                                <input type="tel" class="mat-input" id="mux3_quality" maxlength="3" name="Cards[0][mux3_quality]">
+                                              </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__Discount">ფასდაკლება:</label>
+                    <div class="col-md-3">
+                        <input class="form-control input-sm" data-val="true" data-val-number="ფასდაკლება: რიცხვი უნდა იყოს" data-val-range="შეივანეთ ფასდაკლება" data-val-range-max="2147483647" data-val-range-min="0" data-val-required="შეივანეთ ფასდაკლება" id="Cards_@Html.Raw(@ViewBag.Count)__Discount" name="Cards[@Html.Raw(@ViewBag.Count)].Discount" type="text" value="0">
+                        <span class="field-validation-valid" data-valmsg-for="Cards[@Html.Raw(@ViewBag.Count)].Discount" data-valmsg-replace="true"></span>
+                    </div>
+                    <label class="control-label col-md-2" for="Cards_@Html.Raw(@ViewBag.Count)__Group">ჯგუფი:</label>
+                    <div class="col-md-3">
+                        <input class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__Group" name="Cards[@ViewBag.Count].Group" type="number" value="@ViewBag.Count" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__HasFreeDays">უფასო დღეები:</label>
+                    <div class="col-md-2">
+                        <input checked="checked" class="form-control input-sm" data-val="true" data-val-required="The უფასო დღეები: field is required." id="Cards_@Html.Raw(@ViewBag.Count)__HasFreeDays" name="Cards[@Html.Raw(@ViewBag.Count)].HasFreeDays" type="checkbox" value="true"><input name="Cards[@Html.Raw(@ViewBag.Count)].HasFreeDays" type="hidden" value="false">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__AutoInvoice">ავტომატური ინვოისი:</label>
+                        <div class="col-md-2">
+                            <input class="form-control input-sm" data-val="true" data-val-required="The ავტომატური მესიჯები: field is required." id="Cards_@Html.Raw(@ViewBag.Count)__AutoInvoice" name="Cards[@Html.Raw(@ViewBag.Count)].AutoInvoice" type="checkbox" value="true"><input name="Cards[@Html.Raw(@ViewBag.Count)].AutoInvoice" type="hidden" value="false">
+                        </div>
+                    </div>*@
+                @*<div class="form-group">
+                        <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__ClosedIsPen">ავტომატური ინვოისი:</label>
+                        <div class="col-md-2">
+                            <input class="form-control input-sm" data-val="true" data-val-required="The ჯარიმის დარიცხვა: field is required." id="Cards_@Html.Raw(@ViewBag.Count)__ClosedIsPen" name="Cards[@Html.Raw(@ViewBag.Count)].ClosedIsPen" type="checkbox" value="true"><input name="Cards[@Html.Raw(@ViewBag.Count)].ClosedIsPen" type="hidden" value="false">
+                        </div>
+                    </div>*@
+            </div>
+            <div class="col-md-4">
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <div class="col-md-3">
+                @if (ViewBag.CardPackageChange)
+                {
+                    <span onclick="add_subscription(this, @ViewBag.Count)" style="cursor: pointer;">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                        <span>ახალი პაკეტი</span>
+                    </span>
+                }
+            </div>
+            @*<div class="col-md-3">
+                    @if (ViewBag.CardServiceAdd)
+                    {
+                        <span onclick="onAddCardService(@ViewBag.Count)" style="cursor: pointer;">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                            <span> მომსახურება</span>
+                        </span>
+                    }
+                </div>*@
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div id="services_data_@ViewBag.Count">
+
+            </div>
+            <div class="col-md-12">
+                <span class="packets"></span>
+            </div>
+        </div>
+    </div>
+}

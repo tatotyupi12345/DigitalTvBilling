@@ -1,0 +1,158 @@
+﻿@model IEnumerable<ReRegistering>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Replacement = "active";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ReRegistering> registerings = ViewBag.Replaments;
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/stoppedcards_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script src="~/Static/Scripts/View/replacement_index.js"></script>
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .goingToPay {
+            background-color: #4dff4d;
+        }
+
+        .goingToCancel {
+            background-color: #ff3333;
+        }
+
+        .technicalProblem {
+            background-color: #ffff4d;
+        }
+
+        .unConnected {
+            background-color: #66b3ff;
+        }
+
+        .owner {
+            background-color: #ff80ff;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-5 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    @*<div class="col-sm-1 pull-right" style="padding-right: 0px;">
+            <button type="button" class="btn btn-default btn-xs " id="detail_filter">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+            </button>
+        </div>*@
+    @*<div class="col-sm-1">
+        <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+            <span class="fa-stack">
+                <i class="fa fa-filter fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+            </span>
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm pull-left">
+            <select class="form-control" id="drp_filter">
+                <option value="1">აბონენტი</option>
+                <option value="2">ბარათის №</option>
+                <option value="3">აბონენტის № </option>
+            </select>
+        </div>
+    </div>*@
+
+</div>
+
+<div class="row" style="margin-top: 8px; overflow: scroll;">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th style="width: auto;">
+                    თარიღი
+                </th>
+                <th style="width: 15%;">
+                    აბონენტი
+                </th>
+                <th style="width: 10%;">
+                    პ.ნ
+                </th>
+                <th style="width: 8%;">
+                    ტელეფონი
+                </th>
+                <th style="width: auto;">
+                    თარიღი
+                </th>
+                <th style="width: 15%;">
+                    აბონენტი
+                </th>
+                <th style="width: 10%;">
+                    პ.ნ
+                </th>
+                <th style="width: 8%;">
+                    ტელეფონი
+                </th>
+                <th style="width: 2%;">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (var item in Model)
+            {
+
+                <tr class="" data-id="@item.code" data-card="">
+                    <td style="background-color:#ff6a00">@registerings.Where(c => c.card_id == item.card_id).Select(s => s.tdate).FirstOrDefault()</td>
+                    <td style="background-color:#ff6a00">@item.name @item.lastname</td>
+
+                    <td style="background-color:#ff6a00">@item.code</td>
+                    <td style="background-color:#ff6a00">@item.phone</td>
+                    <td style="background-color:#8bc06a">@item.tdate</td>
+                    <td style="background-color:#8bc06a">@registerings.Where(c => c.card_id == item.card_id).Select(s => s.name).FirstOrDefault() @registerings.Where(c => c.card_id == item.card_id).Select(s => s.lastname).FirstOrDefault()</td>
+
+                    <td style="background-color:#8bc06a">@registerings.Where(c => c.card_id == item.card_id).Select(s => s.code).FirstOrDefault()</td>
+                    <td style="background-color:#8bc06a">@registerings.Where(c => c.card_id == item.card_id).Select(s => s.phone).FirstOrDefault()</td>
+                </tr>
+            }
+            @if (Model.Count() == 0)
+            {
+                <tr>
+                    <td colspan="11" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*<div id="paging">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, status = Request.QueryString["status"] }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>*@
+</div>

@@ -1,0 +1,102 @@
+﻿
+.textbox {
+    border: 1px solid #c4c4c4;
+    height: 35px;
+    width: 370px;
+    font-size: 13px;
+    padding: 4px 4px 4px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+}
+
+.textbox:focus {
+    outline: none;
+    border: 1px solid #7bc1f7;
+    box-shadow: 0px 0px 8px #7bc1f7;
+    -moz-box-shadow: 0px 0px 8px #7bc1f7;
+    -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+}
+
+.option-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    position: relative;
+    top: 5.33333px;
+    right: 0;
+    bottom: 0;
+    left: 5px;
+    height: 20px;
+    width: 20px;
+    transition: all 0.15s ease-out 0s;
+    background: #cbd1d8;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 0.5rem;
+    outline: none;
+    position: relative;
+    z-index: 1000;
+}
+
+    .option-input:hover {
+        background: #313a39;
+    }
+
+    .option-input:checked {
+        background: #08043c;
+    }
+
+        .option-input:checked::before {
+            /*height: 40px;*/
+            width: 20px;
+            position: absolute;
+            content: '✔';
+            display: inline-block;
+            font-size: 14.66667px;
+            text-align: center;
+            line-height: 22px;
+        }
+
+        .option-input:checked::after {
+            -webkit-animation: click-wave 0.65s;
+            -moz-animation: click-wave 0.65s;
+            animation: click-wave 0.65s;
+            background: #40e0d0;
+            content: '';
+            display: block;
+            position: relative;
+            z-index: 100;
+        }
+
+    .option-input.radio {
+        border-radius: 50%;
+    }
+
+        .option-input.radio::after {
+            border-radius: 50%;
+        }
+
+/*/*/
+textarea, input {
+    font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+}
+
+.att div:hover {
+    background-color: #c4ffab;
+}
+
+table tr, th {
+    text-align: center;
+}
+

@@ -1,0 +1,51 @@
+﻿@model PagedListExtended<OfficeCard>
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Page.Title = "ოფისის ბარათები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/utils.js"></script>
+}
+
+<div class="row">
+    <div class="col-sm-2">
+        <button class="btn btn-xs btn-primary" id="newOfficeCard">ახალი ბარათი</button>
+    </div>
+</div>
+<div style="margin-top: 8px;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 25%;">
+                    სახელი, გვარი
+                </th>
+                <th style="width: 45%;">
+                    მისამართი
+                </th>
+                <th style="width: 20%;">
+                    ბარათის №
+                    </th>
+            </tr>
+        </thead>
+        <tbody id="cards_body">
+            @foreach (OfficeCard card in Model)
+            {
+                <tr data-id="@card.Id">
+                    <td>@card.Name</td>
+                    <td>@card.Address</td>
+                    <td>@card.CardNum</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.PageNumbersOnly)
+    </div>
+</div>

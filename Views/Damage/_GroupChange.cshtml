@@ -1,0 +1,58 @@
+﻿@model List<DigitalTVBilling.Models.User>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+
+}
+
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">ჯგუფის შეცვლა</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @*<script type="text/javascript">
+                            $(function () {
+                                var str = '<option value="1">----</option>';
+                                $.each(groups, function (i, val) {
+                                    str += '<option value="' + val.Id + '">' + val.Name + '</option>';
+                                });
+                                $('#group_combo').html(str);
+                            });
+                        </script>*@
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">ჯგუფი:</label>
+                            <div class="col-sm-6">
+                                <select class="form-control input-sm" id="group_combo">
+                                    <option value="0"></option>
+                                    @foreach (var item in Model)
+                                    {
+                                        if ((int)ViewBag.selectedExecutor == item.Id)
+                                        {
+                                            <option selected value="@item.Id">@item.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-default" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-xs btn-primary" id="group_change">შენახვა</button>
+            </div>
+        </div>
+    </div>
+</div>

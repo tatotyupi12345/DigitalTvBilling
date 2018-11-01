@@ -1,0 +1,123 @@
+﻿@model CardInfo
+<div class="tab-pane" id="packet">
+    <section>
+        <div class="cont">
+            @Html.Partial("~/Views/Abonent/_SubscriptionsList.cshtml", @Model.Subscribtions)
+        </div>
+    </section>
+</div>
+<div class="tab-pane" id="payment">
+    <section>
+        <div class="cont">
+            @Html.Partial("~/Views/Abonent/_PaymentsList.cshtml", @Model.Payments)
+        </div>
+    </section>
+</div>
+<div class="tab-pane" id="service">
+    <div class="row" style="margin-top:4px;">
+        <div class="col-md-7">
+            <div class="form-group">
+                <label class="control-label col-md-2">დასახელება:</label>
+                <div class="col-md-10">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-primary" data-label-placement>ყველა</button>
+                        <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                        <ul class="dropdown-menu" id="drp_service_names_filter">
+                            @foreach (IdName store in (List<IdName>)ViewBag.Services)
+                            {
+                                <li>
+                                    <input type="checkbox" id="id_@store.Id" value="@store.Id">
+                                    <label for="id_@store.Id">@store.Name</label>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="control-label col-md-6">გადახდის ტიპი:</label>
+                <div class="col-md-6">
+                    <select class="form-control input-sm" id="drp_service_pay_type_filter">
+                        <option value="0">ყველა</option>
+                        @foreach (CardServicePayType l_s in Enum.GetValues(typeof(CardServicePayType)))
+                        {
+                            <option value="@l_s.ToString()">@Utils.GetEnumDescription(l_s)</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <span class="input-group input-group-sm">
+                <a class="btn btn-default btn-xs" id="filter_services">
+                    <span class="glyphicon glyphicon-search"></span>
+                </a>
+            </span>
+        </div>
+    </div>
+    <section>
+        <div class="cont" id="services_table">
+            @Html.Partial("~/Views/Abonent/_CardServicesList.cshtml", @Model.CardServices)
+        </div>
+    </section>
+</div>
+<div class="tab-pane" id="card">
+    <div class="row" style="margin-top:4px;">
+        <div class="col-md-11">
+            <div class="form-group">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-primary" data-label-placement>ყველა</button>
+                    <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle"><span class="caret"></span></button>
+                    <ul class="dropdown-menu" id="drp_cardlogs_filter">
+                        @foreach (CardLogStatus l_s in Enum.GetValues(typeof(CardLogStatus)))
+                        {
+                            <li>
+                                <input type="checkbox" id="id_@l_s.ToString()" value="@l_s.ToString()">
+                                <label for="id_@l_s.ToString()">@Utils.GetEnumDescription(l_s)</label>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <span class="input-group input-group-sm">
+                <a class="btn btn-default btn-xs" id="filter_cardlogs">
+                    <span class="glyphicon glyphicon-search"></span>
+                </a>
+            </span>
+        </div>
+    </div>
+    <section>
+        <div class="cont" id="cardlogs_table">
+            @Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)
+        </div>
+    </section>
+</div>
+<div class="tab-pane" id="other_charge">
+    <section>
+        <div class="cont">
+            @Html.Partial("~/Views/Abonent/_OtherChargesList.cshtml", @Model.OtherCharges)
+        </div>
+    </section>
+</div>
+<div class="tab-pane active" id="balance">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <select class="form-control input-sm" id="drp_balance_filter">
+                    <option value="0">ყველა</option>
+                    <option value="1">დარიცხვები</option>
+                    <option value="2">გადახდები</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <section>
+        <div class="cont" id="balance_table" >
+            @Html.Partial("~/Views/Abonent/_BalanceList.cshtml", @Model.Balances)
+        </div>
+    </section>
+</div>

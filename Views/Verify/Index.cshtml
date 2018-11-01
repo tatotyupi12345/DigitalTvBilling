@@ -1,0 +1,231 @@
+﻿@model AsyncRawQueryPagedList<Customer>
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "ვერიფიკაცია";
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+
+    var verList = (List<Verify>)ViewBag.verifyList;
+    //ViewBag.AddAbonent = Utils.GetPermission("ABONENT_ADD");
+    //ViewBag.FilterAbonent = Utils.GetPermission("ABONENT_FILTER");
+    //ViewBag.OfficeCards = Utils.GetPermission("OFFICE_CARDS");
+    //ViewBag.AutoChangeSubscribs = Utils.GetPermission("AUTO_CHANGE_SUBSCRIB");
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/verify_index.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/payment_index.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/md5.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called{
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    @if (true)
+    {
+        @*<div class="col-sm-3" style="padding-right: 0px;">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+                <input type="search" class="form-control" id="txt_filter" />
+            </div>
+        </div>*@
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm pull-left">
+                <select class="form-control" id="status-filter" name="status_filter" value ="@ViewBag.filter_status">
+                    @if (ViewBag.filter_status == "All")
+                    {
+                        <option selected value="All">ყველა</option>
+                    }
+                    else
+                    {
+                        <option value="All">ყველა</option>
+                    }
+                    
+                    @if (ViewBag.filter_status == "ForPass")
+                    {
+                    <option selected value="ForPass">გასავლელი</option> }
+                    else
+                    {
+                    <option value="ForPass">გასავლელი</option> }
+
+                    @if (ViewBag.filter_status == "Passed")
+                    {
+                    <option selected value="Passed">გავლილი</option> }
+                    else
+                    {
+                    <option value="Passed">გავლილი</option> }
+
+                    @if (ViewBag.filter_status == "PassedWithError")
+                    {
+                    <option selected value="PassedWithError">გავლილი შეცდომით</option> }
+                    else
+                    {
+                    <option value="PassedWithError">გავლილი შეცდომით</option>}
+
+                    @if (ViewBag.filter_status == "Problem")
+                    {
+                    <option selected value="Problem">პრობლემა</option> }
+                    else
+                    {
+                    <option value="Problem">პრობლემა</option>}
+
+                    @if (ViewBag.filter_status == "Called")
+                    {
+                        <option selected value="Called">დარეკილი</option> }
+                    else
+                    {
+                        <option value="Called">დარეკილი</option>}
+
+                    @*<option value="cr.tower_id">ანძა</option>*@
+                </select>
+            </div>
+
+
+            @*<button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+            </button>*@
+        </div>
+    }
+</div>
+<div class="row" style="margin-top: 8px; overflow: scroll;">
+    <table class="table table-bordered ">
+        <thead>
+            <tr>
+                <th style="width: 15%;">
+                    თარიღი
+                </th>
+                <th style="width: 10%;">
+                    აბონენტი
+                </th>
+                <th style="width: 10%;">
+                    ტიპი
+                </th>
+                <th style="width: 8%;">
+                    ქალაქი
+                </th>
+                <th style="width: 15%;">
+                    მისამართი
+                </th>
+                <th style="width: 8%;">
+                    პირადი №
+                </th>
+                <th style="width: 8%;">
+                    ტელ. №
+                </th>
+                <th style="width: 8%;">
+                    რეგიონი
+                </th>
+                
+                <th style="width: 8%;">
+                    სტატუსი
+                </th>
+                <th style="width: 2%;">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (DigitalTVBilling.Models.Customer abonent in Model)
+            {
+                var className = "";
+                AbonentVerifyStatus status = verList.Where(c => c.customer.Id == abonent.Id).Select(s => s.customer.VerifyStatus).FirstOrDefault();
+
+                switch (status)
+                {
+                    case AbonentVerifyStatus.ForPass:
+                        className = "forPass";
+                        break;
+                    case AbonentVerifyStatus.Passed:
+                        className = "passed";
+                        break;
+                    case AbonentVerifyStatus.PassedWithError:
+                        className = "passedWithError";
+                        break;
+                    case AbonentVerifyStatus.Problem:
+                        className = "problem";
+                        break;
+
+                    case AbonentVerifyStatus.Called:
+                        {
+                            className = "called";
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+
+                <tr class="@className" data-id="@abonent.Id" data-card="@abonent.Id">
+                    <td>
+                        @abonent.Tdate
+                    </td>
+                    <td>@abonent.Name @abonent.LastName</td>
+                    <td>@Html.GetCustomerTypeDesc(abonent.Type)</td>
+                    <td>@abonent.City</td>
+                    <td >@abonent.Address</td>
+                    <td>@abonent.Code</td>
+                    <td>@abonent.Phone1</td>
+                    <td>@abonent.Region</td>
+                    
+                    
+                    <td>@Html.GetAbonentStatusDesc(abonent.VerifyStatus)</td>
+                    <td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit verfiy_abonent" id=""></span></a></td>
+                </tr>
+                className = "";
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+</div>

@@ -1,0 +1,171 @@
+﻿
+@{
+    Page.Title = "სტატისტიკა";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+@section head {
+    <script type="text/javascript">
+        var retunedCardChart=@Html.Raw(ViewBag.ReturnedCards);
+        var returnedCard =@Html.Raw(ViewBag.CardsReturned);
+        var promo_change=@Html.Raw(ViewBag.Promo_Cahnge);
+        var promo_count=@Html.Raw(ViewBag.Promo);
+        var cards_chart_data = @Html.Raw(ViewBag.CardsData);
+        var returned_card=@Html.Raw(ViewBag.Cancled);
+        var damage_card=@Html.Raw(ViewBag.Damage);
+        var order_poll = @Html.Raw(ViewBag.Poll);
+        var cards_active=@Html.Raw(ViewBag.CardsDataActive);
+        var abonents_by_city_data = @Html.Raw(ViewBag.AbonentsByCityData);
+        var monthly_deals = @Html.Raw(ViewBag.MonthlyDeals);
+        var charges_and_payments = @Html.Raw(ViewBag.ChargesAndPayments);
+        var packets_by_cards = @Html.Raw(ViewBag.PacketsByCards);
+        var canceled_cards_count = @Html.Raw(ViewBag.CanceledCardsCount);
+        var packets_by_cities = @Html.Raw(ViewBag.PacketsByCities);
+        var cities = @Html.Raw(ViewBag.Cities);
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <script type="text/javascript" src="~/Static/Scripts/highcharts.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/highcharts-3d.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/main.js"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+}
+<div class="row" @*style="margin-top:5px;"*@>
+    <div class="col-sm-6 " style=" display:inline-block">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimeReturned.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    @*<div class="col-sm-6 " style=" display:inline-block">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickerPoll.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+
+    </div>*@
+</div>
+<div class="row" @*style="margin-top:5px;"*@>
+    @*Html.Partial("_CardsActive")*@
+
+    <div class="col-md-6">
+
+        <div id="returnedCard" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+
+    @*<div class="col-md-6">
+        <div id="order_poll" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>*@
+</div>
+<br />
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="retunedCardChart" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<br />
+<div class="row" @*style="margin-top:5px;"*@>
+    <div class="col-sm-6 " style=" display:inline-block">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickersStatic.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-6 " style=" display:inline-block">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickerPoll.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+
+    </div>
+</div>
+<div class="row" @*style="margin-top:5px;"*@>
+    @*Html.Partial("_CardsActive")*@
+
+    <div class="col-md-6">
+
+        <div id="cards_active" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div id="order_poll" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-6">
+        <div id="cards_count" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="abonents_by_city_count" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-6">
+        <div id="promo_count" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="promo_change_pakc" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="charges_and_payments" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="returned_card" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="damage_card" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-6">
+        <div id="monthly_deals" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="packets_by_cards" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="packets_by_cities" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+

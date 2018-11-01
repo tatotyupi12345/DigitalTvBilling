@@ -1,0 +1,76 @@
+﻿@model InvoicePost
+<div class="modal fade" id="invoice_modal">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+                                         {
+                                             Url = Url.Action("NewInvoice"),
+                                             OnSuccess = "onSuccessNewInvoice",
+                                             HttpMethod = "POST"
+                                         }, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი ინვოისი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">ძებნა:</label>
+                                <div class="col-md-4">
+                                    <select class="form-control input-sm" id="find_by">
+                                        <option value="1">ს/კ</option>
+                                        <option value="0">სახელით</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="payment_find" autocomplete="off">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" id="find">
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7 col-md-offset-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div id="abonent_area">
+                                            </div>
+                                            <div id="cards">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">თვე:</label>
+                                <div class="col-md-2">
+                                    @Html.TextBoxFor(c => c.Months, new { @class = "form-control input-sm", type = "number", min = 1 })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

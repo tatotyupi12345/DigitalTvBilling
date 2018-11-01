@@ -1,0 +1,387 @@
+﻿@model PagedListExtended<Order>
+
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "შეკვეთები";
+
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+    ViewBag.AddOrder = Utils.GetPermission("ORDER_ADD");
+    ViewBag.OrderStatusesAdd = Utils.GetPermission("ORDER_STATUSES_ADD");
+    ViewBag.OrderMontagesSeniors = Utils.GetPermission("ORDER_MONTAGES_SENIORS");
+    ViewBag.AbonentAddFromOrder = Utils.GetPermission("ABONENT_ADD_FROM_ORDER");
+    ViewBag.ApproveDamage = Utils.GetPermission("DAMAGE_APPROVE");
+    List<User> execUsers = ViewBag.ExecutorUsers;
+    List<User> Promo = ViewBag.Promo;
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/order.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript">
+        var groups = @Html.Raw(ViewBag.UserGroups);
+        var reasons = @Html.Raw(ViewBag.Reasons);
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .success__ {
+            background-color: #a4ff7e;
+        }
+
+        .canceledOerders {
+            background-color: #ff8080;
+        }
+
+        .loading {
+            background-color: #ffb366;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-1">
+        @if (ViewBag.AddOrder)
+        {
+            @Html.ActionLink("ახალი შეკვეთა", "New", "Order", null, new { @class = "btn btn-xs btn-primary" })
+        }
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <select class="form-control input-sm valid" data-tag="" data-val="true" id="order_status_filter" name="status">
+            <option value="-1"></option>
+            @foreach (OrderStatus l_s in Enum.GetValues(typeof(OrderStatus)))
+            {
+                var val = (int)Enum.Parse(typeof(OrderStatus), l_s.ToString());
+                string selected = "";
+                if (val == (int)ViewBag.selectedStatus)
+                {
+                    selected = "selected";
+                }
+                <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                selected = "";
+            }
+        </select>
+    </div>
+    <div class="col-sm-1">
+        <select class="form-control input-sm valid" data-tag="" data-val="true" id="order_poll_filter" name="status">
+            @*<option value="-1"></option>*@
+            @foreach (CallCentr l_s in Enum.GetValues(typeof(CallCentr)))
+            {
+                var val = (int)Enum.Parse(typeof(CallCentr), l_s.ToString());
+                string selected = "";
+                if (val == (int)ViewBag.selectedStatus)
+                {
+                    selected = "selected";
+                }
+                <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                selected = "";
+            }
+        </select>
+    </div>
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_filter">
+                <option value="0"></option>
+                @foreach (var item in execUsers.Where(u => u.Type == 4 || u.Type == 44).ToList())
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_answers">
+
+                @foreach (OrderCommitStatic l_s in Enum.GetValues(typeof(OrderCommitStatic)))
+                {
+                    var val = (int)Enum.Parse(typeof(OrderCommitStatic), l_s.ToString());
+                    string selected = "";
+                    if (val == (int)ViewBag.selectedStatus)
+                    {
+                        selected = "selected";
+                    }
+                    <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                    selected = "";
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1">
+        <button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+            <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+<div class="row" style="margin-top: 8px;">
+    <table class="table table-bordered" style="overflow-x:auto;">
+        <thead>
+            <tr>
+                <th style="width:3%;">
+                    №
+                </th>
+                <th style="width:12%;">
+                    თარიღი
+                </th>
+                <th style="width:10%;">
+                    აბონენტი
+                </th>
+                <th style="width:10%;">
+                    ქალაქი
+                </th>
+                <th style="width:5%;">
+                    საკონტაქტო
+                </th>
+                <th style="width:5%;">
+                    რესივ. რაოდ.
+                </th>
+                <th style="width:10%;">
+                    სტატუსი
+                </th>
+                <th style="width: 10%;">
+                    მომხმარებლები
+                </th>
+                <th style="width: 5%;">
+                    შენიშვნა
+                </th>
+                <th style="width: 5%;">
+                    გამოკითხვა
+                </th>
+                <th style="width: 5%;">
+                    ჯგუფი
+                </th>
+                <th style="width: 5%;">
+                    კომენტარი
+                </th>
+                <th style="width: 5%;">
+                    დარ:პასუხები
+                </th>
+                <th style="width: 5%;">
+                    დად.
+                </th>
+                <th style="width:5%; text-align:center;">
+                    <button type="button" class="btn btn-default btn-xs" id="btn_send_sms"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                    <input type="checkbox" id="check_all">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="orders_body">
+            @foreach (Order order in Model)
+            {
+                string classname = "";
+                string is_canceled = "";
+                if (order.Status == OrderStatus.Canceled)
+                {
+                    is_canceled = "canceledOerders";
+                }
+
+                switch (order.Status)
+                {
+                    case OrderStatus.Registered:
+                        break;
+                    case OrderStatus.Montage:
+                        break;
+                    case OrderStatus.Canceled:
+                        break;
+                    case OrderStatus.Worked:
+                        break;
+                    case OrderStatus.Delayed:
+                        break;
+                    case OrderStatus.Loading:
+                        classname = "loading";
+                        break;
+                    case OrderStatus.Sended:
+                        break;
+                    case OrderStatus.Closed:
+                        break;
+                    default:
+                        break;
+                }
+
+                { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(order.Data); }
+                <tr data-code="@order.Code" data-id="@order.Id" data-status="@order.Status" class="@classname @if(order.Status == OrderStatus.Closed) {@Html.Raw("success__")} else {@Html.Raw("")} @is_canceled">
+                    <td>@order.Num</td>
+                    <td>
+                        @Html.SetDateDisplay(order.Tdate)
+                        <br />
+                        <small>@Html.SetDateDisplay(order.GetDate)</small>
+                        <br />
+                        <small>@Html.SetDateDisplay(order.ChangeDate)</small>
+                    </td>
+                    <td>
+                        @order.Name.Split('/')[0]
+                        <br />
+                        <small>@order.Code</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.City
+                        <br />
+                        @if (!string.IsNullOrEmpty(ViewBag.Data.Customer.District))
+                        {
+                            @ViewBag.Data.Customer.District
+                            <br />
+                        }
+                        <small>@ViewBag.Data.Customer.Region</small>
+                        <br />
+                        <small>@ViewBag.Data.Customer.Village</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.Phone1
+                        <br />
+                        <small>@ViewBag.Data.Customer.Phone2</small>
+                    </td>
+                    <td>@order.ReceiversCount</td>
+                    <td class="_status">
+                        @Utils.GetEnumDescription(order.Status)
+                        <br />
+                        <small>
+
+                            @if (order.ExecutorID != 0)
+                            {
+                                var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                                if (nm != null)
+                                {
+                                    <label>
+                                        @nm.Name
+                                    </label>
+                                }
+                            }
+
+                        </small>
+                    </td>
+                    <td>
+                        @order.UserUser.Name
+                        <br />
+                        <small>@order.ChangerUser</small>
+                        <br />
+                        <small>@order.ApproveUser</small>
+                    </td>
+                    <td>
+                        @*@Html.Raw(String.Join("<br />", @order.OrderReasons.Select(r=>r.Reason.Name)))*@
+                        @ViewBag.Data.Customer.Desc
+                    </td>
+                    <td>
+                        @Utils.GetEnumDescription(order.Poll)
+                    </td>
+                    <td id="executor_wrapper_@order.Id">
+                        @if (order.ExecutorID != 0)
+                        {
+
+
+                            var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                            if (nm != null)
+                            {
+                                <label>
+                                    @nm.Name
+                                </label>
+                            }
+
+                            @*@order.UserGroup.Name*@
+
+                        }
+                    </td>
+                    <td>
+                        @order.comment
+                    </td>
+                    <td>
+                        @if (order.OrderReserveAnswers != null)
+                        {
+                            foreach (var item in order.OrderReserveAnswers.ToList())
+                            {
+                                @Utils.GetEnumDescription(item.reserve_answer)
+                                <br />
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (order.IsApproved)
+                        {
+                            <span class="bg-success">დად.</span>
+                        }
+                        else
+                        {
+                            if (!ViewBag.ApproveDamage)
+                            {
+                                <span class="glyphicon glyphicon-minus"></span>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-xs" type="button" onclick="orderApprove(@order.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                            }
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" value="@order.Id">
+                    </td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="order_dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <ul class="list-group">
+                @if (ViewBag.AbonentAddFromOrder)
+                {
+                    <li class="list-group-item" data-index="0">აბონენტის დამატება</li>
+                }
+                @if (ViewBag.AddOrder || ViewBag.OrderMontagesSeniors)
+                {
+                    <li class="list-group-item" data-index="1">შეკვეთის რედაქტირება</li>
+                }
+                @if (ViewBag.OrderMontagesSeniors)
+                {
+                    <li class="list-group-item" data-index="2">მისვლის თარიღის შეცვლა</li>
+                    <li class="list-group-item" data-index="4">ჯგუფის შეცვლა</li>
+                }
+                @if (ViewBag.OrderMontagesSeniors || ViewBag.OrderStatusesAdd)
+                {
+                    <li class="list-group-item" data-index="3">სტატუსის შეცვლა</li>
+                }
+                <li class="list-group-item" data-index="5">დეტალური</li>
+            </ul>
+        </div>
+    </div>
+</div>

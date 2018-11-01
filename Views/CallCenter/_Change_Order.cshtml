@@ -1,0 +1,185 @@
+﻿@model CallModel
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.CallCenter
+@using DigitalTVBilling.Helpers
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CallUser> execUsers = Model.users;
+
+}
+<script type="text/javascript" src="~/Static/Scripts/View/call_static.js"></script>
+
+}
+
+        <tbody id="orders_body">
+            @foreach (var order in Model.order)
+            {
+                string classname = "";
+                string is_canceled = "";
+                if (order.Status == OrderStatus.Canceled)
+                {
+                    is_canceled = "canceledOerders";
+                }
+
+                switch (order.Status)
+                {
+                    case OrderStatus.Registered:
+                        break;
+                    case OrderStatus.Montage:
+                        break;
+                    case OrderStatus.Canceled:
+                        break;
+                    case OrderStatus.Worked:
+                        break;
+                    case OrderStatus.Delayed:
+                        break;
+                    case OrderStatus.Loading:
+                        classname = "loading";
+                        break;
+                    case OrderStatus.Sended:
+                        break;
+                    case OrderStatus.Closed:
+                        break;
+                    default:
+                        break;
+                }
+
+                { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(order.Data); }
+                <tr data-code="@order.Code" data-id="@order.Id" data-status="@order.Status" class="@classname @if(order.Status == OrderStatus.Closed) {@Html.Raw("success__")} else {@Html.Raw("")} @is_canceled">
+                    <td id="executor_wrapper_@order.Id">
+                        @if (order.ExecutorID != 0)
+                        {
+
+
+                            var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                            if (nm != null)
+                            {
+
+                                <div>
+                                    <img src="@nm.image" style="width:115px; height:115px;" id="user_image_@order.Id" />
+                                </div>
+                                <label id="user_name_@order.Id">
+                                    @nm.Name
+                                </label>
+                            }
+
+                        }
+                        else
+                        {
+                            <div>
+                                <img src="~/tStyles/dist/img/user9-128x128.png" style="width:115px; height:115px;" />
+                            </div>
+
+                        }
+                        <div class="form-group">
+                            <label class="control-label ">ჯგუფი</label>
+                            <div>
+                                <select class="form-control input-sm" id="group_combo">
+                                    <option id="0"></option>
+                                    @foreach (var user in Model.users.Where(c => c.Type == 4).Select(s => s).ToList())
+                                    {
+                                        <option id="@user.Id" value="@order.Id" data-value="@user.image" onclick="groupsChange(@user.Id)">@user.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="">
+                                <div class="input-group input-group-sm date" id="txt_date" value="@order.Id">
+                                    <input type="text" class="form-control input-sm" readonly />
+                                    <a class="input-group-addon" style="cursor: pointer;">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        @Html.SetDateDisplay(order.Tdate)
+                        <br />
+                        <small>@Html.SetDateDisplay(order.GetDate)</small>
+                        <br />
+                        <small>@Html.SetDateDisplay(order.ChangeDate)</small>
+                    </td>
+                    <td>
+                        @order.Name.Split('/')[0]
+                        <br />
+                        <small>@order.Code</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.City
+                        <br />
+                        @if (!string.IsNullOrEmpty(ViewBag.Data.Customer.District))
+                        {
+                            @ViewBag.Data.Customer.District
+                            <br />
+                        }
+                        <small>@ViewBag.Data.Customer.Region</small>
+                        <br />
+                        <small>@ViewBag.Data.Customer.Village</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.Phone1
+                        <br />
+                        <small>@ViewBag.Data.Customer.Phone2</small>
+                    </td>
+                    <td>@order.ReceiversCount</td>
+                    <td class="_status">
+                        @Utils.GetEnumDescription(order.Status)
+                        <br />
+                        <small>
+
+                            @if (order.ExecutorID != 0)
+                            {
+                                var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                                if (nm != null)
+                                {
+                                    <label id="user_name_@order.Id">
+                                        @nm.Name
+                                    </label>
+                                }
+                            }
+
+                        </small>
+                    </td>
+                    <td>
+                        @execUsers.Where(e => e.Id == order.UserId).Select(s => s.Name).FirstOrDefault();
+                        <br />
+                        <small>@order.ChangerUser</small>
+                        <br />
+                        <small>@order.ApproveUser</small>
+                    </td>
+                    <td>
+                        @*@Html.Raw(String.Join("<br />", @order.OrderReasons.Select(r=>r.Reason.Name)))*@
+                        @ViewBag.Data.Customer.Desc
+                    </td>
+                    @*<td>
+                            <input type="checkbox" style="width:25px; height:25px;" onclick="groupsChange(@order.Id)" />
+                            <div class="form-group">
+                                <label class="control-label ">ჯგუფი</label>
+                                <div >
+                                    <select class="form-control input-sm" id="group_combo">
+                                        <option id="0"></option>
+                                        @foreach (var user in Model.users.Where(c => c.Type == 4).Select(s => s).ToList())
+                                        {
+                                            <option id="@user.Id" value="@order.Id" onclick="groupsChange(@user.Id)">@user.Name</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>*@
+
+
+                </tr>
+            }
+            @if (Model.order.Count() == 0)
+            {
+                <tr>
+                    <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+

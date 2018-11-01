@@ -1,0 +1,194 @@
+﻿<div class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">დეტალური ფილტრი</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label for="txt_abonent_select" class="control-label col-md-3">აბონენტი:</label>
+                            <div class="col-md-3">
+                                <select class="form-control input-sm" id="drp_abonent_select_by">
+                                    <option value=""></option>
+                                    <option value="c.city">ქალაქით</option>
+                                    <option value="c.village">სოფლით</option>
+                                    <option value="c.region">რეგიონით</option>
+                                    <option value="c.name+c.lastname">სახელით</option>
+                                    <option value="c.code">პ/ნ</option>
+                                    <option value="c.phone1">ტელეფონით</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="scrollable-dropdown-menu">
+                                    <input type="text" name="abonent_select" autocomplete="off" class="form-control input-sm" data-provide="typeahead" id="txt_abonent_select" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="drp_abonent_type" class="control-label col-md-3">აბონენტის ტიპი:</label>
+                            <div class="col-md-3">
+                                <select class="form-control input-sm" id="drp_abonent_type">
+                                    <option value="-1"></option>
+                                    <option value="0">ფიზიკური</option>
+                                    <option value="1">იურიდიული</option>
+                                    <option value="2">ტექნიკური</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="drp_status" class="control-label col-md-3">სტატუსი:</label>
+                            <div class="col-md-3">
+                                <select class="form-control input-sm" id="drp_status">
+                                    <option value="-1"></option>
+                                    <option value="0">აქტიური</option>
+                                    <option value="1">გათიშული</option>
+                                    <option value="2">დაპაუზებული</option>
+                                    <option value="3">მონტაჟი</option>
+                                    <option value="5">დაბლოკილი</option>
+                                    <option value="6">კრედიტი</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="drp_receiver" class="control-label col-md-3">რესივერი:</label>
+                            <div class="col-md-3">
+                                @Html.DropDownList("Receiver", new SelectList((List<IdName>)ViewBag.Receivers, "Id", "Name"), "", new { @class = "form-control input-sm", id = "drp_receiver" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="drp_tower" class="control-label col-md-3">ანძა:</label>
+                            <div class="col-md-3">
+                                @Html.DropDownList("Tower", new SelectList((List<IdName>)ViewBag.Towers, "Id", "Name"), "", new { @class = "form-control input-sm", id = "drp_tower" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="txt_abonent_num" class="control-label col-md-3">აბონენტის/ბარათის №:</label>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control input-sm" id="txt_abonent_num" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="balance_val">ბალანსი:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="balance_where" data-log="balance_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="balance_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="finish_date_val">Finish date:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="finish_date_where" data-log="finish_date_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="finish_date_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="pause_date_val">პაუზის დღე:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="pause_date_where" data-log="pause_date_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="pause_date_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="credit_date_val">კრედიტის დღე:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="credit_date_where" data-log="credit_date_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="credit_date_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="discount_val">ფასდაკლება:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="discount_where" data-log="discount_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="discount_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="status_val">სტატუსი:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="status_where" data-log="status_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="status_val" data-log>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-xs-4" for="service_val">მომსახურება:</label>
+                            <div class="col-xs-3" style="padding-right:0px;">
+                                <select class="form-control input-sm" id="service_where" data-log="service_val">
+                                    <option>></option>
+                                    <option>>=</option>
+                                    <option>=</option>
+                                    <option><</option>
+                                    <option><=</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3" style="padding-left:2px;">
+                                <input type="text" class="form-control input-sm" id="service_val" data-log>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" id="detail_filter_print">
+                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span> Excel
+                </button>
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-default btn-xs" id="detail_filter">
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> ძებნა
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

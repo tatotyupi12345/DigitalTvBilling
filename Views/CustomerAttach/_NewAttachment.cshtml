@@ -1,0 +1,143 @@
+﻿@model List<SellAttachment>
+@using DigitalTVBilling.Helpers
+@using DigitalTVBilling.Utils
+@{ 
+    //List<SellAttachment> attachs = ViewBag.attachmenlist;
+}
+
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">სტატუსი</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @*<div class="col-md-2">
+                            <button class="btn btn-default btn-xs" id="btn_excel">
+                                <span class="glyphicon glyphicon-print"></span> ექპორტი
+                            </button>
+                        </div>*@
+                    @*<div class="col-md-6 pull-right">
+                            <div class="form-group">
+                                @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="hidden" id="abonent_id" value="" />
+
+                        <label class="control-label col-md-4" for="code_word">პირადი ნომერი:</label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" id="customer_code"value="">
+                        </div>
+                        @* დილერი *@
+                        @*<br />
+                        <br />
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">დილერი:</label>
+                                    <div class="col-md-7">
+                                        <input id="isFromDiler" type="checkbox">
+                                        <input id="isFromDiler_" name="isFromDiler" type="hidden" value="true">
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="form-group diler_filter" style="display: none;">
+                                    <label class="control-label col-md-4" for="code_word">კოდური სიტყვა:</label>
+                                    <div class="col-md-7">
+                                        <input type="text" class="form-control" id="diler_code_word">
+                                    </div>
+                                </div>
+                                <div class="form-group diler_filter">
+                                    <div id="dilersWrapper_edit" class="" >
+                                        <div id="loader"></div>
+                                    </div>
+                                </div>
+                            </div>*@
+                        
+                            @*card tab content*@
+                            <div class="tab-content card-info">
+                                <div class="tab-pane active" id="card">
+                                    <section>
+                                        <div class="cont" id="cardlogs_table">
+
+                                            @*card table content*@
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th style="text-align:center;">აქსესუარი</th>
+                                                        <th style="text-align:center;">რაოდენობა</th>
+                                                       @* <th style="text-align:center;">გამოყენებულის რაოდენობა</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @for (int i = 0; i < Model.Count(); i++)
+                                                    {
+                                                        <tr>
+                                                            <td><img src="@Model[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                                            <td>@Model[i].Name</td>
+                                                            <td>
+                                                                <input data-val="@Model[i].Id" type="number" min="0" id="attachments_@i" value="" class="form-control input-sm" autocomplete="off" />
+                                                                <input type="hidden" id="attachments[@i].Id" value="@Model[i].Id" />
+                                                               </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+
+                                            @*@Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)*@
+                                        </div>
+                                    </section>
+                                </div>
+                                @*@{Html.RenderPartial("~/Views/Abonent/_CardInfoData.cshtml", @Model);}*@
+                            </div>
+                        </div>
+                </div>
+                <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/dropdowns-enhancement.js"></script>
+                <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+                <link rel="stylesheet" type="text/css" href="~/Static/Styles/dropdowns-enhancement.css" />
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="save" class="btn btn-default btn-xs" >შენახვა</button>
+                
+            </div>
+        </div>
+    </div>
+</div>

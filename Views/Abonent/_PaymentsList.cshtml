@@ -1,0 +1,74 @@
+﻿@model List<Payment>
+@using DigitalTVBilling.Helpers
+@if (ViewBag.CardId != 0)
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 30%;">
+                    თარიღი
+                    @*<div>თარიღი</div>*@
+                </th>
+                <th style="width: 40%;">
+                    გადახდის ტიპი
+                    @*<div>გადახდის ტიპი</div>*@
+                </th>
+                <th style="width: 15%;">
+                    თანხა
+                    @*<div>თანხა</div>*@
+                </th>
+                <th style="width: 15%;">
+                    იაჯრა
+
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Payment list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.PayType.Name</td>
+                    <td>@list.Amount</td>
+                    <td>@list.PayRent</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 30%;">
+                    თარიღი
+                    <div>თარიღი</div>
+                </th>
+                <th style="width: 25%;">
+                    ბარათი
+                    <div>ბარათი</div>
+                </th>
+                <th style="width: 25%;">
+                    გადახდის ტიპი
+                    <div>გადახდის ტიპი</div>
+                </th>
+                <th style="width: 20%;">
+                    თანხა
+                    <div>თანხა</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Payment list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.Card.AbonentNum</td>
+                    <td>@list.PayType.Name</td>
+                    <td>@list.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

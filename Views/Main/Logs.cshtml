@@ -1,0 +1,87 @@
+﻿@model PagedListExtended<LoggingList>
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+
+@{
+    Page.Title = "ლოგი";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.LogExport = Utils.GetPermission("LOG_EXPORT");
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/purl.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/View/logging.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon">ტიპი</span>
+            @Html.DropDownList("FilterType", new SelectList(ViewBag.Types, "Id", "Text", @Html.GetLogTypeRequestValue()), "", new { @class = "form-control", id = "id_type" })
+        </div>
+    </div>
+    <div class="col-md-2">
+        <select id="id_cols" class="form-control input-sm" name="FilterMode"></select>
+    </div>
+    <div class="col-md-2" id="filter_area">
+        <input type="search" id="FilterText" onkeyup="onFilterKeyUp(this)" class="form-control input-sm" />
+    </div>
+    <div style="float:right; margin-right:15px;">
+        @if (ViewBag.LogExport)
+        { 
+        <button class="btn btn-default btn-xs hide" id="btn_excel">
+            <span class="glyphicon glyphicon-print"></span>
+        </button>
+        }
+    </div>
+    <div class="col-md-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <!-- -->
+</div>
+<div style="margin-top: 8px;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 15%;">
+                    თარიღი
+                </th>
+                <th style="width: 20%;">
+                    მომხმარებლის ჯგუფი
+                </th>
+                <th style="width: 20%;">
+                    მომხმარებელი
+                </th>
+                <th style="width: 15%;">
+                    ტიპი
+                </th>
+                <th style="width: 15%;">
+                    მოქმედება
+                </th>
+                <th style="width: 15%;">აღწერა</th>
+            </tr>
+        </thead>
+        <tbody id="logging_body">
+            @foreach (DigitalTVBilling.Models.LoggingList log in Model)
+            {
+                <tr data-id="@log.Id" data-mode="@log.Mode">
+                    <td>@Html.SetDateDisplayWithSeconds(log.Tdate)</td>
+                    <td>@log.UserGroupName</td>
+                    <td>@log.UserName</td>
+                    <td>@Html.GetLogTypeDesc(log.Type)</td>
+                    <td>@Html.GetLogModeDesc(log.Mode)</td>
+                    <td>@log.Value</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>
+

@@ -1,0 +1,207 @@
+﻿@model IPagedList<DigitalTVBilling.Models.Card>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    Page.Title = "დაბლოკილი ბარათები";
+
+    int totalcount = ViewBag.totalItemsCount;
+    int _page = ViewBag.page;
+    int pagesize = ViewBag.pageSize;
+    int pos = totalcount - ((_page - 1) * pagesize);
+}
+
+@section head {
+
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+
+    <script type="text/javascript" src="~/Static/Scripts/md5.min.js"></script>
+
+    <script src="~/Static/Scripts/View/blocked_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+
+        .Delivered {
+            background-color: #ffd633;
+        }
+
+        .Passed {
+            background-color: #47d147;
+        }
+
+        .FixableProblematic {
+            background-color: #ffa64d;
+        }
+
+        .PassedProblematic {
+            background-color: #4d94ff;
+        }
+
+        .NotFixableProblem {
+            background-color: #ff3333;
+        }
+
+        .Stopped {
+            background-color: #adad85;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+    <div class="row" style="margin: 0px; overflow: auto;">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 1%;">
+                        №
+                    </th>
+                    <th style="width: 10%;">
+                        თარიღი
+                    </th>
+                    <th style="width: 5%;">
+                        სახელი
+                    </th>
+                    <th style="width: 8%;">
+                        გვარი
+                    </th>
+                    <th style="width: 8%;">
+                        პირ. ნომერი
+                    </th>
+                    <th style="width: 15%;">
+                        პაკეტი
+                    </th>
+                    <th style="width: 13%;">
+                        მისამართი
+                    </th>
+                    <th style="width: 8%;">
+                        ბარათის №
+                    </th>
+                    <th style="width: 8%;">
+                        ხელშეკრულების №
+                    </th>
+                    <th style="width: 5%;">
+                        აბონენტის №
+                    </th>
+                    <th style="width: 10%;">
+                        ვერიფიკაციის სტატუსი
+                    </th>
+
+                    <th style="width: 14%;">
+                        სტატუსი
+                    </th>
+                    @*<th style="width: 2%;">
+
+                    </th>*@
+
+
+                    @*<th style="width: 2%;">
+                        </th>*@
+                </tr>
+            </thead>
+            <tbody id="abonents_body">
+                @foreach (DigitalTVBilling.Models.Card card in Model)
+                {
+                    string classname = "";
+
+                    switch (card.JuridVerifyStatus)
+                    {
+                        case CardJuridicalVerifyStatus.Delivered:
+                            classname = "Delivered";
+                            break;
+                        case CardJuridicalVerifyStatus.Passed:
+                            classname = "Passed";
+                            break;
+                        case CardJuridicalVerifyStatus.FixableProblematic:
+                            classname = "FixableProblematic";
+                            break;
+                        case CardJuridicalVerifyStatus.PassedProblematic:
+                            classname = "PassedProblematic";
+                            break;
+                        case CardJuridicalVerifyStatus.NotFixableProblem:
+                            classname = "NotFixableProblem";
+                            break;
+                        case CardJuridicalVerifyStatus.Stopped:
+                            classname = "Stopped";
+                            break;
+                        default:
+                            break;
+                    }
+
+                    <tr data-id="@card.Id" data-card="@card.Id" class="@classname ">
+                        <td>
+                            @pos
+                        </td>
+                        <td>
+                            @card.Tdate
+                        </td>
+                        <td>
+                            @card.Customer.Name
+                        </td>
+
+                        <td>@card.Customer.LastName</td>
+                        <td>@card.Customer.Code</td>
+                        <td id="">
+
+                            @{
+                                List<SubscriptionPackage> subs = card.Subscribtions.Where(s => s.Status == true).FirstOrDefault().SubscriptionPackages.ToList();
+                                foreach (SubscriptionPackage sub in subs)
+                                {
+                                    <span>
+                                        @sub.Package.Name
+                                    </span>
+
+                                }
+                            }
+                        </td>
+                        <td>@card.Customer.Address</td>
+                        <td>@card.CardNum</td>
+                        <td>@card.DocNum</td>
+                        <td>@card.AbonentNum</td>
+                        <td>@Html.GetCardJuridStatusTypeDesc(card.JuridVerifyStatus)</td>
+
+                        <td>
+                            @Html.GetCardStatus(card.CardStatus)
+                            @*@if (card.User.SellerObj.type != null)
+                                {
+                                    @Html.Raw(Html.GetSellerTypeDesc((SellerType)card.User.SellerObj.type));
+                                }*@
+                        </td>
+
+                        @*<td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit change_card_status" id="change_card_status"></span></a></td>*@
+                        @*<td id="edit_abonent"><a href=""><span class="glyphicon glyphicon-edit" id="edit_abonent"></span></a></td>*@
+                    </tr>
+                                    pos--;
+                                }
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="10" style="text-align: center;">სია ცარიელია</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="paging">
+            @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>
+
+        <script type="text/javascript">
+
+        </script>
+    </div>
+

@@ -1,0 +1,275 @@
+﻿@model List<CustomerSellAttachments>
+@using DigitalTVBilling.Helpers;
+@using DigitalTVBilling.ListModels;
+
+@{
+    List<SellAttachment> attachs = ViewBag.attachmenlist;
+    List<User> user = ViewBag.Bort;
+    List<Diler> attac_diler = ViewBag.attachdilerID;
+
+    //int ind = 1;
+    //int k = 0;
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/dynamic_parse.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/typeahead.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/cities.js"></script>
+    <script type="text/javascript">
+        var has_readonly = @ViewBag.HasReadonly;
+    </script>
+
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_all.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_edit.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <script src="~/Static/Scripts/View/returned_card.js"></script>
+    <link href="~/Static/Styles/Returned_.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Static/Scripts/spinner/dist/css/gspinner.min.css">
+    <script src="~/Static/Scripts/spinner/dist/js/g-spinner.min.js"></script>
+    @*<link rel="stylesheet" href="https://silviomoreto.github.io/bootstrap-select/">*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+            //$(':checkbox').checkboxpicker();
+        });
+    </script>
+}
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+            margin-right: -40px;
+        }
+
+        .bootstrap-select.form-control:not([class*=col-]) {
+            width: 70%;
+        }
+        /* table and column width, table max height, alignments */
+        /*div.scroll {
+                width: 50%;
+            }*/
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 30px;
+            width: 70px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+                background-color: #c4ffab;
+            }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width:1100px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">სტატუსი</h4>
+            </div>
+            <div class="modal-body scroll" style="overflow-x:scroll;">
+                <div class="row">
+
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="hidden" id="abonent_id" value="@ViewBag.AbonentID" />
+
+                        <label class="control-label col-md-4" for="code_word">პირადი ნომერი:</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="customer_code" value="@ViewBag.Code" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-4">დრო:სარგებლობაში</label>
+                            <div class="col-md-2">
+                                <input id="Temporarily" type="checkbox">
+                                <input id="Temporarily_" name="Temporarily" type="hidden" value="false">
+                            </div>
+                        </div>
+
+                        @*card tab content*@
+                        <div class="tab-content card-info">
+                            <div class="tab-pane active" id="card">
+                                <section>
+                                    <div class="cont" id="cardlogs_table">
+
+                                        @*card table content*@
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:50px;"></th>
+                                                    <th style="text-align:center; width:50px;">აქსესუარი</th>
+                                                    <th style="text-align:start;width:50px;">რაოდენობა</th>
+                                                    @if (Model.Count() != 0)
+                                                    {
+                                                        int i = 0;
+                                                        foreach (var item in attac_diler)
+                                                        {
+                                                            i++;
+                                                            <th style="text-align:start;width:30px;" colspan="1" class="item_each" data-val="@user.Where(c => c.Id == item.diler).LastOrDefault().Id">@user.Where(c => c.Id == item.diler).LastOrDefault().Name <label data-val="@item.tdate" id="date_diler_@i" style="background-color: #d2d6de;color: #444;">@item.tdate</label></th>
+
+                                                        }
+                                                    }
+                                                    @*</th>*@
+                                                    <th style="text-align:center; width:100px">
+                                                        <div class="form-group" id="modal_bort">
+                                                            <div class="col-md-12 input-lg">
+
+                                                                <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" *@ name="team" id="team" style="height:30px;margin-right:-40px" @*multiple data-max-options="20"*@>
+                                                                    <option id="0" value="0" title=" "></option>
+                                                                    @foreach (var item in user)
+                                                                    {
+
+                                                                        <option id="@item.Id" value="@item.Id">@item.Name</option>
+
+                                                                    }
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                        @*<div class="form-group diler_filter_edit" style="display: none;">
+                                            <label class="control-label col-md-4" for="code_word">კოდური სიტყვა:</label>
+                                            <div class="col-md-7">
+                                                <input type="text" class="form-control" id="diler_code_edit">
+                                            </div>
+                                        </div>
+                                        <div class="form-group diler_true_false" style="display: none;">
+                                            <div class="col-md-12">
+                                                <label id="_label_true_false"></label>
+                                            </div>
+                                        </div>*@
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int k = 0, i = 0; i < attachs.Count(); i++)
+                                                {
+                                                    k = 0;
+                                                    int val = 0;
+                                                    if (Model.Count() != 0)
+                                                    {
+                                                        if (Model.Any(a => a.AttachmentID == attachs[i].Id))
+                                                        {
+                                                            var at = Model.Where(a => a.AttachmentID == attachs[i].Id).ToList();
+                                                            val = at.Select(s => s.Count).Sum();
+                                                        }
+                                                    }
+                                                    <tr>
+                                                        <td><img src="@attachs[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                                        <td>@attachs[i].Name</td>
+                                                        <td>
+                                                            <input data-val="@attachs[i].Id" type="number" min="0" id="attachment_s_@i" value="@val" disabled="disabled" class="form-control input-sm textbox" autocomplete="off" />
+                                                            <input type="hidden" id="attachment[@i].Id" value="@attachs[i].Id" />
+                                                        </td>
+                                                        @if (Model.Count() != 0)
+                                                        {
+                                                            foreach (var item in attac_diler)
+                                                            {
+                                                                int val_diler = 0;
+
+                                                                if (Model.Any(a => a.AttachmentID == attachs[i].Id))
+                                                                {
+
+                                                                    k++;
+                                                                    var at_diler = Model.Where(a => a.AttachmentID == attachs[i].Id && a.Diler_Id == item.diler && a.Tdate.ToString("dd-MM-yyy") == item.tdate).FirstOrDefault();
+                                                                    if (at_diler != null)
+                                                                    {
+                                                                        val_diler = at_diler.Count;
+                                                                    }
+                                                                    <td class="foreach_@k" id="add_button_@k">
+                                                                        <input data-val="@attachs[i].Id" type="number" min="0" id="attachment_@i@item.diler" value="@val_diler" class="form-control input-sm textbox" autocomplete="on" />
+                                                                        <input type="hidden" id="attachments[@i].Id" value="@attachs[i].Id" />
+                                                                    </td>
+                                                                }
+                                                                else
+                                                                {
+
+                                                                    k++;
+                                                                    <td class="foreach_@k" id="add_button_@k">
+                                                                        <input data-val="@attachs[i].Id" type="number" min="0" id="attachment_@i@item.diler" value="@val_diler" class="form-control input-sm textbox" autocomplete="off" />
+                                                                        <input type="hidden" id="attachment[@i].Id" value="@attachs[i].Id" />
+                                                                    </td>
+                                                                }
+                                                            }
+                                                        }
+                                                        <td>
+                                                            <input data-val="@attachs[i].Id" type="number" min="0" id="attachments_@i" value="" class=" for_hiden textbox" style="width:200px;" autocomplete="off" disabled />
+                                                            <input type="hidden" id="attachments[@i].Id" value="@attachs[i].Id" />
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        @*@Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)*@
+                                    </div>
+                                </section>
+                            </div>
+                            @*@{Html.RenderPartial("~/Views/Abonent/_CardInfoData.cshtml", @Model);}*@
+                        </div>
+                    </div>
+                </div>
+                @*<script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+                    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+                    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+                    <script type="text/javascript" src="/Static/Scripts/View/stoppedcards_info.js"></script>
+                    <script type="text/javascript" src="/Static/Scripts/dropdowns-enhancement.js"></script>
+                    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+                    <link rel="stylesheet" type="text/css" href="~/Static/Styles/dropdowns-enhancement.css" />*@
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="save" class="btn btn-success" disabled>შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

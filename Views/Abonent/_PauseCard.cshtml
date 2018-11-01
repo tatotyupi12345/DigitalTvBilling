@@ -1,0 +1,263 @@
+﻿@model DigitalTVBilling.Models.Card
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+
+}
+<div class="modal fade" id="card_pause_modal" role="dialog" aria-hidden="true">
+    <style type="text/css">
+        /**{font-family: 'Roboto', sans-serif;}*/
+
+
+        .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            top: 0.33333px;
+            right: 0;
+            bottom: 0;
+            left: 5px;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+        }
+
+            .option-input:hover {
+                background: #313a39;
+            }
+
+            .option-input:checked {
+                background: #ff0000;
+            }
+
+                .option-input:checked::before {
+                    /*height: 40px;*/
+                    width: 20px;
+                    position: absolute;
+                    content: '✔';
+                    display: inline-block;
+                    font-size: 14.66667px;
+                    text-align: center;
+                    line-height: 22px;
+                }
+
+                .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: #40e0d0;
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .option-input.radio::after {
+                    border-radius: 50%;
+                }
+
+        /*/*/
+        textarea, input {
+            font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+        }
+
+        .att div:hover {
+            background-color: #c4ffab;
+        }
+
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ბარათის დაპაუზება</h4>
+            </div>
+            <div class="modal-body">
+                <div id="card_pause_modal_error" style="margin-bottom: 10px;">
+                </div>
+                <div class="form-group">
+                    <label for="" class="control-label col-md-6">თვე:</label>
+                    <div class="col-md-6">
+                        @*<input type="number" class="form-control input-sm" id="txt_enter_pause_day" value="@ViewBag.CardPauseDay" autofocus />*@
+                        <select class="form-control input-sm" id="txt_enter_pause_day" value="@ViewBag.CardPauseDay" autofocus>
+                            @{
+                                var dateSpan = DateTimeSpan.CompareDates(DateTime.Now, Model.Tdate);
+                                dateSpan = DateTimeSpan.CompareDates(DateTime.Now, Model.Tdate.AddYears(dateSpan.Years + 5));
+                                bool lastDays = false;
+                                if(dateSpan.Years == 0 && dateSpan.Months == 0)
+                                {
+                                    if(dateSpan.Days < 30)
+                                    {
+                                        lastDays = true;
+                                    }
+                                }
+
+                                @*switch (Model.LastPauseType)
+                                {
+                                    case PauseType.OneMonthFree:
+                                        {
+                                            if (!lastDays)
+                                            {
+                                            <option value="@PauseType.OneMonth">30 დღე 3 ლარი</option>
+                                            <option value="@PauseType.ThreeMonth">90 დღე 9 ლარი</option>
+                                            }
+                                        }
+                                        break;
+                                    case PauseType.OneMonth:
+                                        {
+                                            if (Model.PauseFreeMonthUsed)
+                                            {
+                                                <option value="">პაუზის ლიმიტი ამოწურულია</option>
+                                            }
+                                            else
+                                            {
+                                                if (!lastDays)
+                                                {
+                                                    <option value="@PauseType.OneMonthFree">30 უფასო</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@PauseType.OneMonthFree">@dateSpan.Days უფასო</option>
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case PauseType.ThreeMonth:
+                                        {
+                                            if (Model.PauseFreeMonthUsed)
+                                            {
+                                                <option value="">პაუზის ლიმიტი ამოწურულია</option>
+                                            }
+                                            else
+                                            {
+                                                if (!lastDays)
+                                                {
+                                                    <option value="@PauseType.OneMonthFree">30 უფასო</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@PauseType.OneMonthFree">@dateSpan.Days უფასო</option>
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        {
+                                            if (!lastDays)
+                                            {
+                                                <option value="@PauseType.OneMonthFree">30 უფასო</option>
+                                                <option value="@PauseType.OneMonth">30 დღე 3 ლარი</option>
+                                                <option value="@PauseType.ThreeMonth">90 დღე 9 ლარი</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@PauseType.OneMonthFree">@dateSpan.Days უფასო</option>
+                                            }
+                                            
+                                        }
+                                        break;
+                                }*@
+                            if (!lastDays)
+                            {
+                                if (Model.PauseFreeMonthUsed && Model.NonFreePausedCountPerMonth == 3)
+                                {
+                                    if (Model.NonFreePausedCountPerMonth == 3)
+                                    {
+                                    <option value="">პაუზის ლიმიტი ამოწურულია</option>
+                                    }
+                                }
+
+                                if(!Model.PauseFreeMonthUsed)
+                                {
+                                    <option value="0">1 თვე უფასო</option>
+                                }
+
+                                if (Model.NonFreePausedCountPerMonth < 3)
+                                {
+                                    if (Model.NonFreePausedCountPerMonth == 0)
+                                    {
+                                    <option value="1">1 თვე 3 ლარი</option>
+                                    <option value="3">3 თვე 9 ლარი</option>
+                                    }
+                                    else
+                                    {
+                                    <option value="1">1 თვე 3 ლარი</option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Model.PauseFreeMonthUsed)
+                                {
+                                    <option value="">პაუზის ლიმიტი ამოწურულია</option>
+                                }
+                                else
+                                {
+                                    <option value="0">@dateSpan.Days დღე უფასო</option>
+                                }
+                            }
+                        }
+                        
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <table class="table table-bordered" style="margin-top:20px;">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    გამოყენებული პაუზების რაოდენობა:
+                                </td>
+                                <td>
+                                    ფასიანი: @Model.NonFreePausedCountPerMonth თვე.
+                                    <br />
+                                    უფასო: @(Model.PauseFreeMonthUsed ? 1 : 0) თვე.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>გამოყენების ლიმიტი:</td>
+                                <td>@dateSpan.Months თვე და @dateSpan.Days დღე</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                @if(Utils.GetPermission("CARD_PAUSED_CASE_DEBT")==true)
+                { 
+                <div class="form-group">
+                    <label class="col-md-5">უარყოფითი ბალანსის იგნორირება</label>
+                    <input type="checkbox" class="option-input radio"  id="_paused" value="0">
+                </div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="btn_card_pause" class="btn btn-primary btn-xs">დაპაუზება</button>
+            </div>
+        </div>
+    </div>
+</div>

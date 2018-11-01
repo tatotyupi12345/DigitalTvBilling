@@ -1,0 +1,437 @@
+﻿@model List<User>
+@{
+    int value = 0;
+    List<ReceiverAttachment> attachs = ViewBag.attachmenlist;
+    List<ReturnedCardAttachment> ReturnedCardAttachments = new List<ReturnedCardAttachment>();
+    ReturnedCardAttachments = ViewBag.ReturnedCardAttachments;
+}
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        /**{font-family: 'Roboto', sans-serif;}*/
+
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 32px;
+            width: 275px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+
+        .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            top: 5.33333px;
+            right: 0;
+            bottom: 0;
+            left: 5px;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+        }
+
+            .option-input:hover {
+                background: #313a39;
+            }
+
+            .option-input:checked {
+                background: #24694c;
+            }
+
+                .option-input:checked::before {
+                    /*height: 40px;*/
+                    width: 20px;
+                    position: absolute;
+                    content: '✔';
+                    display: inline-block;
+                    font-size: 14.66667px;
+                    text-align: center;
+                    line-height: 22px;
+                }
+
+                .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: #40e0d0;
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .option-input.radio::after {
+                    border-radius: 50%;
+                }
+
+        /*/*/
+        textarea, input {
+            font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+        }
+        /**/
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <input type="hidden" value="@ViewBag.card_id" id="card_id" />
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input class="hidden" value="@ViewBag.ReturnedCardCancel.Tdate" id="returned_date" />
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ბარათის გაუქმება</h4>
+                <h4 class="modal-title"><b>ბალანსი: </b><b id="return_balance">@ViewBag.Balance</b></h4>
+                <h4 class="modal-title"><b>საკომისიო: </b><b id="comm_ision"> @ViewBag.CommisionAmount</b></h4>
+                @if (((decimal)ViewBag.Balance - (decimal)ViewBag.CommisionAmount) > 0)
+                {
+                    <h4 class="modal-title"><b>მინ.გად: </b><b id="balance">0</b></h4>
+                    <input type="hidden" id="min_amount" value="0" />
+                }
+                else
+                {
+                    <h4 class="modal-title"><b>მინ.გად:</b> <b id="balance">@Math.Abs((decimal)ViewBag.Balance)</b></h4>
+                    <input type="hidden" id="min_amount" value="@Math.Abs(((decimal)ViewBag.Balance @*- (decimal)ViewBag.CommisionAmount*@))" />
+                }
+                @*<h4 class="modal-title"><b>მინ. გადასახდელი: @((decimal)ViewBag.Balance - (decimal)ViewBag.CommisionAmount)</b></h4>*@
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="Customer_Desc">მიზეზი:</label>
+                <div class="col-md-9  input-lg">
+                    <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" id="card_status">
+                        @foreach (ReturnCardStatus l_s in Enum.GetValues(typeof(ReturnCardStatus)))
+                        {
+
+                            var val = (int)Enum.Parse(typeof(ReturnCardStatus), l_s.ToString());
+
+                            //string selected = "";
+                            if (ViewBag.ReturnedCardCancel.reason == val)
+                            {
+                                <option selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                            }
+                            else
+                            {
+                                <option value="@val">@Utils.GetEnumDescription(l_s)</option>
+                            }
+                            // selected = "";
+                        }
+                    </select>
+                </div>
+            </div>
+            @if (ViewBag.ReturnedCardCancel.reason == 5 || ViewBag.ReturnedCardCancel.reason == 8)
+            {
+                <div class="form-group" style="display:block; margin-top:50px" id="return_">
+                    <label class="control-label col-md-3" for="Customer_Desc">კომენტარი:</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control  textbox" cols="50" data-tag="" id="Customer_Desc" name="Customer.Desc" rows="2" style="width:500px; height:60px; display:block;">@ViewBag.ReturnedCardCancel.info</textarea>
+                        <span class="field-validation-valid" data-valmsg-for="Customer.Desc" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group" style="display:none; margin-top:50px" id="return_">
+                    <label class="control-label col-md-3" for="Customer_Desc">კომენტარი:</label>
+                    <div class="col-md-7">
+                        <textarea class="form-control  textbox" cols="50" data-tag="" id="Customer_Desc" name="Customer.Desc" rows="2" placeholder='&#xf075; დაწერეთ კომენტარი' style="width:500px; height:60px;"></textarea>
+                        <span class="field-validation-valid" data-valmsg-for="Customer.Desc" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+            }
+            <br />
+            <div class="form-group" style="margin-top:5%">
+                <label class="control-label col-md-3" for="Customer_Desc">პრეტენზიული კლიენტი</label>
+                <div class="col-md-8">
+                    @if (ViewBag.ReturnedCardCancel.pretentious == 1)
+                    {
+                        <input type="checkbox" checked name="pretentious" id="pretentious" value="1">
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="pretentious" id="pretentious" value="1">
+                    }
+                </div>
+            </div>
+            <div class="form-group" style="margin-top:13%">
+                <label class="control-label col-md-3" for="Customer_Desc">საკომისიოს გარეშე</label>
+                <div class="col-md-8">
+                    <input type="checkbox" name="pretentious" id="commision" value="1">
+                </div>
+            </div>
+            <br />
+            <div class="form-group" style="margin-top:5%;" id="modal_bort">
+                <label class="control-label col-md-3" for="Customer_Desc">ბორტი:</label>
+                <div class="col-md-9 input-lg">
+
+                    <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" id="select">
+                        @foreach (var item in Model)
+                        {
+                            if (ViewBag.ReturnedCardCancel.bort_id == item.Id)
+                            {
+                                <option selected value="@item.Id">@item.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <br />
+
+            <div class="form-group" style="margin-top:5%">
+                <label class="control-label col-md-3" for="Customer_Desc">ჩასარიცხი თანხა:</label>
+                <div class="col-md-8 " id="dissabled_">
+                    @if (ViewBag.returncard_cash.Cash != 0)
+                    {
+                        <input type="checkbox" name="checkbox" id="checkbox_id1" value="1" checked>
+                        <input type="text" class="textbox" name="1" value="@ViewBag.returncard_cash.Cash" id="disabled_1"><br><br />
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="checkbox" id="checkbox_id1" value="1">
+                        <input type="text" class="textbox" name="1" value="ნაღდი" placeholder="ნაღდი" disabled="disabled" id="disabled_1"><br><br />
+                    }
+                    @if (ViewBag.returncard_cash.Cashless != 0)
+                    {
+                        <input type="checkbox" name="checkbox" id="checkbox_id3" value="3" checked>
+                        <input type="text" class="textbox" name="3" value="@ViewBag.returncard_cash.Cashless" id="disabled_3" placeholder="ნაღდი/უნაღდო">
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="checkbox" id="checkbox_id3" value="3">
+                        <input type="text" class="textbox" name="3" value="ნაღდი/უნაღდო" disabled="disabled" id="disabled_3" placeholder="ნაღდი/უნაღდო">
+                    }
+                </div>
+            </div>
+            <br />
+            <div class="form-group" style="margin-top:10%">
+                <label class="control-label col-md-3" for="Customer_Desc">გავიდეს მინუსში</label>
+                <div class="col-md-8">
+                    @if (ViewBag.Balance < 0)
+                    {
+                    <input type="checkbox" checked name="force" id="force" value="1">
+                    }
+                    else
+                    {
+                        <input type="checkbox" name="force" id="force" value="1">
+                    }
+                </div>
+            </div>
+            <br />
+            <div class="form-group" style="margin-top:5%">
+                <label class="control-label col-md-3" for="Customer_Desc">დას.თანხა:</label>
+                <div class="col-md-7">
+                    <input type="checkbox" name="checkbox" id="checkbox_return" value="2">
+                    <input type="text" class="textbox" id="card_balance" disabled="disabled" value="@(Math.Round(ViewBag.Returned_Amount,4))" />
+                </div>
+            </div>
+            <br />
+
+            <div class="form-group" style="margin-top:6%">
+                <div class="col-md-10">
+                    <label class="control-label col-md-3" for="Customer_Desc">
+                        სრული:
+                        @if (ReturnedCardAttachments.Count() != 0)
+                        {
+                            <input type="radio" class="option-input radio" name="example" id="full" />
+                        }
+                        else
+                        {
+                            <input type="radio" class="option-input radio" name="example" id="full" checked="checked" />
+                        }
+
+                        @* <input  type="radio" name="gender" value="1" id="full" checked> <br>*@
+                    </label>
+
+                    <label class="control-label col-md-3 " for="Customer_Desc">
+                        არასრული:
+                        @if (ReturnedCardAttachments.Count() != 0)
+                        {
+                            <input type="radio" class="option-input radio" name="example" id="incomplete" checked="checked" />
+                        }
+                        else
+                        {
+                            <input type="radio" class="option-input radio" name="example" id="incomplete" />
+                        }
+                        @* <input  type="radio" name="gender" value="2" id="incomplete"> <br>*@
+                    </label>
+                    @*<input type="radio" class="option-input radio" name="example" id="incomplete" />*@
+
+                </div>
+
+            </div>
+            @if (ReturnedCardAttachments.Count() != 0)
+            {
+                <div class="row" id="hidden" style="display:block">
+                    <div class="col-md-12">
+                        <input type="hidden" id="abonent_id" value="@ViewBag.AbonentID" />
+                        <div class="col-md-7">
+                        </div>
+
+                        <div class="tab-content card-info">
+                            <div class="tab-pane active" id="card">
+                                <section>
+                                    <div class="cont" id="cardlogs_table">
+
+                                        @*card table content*@
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th style="text-align:center;">აქსესუარი</th>
+                                                    <th style="text-align:center;">დანაკლისი</th>
+                                                    <th style="text-align:center;">ღირებულება</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < attachs.Count(); i++)
+                                                {
+
+                                                    <tr>
+                                                        <td><img src="@attachs[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                                        <td>@attachs[i].Name</td>
+                                                        <td>
+                                                            @if (ReturnedCardAttachments.Where(c => c.ReceiverAttachmentsID == attachs[i].Id).FirstOrDefault() != null)
+                                                            {
+                                                                <input type="checkbox" checked name="checkbox" data-id="@attachs[i].Id" id="attachments" value="@attachs[i].Id">
+                                                                <input type="hidden" id="@attachs[i].Price" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" name="checkbox" id="attachments" data-id="@attachs[i].Id" value="@attachs[i].Id">
+                                                                <input type="hidden" id="@attachs[i].Price" />
+                                                            }
+                                                        </td>
+                                                        <td id="@attachs[i].Id">@attachs[i].Price</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        @*@Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)*@
+                                    </div>
+                                </section>
+                            </div>
+                            @*@{Html.RenderPartial("~/Views/Abonent/_CardInfoData.cshtml", @Model);}*@
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row" id="hidden" style="display:none">
+                    <div class="col-md-12">
+                        <input type="hidden" id="abonent_id" value="@ViewBag.AbonentID" />
+                        <div class="col-md-7">
+                        </div>
+
+                        <div class="tab-content card-info">
+                            <div class="tab-pane active" id="card">
+                                <section>
+                                    <div class="cont" id="cardlogs_table">
+
+                                        @*card table content*@
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th style="text-align:center;">აქსესუარი</th>
+                                                    <th style="text-align:center;">დანაკლისი</th>
+                                                    <th style="text-align:center;">ღირებულება</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int i = 0; i < attachs.Count(); i++)
+                                                {
+
+                                                    <tr>
+                                                        <td><img src="@attachs[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                                        <td>@attachs[i].Name</td>
+                                                        <td>
+                                                            <input type="checkbox" name="checkbox" id="attachments" data-id="@attachs[i].Id" value="@attachs[i].Id">
+                                                            <input type="hidden" id="@attachs[i].Price" />
+                                                        </td>
+                                                        <td id="@attachs[i].Id">@attachs[i].Price</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        @*@Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)*@
+                                    </div>
+                                </section>
+                            </div>
+                            @*@{Html.RenderPartial("~/Views/Abonent/_CardInfoData.cshtml", @Model);}*@
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="modal-footer" style="margin-top:10%">
+                <button type="button" class="btn btn-default  btn-warning" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="return_save" class="btn btn-default  btn-success">შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

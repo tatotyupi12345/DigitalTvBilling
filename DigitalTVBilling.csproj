@@ -1,0 +1,2002 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8728492D-7D62-4756-A88E-FA84985CD221}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DigitalTVBilling</RootNamespace>
+    <AssemblyName>DigitalTVBilling</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44313</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <Use64BitIISExpress />
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Pdf, Version=18.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>..\packages\Aspose.Pdf.18.1.0\lib\net40-client\Aspose.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.7.0.1\lib\net45\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.2.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.2.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.5\lib\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="HiQPdf.Free, Version=10.10.0.0, Culture=neutral, PublicKeyToken=acd8b62594985b24, processorArchitecture=MSIL">
+      <HintPath>..\packages\hiqpdf.free.10.10\lib\net40\HiQPdf.Free.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Client.2.3.0\lib\net45\Microsoft.AspNet.SignalR.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.3.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.3.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.2.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=1.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.8.4\lib\net35\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.PdfGenerator, Version=1.1.15.0, Culture=neutral, PublicKeyToken=231663d50a41b451, processorArchitecture=MSIL">
+      <HintPath>..\packages\NReco.PdfGenerator.1.1.15\lib\net20\NReco.PdfGenerator.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.9.3.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.9.3\lib\net45\RazorEngine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Rotativa.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.Core.2.0.0\lib\net45\Rotativa.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rotativa.MVC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.MVC.2.0.3\lib\net45\Rotativa.MVC.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=17.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>..\packages\Select.HtmlToPdf.17.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Spire.License">
+      <HintPath>..\packages\FreeSpire.PDF.3.2\lib\net40\Spire.License.dll</HintPath>
+    </Reference>
+    <Reference Include="Spire.Pdf">
+      <HintPath>..\packages\FreeSpire.PDF.3.2\lib\net40\Spire.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\net45\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="ToyMp3, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ToyMp3.1.0.1.0\lib\NET40\ToyMp3.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\city_xml.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\ExcelExport.xslt" />
+    <Content Include="App_Data\Invoice.xslt" />
+    <Content Include="App_Data\LogExport.xslt" />
+    <Content Include="App_Data\privilegies.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="App_Data\rs_data.xml" />
+    <Content Include="App_Data\sql.sql" />
+    <None Include="Docs\PhysicalBuyDiller\მიღება-ჩაბარება დილერისთვის ფიზიკური.cshtml" />
+    <None Include="Docs\PhysicalBuyDiller\ნასყიდობა ფიზიკური პირი.cshtml" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Global.asax" />
+    <Content Include="Models\st_model.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>st_model.edmx</DependentUpon>
+      <LastGenOutput>st_model.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\st_model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>st_model.edmx</DependentUpon>
+      <LastGenOutput>st_model.cs</LastGenOutput>
+    </Content>
+    <None Include="Scripts\jquery-1.12.4.intellisense.js" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.3.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.3.0.min.js" />
+    <Content Include="Static\css\bpg-nino-mtavruli.css" />
+    <Content Include="Static\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Static\Images\logos.png" />
+    <Content Include="Static\Scripts\bootstrap-datepicker.js" />
+    <Content Include="Static\Scripts\bootstrap-datepicker.ka.js" />
+    <Content Include="Static\Scripts\bootstrap-treeview.min.js" />
+    <Content Include="Static\Scripts\bootstrap.min.js" />
+    <Content Include="Static\Scripts\checkboxlist.js" />
+    <Content Include="Static\Scripts\cities.js" />
+    <Content Include="Static\Scripts\core.js" />
+    <Content Include="Static\Scripts\dropdowns-enhancement.js" />
+    <Content Include="Static\Scripts\dynamic_parse.js" />
+    <Content Include="Static\Scripts\geokbd.js" />
+    <Content Include="Static\Scripts\highcharts-3d.js" />
+    <Content Include="Static\Scripts\highcharts.js" />
+    <Content Include="Static\Scripts\highstock.js" />
+    <Content Include="Static\Scripts\jquery-2.1.0.min.js" />
+    <Content Include="Static\Scripts\jquery.signalR-2.2.3.js" />
+    <Content Include="Static\Scripts\jquery.signalR-2.2.3.min.js" />
+    <Content Include="Static\Scripts\jquery.signalR-2.3.0.js" />
+    <Content Include="Static\Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Static\Scripts\jquery.validate.min.js" />
+    <Content Include="Static\Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Static\Scripts\md5.min.js" />
+    <Content Include="Static\Scripts\purl.js" />
+    <Content Include="Static\Scripts\View\abonent_all.js" />
+    <Content Include="Static\Scripts\View\abonent_edit.js" />
+    <Content Include="Static\Scripts\View\abonent_index.js" />
+    <Content Include="Static\Scripts\View\abonent_new.js" />
+    <Content Include="Static\Scripts\View\accountant_outside_sales_all.js" />
+    <Content Include="Static\Scripts\View\accountant_all.js" />
+    <Content Include="Static\Scripts\View\accsessory_index.js" />
+    <Content Include="Static\Scripts\View\blocked_index.js" />
+    <Content Include="Static\Scripts\View\call_static_index.js" />
+    <Content Include="Static\Scripts\View\call_static_order.js" />
+    <Content Include="Static\Scripts\View\call_static_cancellation.js" />
+    <Content Include="Static\Scripts\View\call_static_damage.js" />
+    <Content Include="Static\Scripts\View\cancel.js" />
+    <Content Include="Static\Scripts\View\cardstat_index.js" />
+    <Content Include="Static\Scripts\View\card_info.js" />
+    <Content Include="Static\Scripts\View\channels.js" />
+    <Content Include="Static\Scripts\View\channel_index.js" />
+    <Content Include="Static\Scripts\View\damage.js" />
+    <Content Include="Static\Scripts\View\get_card.js" />
+    <Content Include="Static\Scripts\View\invoice.js" />
+    <Content Include="Static\Scripts\View\jquery.signalR-2.2.3.js" />
+    <Content Include="Static\Scripts\View\jquery.signalR-2.2.3.min.js" />
+    <Content Include="Static\Scripts\View\juridical_index.js" />
+    <Content Include="Static\Scripts\View\logging.js" />
+    <Content Include="Static\Scripts\View\main.js" />
+    <Content Include="Static\Scripts\View\main2.js" />
+    <Content Include="Static\Scripts\View\message_index.js" />
+    <Content Include="Static\Scripts\View\order.js" />
+    <Content Include="Static\Scripts\View\package_charges_index.js" />
+    <Content Include="Static\Scripts\View\payment_index.js" />
+    <Content Include="Static\Scripts\View\reciver_acssery.js" />
+    <Content Include="Static\Scripts\View\replacement_index.js" />
+    <Content Include="Static\Scripts\View\report.js" />
+    <Content Include="Static\Scripts\View\returned_card.js" />
+    <Content Include="Static\Scripts\View\returned_index.js" />
+    <Content Include="Static\Scripts\View\sell_attachs_index.js" />
+    <Content Include="Static\Scripts\View\stoppedcards_info.js" />
+    <Content Include="Static\Scripts\View\stoppedcards_index.js" />
+    <Content Include="Static\Scripts\View\juridical_docs.js" />
+    <Content Include="Static\Scripts\View\utils.js" />
+    <Content Include="Static\Scripts\View\verify_index.js" />
+    <Content Include="Static\Scripts\View\verify_info.js" />
+    <Content Include="Static\Styles\bootstrap-treeview.min.css" />
+    <Content Include="Static\Styles\bpg-nino-mtavruli.css" />
+    <Content Include="Static\Styles\bpg-nino-mtavruli.min.css" />
+    <Content Include="Static\Styles\Call_Centr.css" />
+    <Content Include="Static\Styles\datepicker3.css" />
+    <Content Include="Static\Styles\dropdowns-enhancement.css" />
+    <Content Include="Static\Styles\JuridicalStyle.css" />
+    <Content Include="Static\Styles\Returned_.css" />
+    <Content Include="Static\Styles\styles.css" />
+    <Content Include="Static\Styles\test.css" />
+    <Content Include="Static\templates\cancel_coment_change.html" />
+    <Content Include="Static\templates\cancel_status_change.html" />
+    <Content Include="Static\templates\damage_status_change.html" />
+    <Content Include="Static\templates\getdate_change.html" />
+    <Content Include="Static\templates\group_change.html" />
+    <Content Include="Static\templates\message_result_modal.html" />
+    <Content Include="Static\templates\order_cards.html" />
+    <Content Include="Static\templates\order_status_change.html" />
+    <Content Include="Static\templates\reason_desc.html" />
+    <Content Include="Static\templates\services_res_modal.html" />
+    <Content Include="tStyles\bootstrap\css\bootstrap.css" />
+    <Content Include="tStyles\bootstrap\css\bootstrap.min.css" />
+    <Content Include="tStyles\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="tStyles\bootstrap\js\bootstrap.js" />
+    <Content Include="tStyles\bootstrap\js\bootstrap.min.js" />
+    <Content Include="tStyles\bootstrap\js\npm.js" />
+    <Content Include="tStyles\dist\css\AdminLTE.css" />
+    <Content Include="tStyles\dist\css\AdminLTE.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-black-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-black-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-black.css" />
+    <Content Include="tStyles\dist\css\skins\skin-black.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-blue-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-blue-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-blue.css" />
+    <Content Include="tStyles\dist\css\skins\skin-blue.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-green-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-green-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-green.css" />
+    <Content Include="tStyles\dist\css\skins\skin-green.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-purple-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-purple-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-purple.css" />
+    <Content Include="tStyles\dist\css\skins\skin-purple.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-red-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-red-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-red.css" />
+    <Content Include="tStyles\dist\css\skins\skin-red.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-yellow-light.css" />
+    <Content Include="tStyles\dist\css\skins\skin-yellow-light.min.css" />
+    <Content Include="tStyles\dist\css\skins\skin-yellow.css" />
+    <Content Include="tStyles\dist\css\skins\skin-yellow.min.css" />
+    <Content Include="tStyles\dist\css\skins\_all-skins.css" />
+    <Content Include="tStyles\dist\css\skins\_all-skins.min.css" />
+    <Content Include="tStyles\dist\img\avatar.png" />
+    <Content Include="tStyles\dist\img\avatar04.png" />
+    <Content Include="tStyles\dist\img\avatar2.png" />
+    <Content Include="tStyles\dist\img\avatar3.png" />
+    <Content Include="tStyles\dist\img\avatar5.png" />
+    <Content Include="tStyles\dist\img\boxed-bg.jpg" />
+    <Content Include="tStyles\dist\img\boxed-bg.png" />
+    <Content Include="tStyles\dist\img\credit\american-express.png" />
+    <Content Include="tStyles\dist\img\credit\cirrus.png" />
+    <Content Include="tStyles\dist\img\credit\mastercard.png" />
+    <Content Include="tStyles\dist\img\credit\mestro.png" />
+    <Content Include="tStyles\dist\img\credit\paypal.png" />
+    <Content Include="tStyles\dist\img\credit\paypal2.png" />
+    <Content Include="tStyles\dist\img\credit\visa.png" />
+    <Content Include="tStyles\dist\img\default-50x50.gif" />
+    <Content Include="tStyles\dist\img\icons.png" />
+    <Content Include="tStyles\dist\img\photo1.png" />
+    <Content Include="tStyles\dist\img\photo2.png" />
+    <Content Include="tStyles\dist\img\photo3.jpg" />
+    <Content Include="tStyles\dist\img\photo4.jpg" />
+    <Content Include="tStyles\dist\img\user1-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user2-160x160.jpg" />
+    <Content Include="tStyles\dist\img\user3-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user4-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user5-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user6-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user7-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user8-128x128.jpg" />
+    <Content Include="tStyles\dist\img\user9-128x128.png" />
+    <Content Include="tStyles\dist\js\app.js" />
+    <Content Include="tStyles\dist\js\app.min.js" />
+    <Content Include="tStyles\dist\js\demo.js" />
+    <Content Include="tStyles\dist\js\pages\dashboard.js" />
+    <Content Include="tStyles\dist\js\pages\dashboard2.js" />
+    <Content Include="tStyles\plugins\bootstrap-slider\bootstrap-slider.js" />
+    <Content Include="tStyles\plugins\bootstrap-slider\slider.css" />
+    <Content Include="tStyles\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.js" />
+    <Content Include="tStyles\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.min.js" />
+    <Content Include="tStyles\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.css" />
+    <Content Include="tStyles\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.min.css" />
+    <Content Include="tStyles\plugins\chartjs\Chart.js" />
+    <Content Include="tStyles\plugins\chartjs\Chart.min.js" />
+    <Content Include="tStyles\plugins\ckeditor\adapters\jquery.js" />
+    <Content Include="tStyles\plugins\ckeditor\build-config.js" />
+    <Content Include="tStyles\plugins\ckeditor\ckeditor.js" />
+    <Content Include="tStyles\plugins\ckeditor\config.js" />
+    <Content Include="tStyles\plugins\ckeditor\contents.css" />
+    <Content Include="tStyles\plugins\ckeditor\lang\af.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ar.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\bg.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\bn.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\bs.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\cs.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\cy.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\da.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\de-ch.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\de.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\el.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\en-au.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\en-ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\en-gb.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\en.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\eo.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\es.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\et.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\eu.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\fa.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\fi.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\fo.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\fr-ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\fr.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\gl.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\gu.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\he.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\hi.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\hr.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\hu.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\id.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\is.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\it.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ja.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ka.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\km.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ko.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ku.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\lt.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\lv.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\mk.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\mn.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ms.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\nb.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\nl.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\no.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\pl.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\pt-br.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\pt.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ro.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ru.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\si.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sk.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sl.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sq.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sr-latn.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sr.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\sv.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\th.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\tr.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\tt.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\ug.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\uk.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\vi.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\zh-cn.js" />
+    <Content Include="tStyles\plugins\ckeditor\lang\zh.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\af.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\de-ch.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\es.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\et.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\eu.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\fo.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\he.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\id.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\it.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\km.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\no.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\si.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\th.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\tt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\zh.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\a11yhelp\dialogs\lang\_translationstatus.txt" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\about\dialogs\hidpi\logo_ckeditor.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\icons.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\icons_hidpi.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\image\dialogs\image.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\image\images\noimage.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\link\images\hidpi\anchor.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\magicline\images\hidpi\icon-rtl.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\magicline\images\hidpi\icon.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\magicline\images\icon-rtl.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\magicline\images\icon.png" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\pastefromword\filter\default.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\scayt\dialogs\options.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\scayt\dialogs\toolbar.css" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\af.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ar.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\bg.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\cs.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\da.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\de-ch.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\en-gb.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\es.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\et.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\eu.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\fa.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\fi.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\fr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\gl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\he.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\hr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\hu.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\id.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\it.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ja.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\km.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ko.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ku.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\lt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\lv.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\nb.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\nl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\no.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\sl.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\sq.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\sv.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\th.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\tt.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\ug.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\uk.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\vi.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\zh.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\lang\_translationstatus.txt" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\table\dialogs\table.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\dialogs\ciframe.html" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\dialogs\tmpFrameset.html" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\dialogs\wsc.css" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\dialogs\wsc.js" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\css\samples.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\img\github-top.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\img\header-bg.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\img\header-separator.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\img\logo.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\img\navigation-tip.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\index.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\js\sample.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\js\sf.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\ajax.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\api.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\appendto.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\assets\inlineall\logo.png" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\assets\outputxhtml\outputxhtml.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\assets\sample.jpg" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\assets\uilanguages\languages.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\datafiltering.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\dialog\assets\my_dialog.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\dialog\dialog.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\divreplace.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\enterkey\enterkey.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\htmlwriter\assets\outputforflash\outputforflash.swf" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\htmlwriter\assets\outputforflash\swfobject.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\htmlwriter\outputforflash.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\htmlwriter\outputhtml.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\index.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\inlineall.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\inlinebycode.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\inlinetextarea.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\jquery.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\magicline\magicline.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\readonly.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\replacebyclass.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\replacebycode.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\sample.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\sample.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\tabindex.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\toolbar\toolbar.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\uicolor.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\uilanguages.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\wysiwygarea\fullpage.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\xhtmlstyle.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\css\fontello.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\fontello.svg" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\LICENSE.txt" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\index.html" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\js\abstracttoolbarmodifier.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\js\fulltoolbareditor.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\js\toolbarmodifier.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\js\toolbartextmodifier.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\codemirror.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\codemirror.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\javascript.js" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\neo.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\show-hint.css" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\show-hint.js" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\dialog.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\dialog_ie.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\dialog_ie7.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\dialog_ie8.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\dialog_iequirks.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor_gecko.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor_ie.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor_ie7.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor_ie8.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\editor_iequirks.css" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\icons.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\icons_hidpi.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\arrow.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\close.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\hidpi\close.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\hidpi\lock-open.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\hidpi\lock.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\hidpi\refresh.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\lock-open.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\lock.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\refresh.png" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\images\spinner.gif" />
+    <Content Include="tStyles\plugins\ckeditor\styles.js" />
+    <Content Include="tStyles\plugins\colorpicker\bootstrap-colorpicker.css" />
+    <Content Include="tStyles\plugins\colorpicker\bootstrap-colorpicker.js" />
+    <Content Include="tStyles\plugins\colorpicker\bootstrap-colorpicker.min.css" />
+    <Content Include="tStyles\plugins\colorpicker\bootstrap-colorpicker.min.js" />
+    <Content Include="tStyles\plugins\colorpicker\img\alpha-horizontal.png" />
+    <Content Include="tStyles\plugins\colorpicker\img\alpha.png" />
+    <Content Include="tStyles\plugins\colorpicker\img\hue-horizontal.png" />
+    <Content Include="tStyles\plugins\colorpicker\img\hue.png" />
+    <Content Include="tStyles\plugins\colorpicker\img\saturation.png" />
+    <Content Include="tStyles\plugins\datatables\dataTables.bootstrap.css" />
+    <Content Include="tStyles\plugins\datatables\dataTables.bootstrap.js" />
+    <Content Include="tStyles\plugins\datatables\dataTables.bootstrap.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\css\dataTables.autoFill.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\css\dataTables.autoFill.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\columns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\complete-callback.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\fill-both.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\fill-horizontal.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\scrolling.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\examples\step-callback.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\images\filler.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\js\dataTables.autoFill.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\js\dataTables.autoFill.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\AutoFill\Readme.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\css\dataTables.colReorder.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\css\dataTables.colReorder.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\alt_insert.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\colvis.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\col_filter.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\fixedcolumns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\fixedheader.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\jqueryui.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\new_init.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\predefined.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\realtime.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\reset.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\scrolling.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\server_side.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\examples\state_save.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\images\insert.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\js\dataTables.colReorder.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\js\dataTables.colReorder.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\License.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\css\dataTables.colVis.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\css\dataTables.colvis.jqueryui.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\css\dataTables.colVis.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\button_order.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\exclude_columns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\group_columns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\jqueryui.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\mouseover.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\new_init.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\restore.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\text.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\title_callback.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\two_tables.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\examples\two_tables_identical.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\js\dataTables.colVis.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\js\dataTables.colVis.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\License.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\css\dataTables.fixedColumns.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\css\dataTables.fixedColumns.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\bootstrap.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\colvis.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\col_filter.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\css_size.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\index_column.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\left_right_columns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\right_column.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\rowspan.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\server-side-processing.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\size_fixed.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\size_fluid.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\examples\two_columns.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\js\dataTables.fixedColumns.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\js\dataTables.fixedColumns.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\License.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\css\dataTables.fixedHeader.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\css\dataTables.fixedHeader.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\header_footer.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\top_left_right.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\two_tables.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\examples\zIndexes.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\js\dataTables.fixedHeader.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\js\dataTables.fixedHeader.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedHeader\Readme.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\css\dataTables.keyTable.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\css\dataTables.keyTable.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\examples\events.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\examples\html.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\examples\scrolling.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\js\dataTables.keyTable.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\js\dataTables.keyTable.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\KeyTable\Readme.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\css\dataTables.responsive.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\column-control.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\custom-renderer.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\disable-child-rows.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\right-column.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\child-rows\whole-row-control.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\auto.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\classes.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\complexHeader.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\fixedHeader.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\display-control\init-classes.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\ajax.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\className.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\default.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\new.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\initialisation\option.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\styling\bootstrap.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\styling\compact.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\styling\foundation.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\styling\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\examples\styling\scrolling.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\js\dataTables.responsive.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\js\dataTables.responsive.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\License.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\css\dataTables.scroller.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\css\dataTables.scroller.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\api_scrolling.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\data\2500.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\large_js_source.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\server-side_processing.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\state_saving.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\images\loading-background.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\js\dataTables.scroller.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\js\dataTables.scroller.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\Readme.txt" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\css\dataTables.tableTools.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\css\dataTables.tableTools.min.css" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\ajax.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\alter_buttons.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\bootstrap.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\button_text.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\collection.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\defaults.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\index.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\jqueryui.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\multiple_tables.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\multi_instance.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\new_init.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\pdf_message.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\plug-in.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\select_column.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\select_multi.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\select_os.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\select_single.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\simple.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\examples\swf_path.html" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\collection.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\collection_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\copy.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\copy_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\csv.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\csv_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\pdf.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\pdf_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\print.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\print_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\xls.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\xls_hover.png" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\js\dataTables.tableTools.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\js\dataTables.tableTools.min.js" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\swf\copy_csv_xls.swf" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="tStyles\plugins\datatables\images\sort_asc.png" />
+    <Content Include="tStyles\plugins\datatables\images\sort_asc_disabled.png" />
+    <Content Include="tStyles\plugins\datatables\images\sort_both.png" />
+    <Content Include="tStyles\plugins\datatables\images\sort_desc.png" />
+    <Content Include="tStyles\plugins\datatables\images\sort_desc_disabled.png" />
+    <Content Include="tStyles\plugins\datatables\jquery.dataTables.css" />
+    <Content Include="tStyles\plugins\datatables\jquery.dataTables.js" />
+    <Content Include="tStyles\plugins\datatables\jquery.dataTables.min.css" />
+    <Content Include="tStyles\plugins\datatables\jquery.dataTables.min.js" />
+    <Content Include="tStyles\plugins\datatables\jquery.dataTables_themeroller.css" />
+    <Content Include="tStyles\plugins\datepicker\bootstrap-datepicker.js" />
+    <Content Include="tStyles\plugins\datepicker\datepicker3.css" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ar.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.az.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.bg.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ca.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.cy.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.da.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.de.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.el.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.es.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.et.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.fa.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.fi.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.gl.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.he.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.hr.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.hu.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.id.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.is.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.it.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ka.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.kk.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.kr.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.lt.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.lv.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.mk.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ms.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.nl-BE.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.nl.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.no.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.pl.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.pt-BR.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.pt.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ro.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.rs-latin.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.rs.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ru.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.sk.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.sl.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.sq.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.sv.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.sw.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.th.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.ua.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.vi.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.zh-CN.js" />
+    <Content Include="tStyles\plugins\datepicker\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="tStyles\plugins\daterangepicker\daterangepicker.css" />
+    <Content Include="tStyles\plugins\daterangepicker\daterangepicker.js" />
+    <Content Include="tStyles\plugins\daterangepicker\moment.js" />
+    <Content Include="tStyles\plugins\daterangepicker\moment.min.js" />
+    <Content Include="tStyles\plugins\fastclick\fastclick.js" />
+    <Content Include="tStyles\plugins\fastclick\fastclick.min.js" />
+    <Content Include="tStyles\plugins\flot\excanvas.js" />
+    <Content Include="tStyles\plugins\flot\excanvas.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.colorhelpers.js" />
+    <Content Include="tStyles\plugins\flot\jquery.colorhelpers.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.canvas.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.canvas.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.categories.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.categories.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.crosshair.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.crosshair.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.errorbars.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.errorbars.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.fillbetween.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.fillbetween.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.image.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.image.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.navigate.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.navigate.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.pie.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.pie.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.resize.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.resize.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.selection.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.selection.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.stack.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.stack.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.symbol.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.symbol.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.threshold.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.threshold.min.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.time.js" />
+    <Content Include="tStyles\plugins\flot\jquery.flot.time.min.js" />
+    <Content Include="tStyles\plugins\fullcalendar\fullcalendar.css" />
+    <Content Include="tStyles\plugins\fullcalendar\fullcalendar.js" />
+    <Content Include="tStyles\plugins\fullcalendar\fullcalendar.min.css" />
+    <Content Include="tStyles\plugins\fullcalendar\fullcalendar.min.js" />
+    <Content Include="tStyles\plugins\fullcalendar\fullcalendar.print.css" />
+    <Content Include="tStyles\plugins\iCheck\all.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\aero%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\aero.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\aero.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\blue%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\blue.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\blue.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\flat%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\flat.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\flat.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\green%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\green.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\green.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\grey%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\grey.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\grey.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\orange%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\orange.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\orange.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\pink%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\pink.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\pink.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\purple%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\purple.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\purple.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\red%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\red.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\red.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\yellow%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\yellow.css" />
+    <Content Include="tStyles\plugins\iCheck\flat\yellow.png" />
+    <Content Include="tStyles\plugins\iCheck\flat\_all.css" />
+    <Content Include="tStyles\plugins\iCheck\futurico\futurico%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\futurico\futurico.css" />
+    <Content Include="tStyles\plugins\iCheck\futurico\futurico.png" />
+    <Content Include="tStyles\plugins\iCheck\icheck.js" />
+    <Content Include="tStyles\plugins\iCheck\icheck.min.js" />
+    <Content Include="tStyles\plugins\iCheck\line\aero.css" />
+    <Content Include="tStyles\plugins\iCheck\line\blue.css" />
+    <Content Include="tStyles\plugins\iCheck\line\green.css" />
+    <Content Include="tStyles\plugins\iCheck\line\grey.css" />
+    <Content Include="tStyles\plugins\iCheck\line\line%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\line\line.css" />
+    <Content Include="tStyles\plugins\iCheck\line\line.png" />
+    <Content Include="tStyles\plugins\iCheck\line\orange.css" />
+    <Content Include="tStyles\plugins\iCheck\line\pink.css" />
+    <Content Include="tStyles\plugins\iCheck\line\purple.css" />
+    <Content Include="tStyles\plugins\iCheck\line\red.css" />
+    <Content Include="tStyles\plugins\iCheck\line\yellow.css" />
+    <Content Include="tStyles\plugins\iCheck\line\_all.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\aero%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\aero.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\aero.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\blue%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\blue.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\blue.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\green%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\green.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\green.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\grey%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\grey.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\grey.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\minimal%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\minimal.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\minimal.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\orange%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\orange.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\orange.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\pink%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\pink.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\pink.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\purple%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\purple.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\purple.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\red%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\red.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\red.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\yellow%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\yellow.css" />
+    <Content Include="tStyles\plugins\iCheck\minimal\yellow.png" />
+    <Content Include="tStyles\plugins\iCheck\minimal\_all.css" />
+    <Content Include="tStyles\plugins\iCheck\polaris\polaris%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\polaris\polaris.css" />
+    <Content Include="tStyles\plugins\iCheck\polaris\polaris.png" />
+    <Content Include="tStyles\plugins\iCheck\square\aero%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\aero.css" />
+    <Content Include="tStyles\plugins\iCheck\square\aero.png" />
+    <Content Include="tStyles\plugins\iCheck\square\blue%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\blue.css" />
+    <Content Include="tStyles\plugins\iCheck\square\blue.png" />
+    <Content Include="tStyles\plugins\iCheck\square\green%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\green.css" />
+    <Content Include="tStyles\plugins\iCheck\square\green.png" />
+    <Content Include="tStyles\plugins\iCheck\square\grey%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\grey.css" />
+    <Content Include="tStyles\plugins\iCheck\square\grey.png" />
+    <Content Include="tStyles\plugins\iCheck\square\orange%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\orange.css" />
+    <Content Include="tStyles\plugins\iCheck\square\orange.png" />
+    <Content Include="tStyles\plugins\iCheck\square\pink%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\pink.css" />
+    <Content Include="tStyles\plugins\iCheck\square\pink.png" />
+    <Content Include="tStyles\plugins\iCheck\square\purple%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\purple.css" />
+    <Content Include="tStyles\plugins\iCheck\square\purple.png" />
+    <Content Include="tStyles\plugins\iCheck\square\red%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\red.css" />
+    <Content Include="tStyles\plugins\iCheck\square\red.png" />
+    <Content Include="tStyles\plugins\iCheck\square\square%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\square.css" />
+    <Content Include="tStyles\plugins\iCheck\square\square.png" />
+    <Content Include="tStyles\plugins\iCheck\square\yellow%402x.png" />
+    <Content Include="tStyles\plugins\iCheck\square\yellow.css" />
+    <Content Include="tStyles\plugins\iCheck\square\yellow.png" />
+    <Content Include="tStyles\plugins\iCheck\square\_all.css" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.date.extensions.js" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.extensions.js" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.js" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.numeric.extensions.js" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.phone.extensions.js" />
+    <Content Include="tStyles\plugins\input-mask\jquery.inputmask.regex.extensions.js" />
+    <Content Include="tStyles\plugins\input-mask\phone-codes\readme.txt" />
+    <Content Include="tStyles\plugins\ionslider\img\sprite-skin-flat.png" />
+    <Content Include="tStyles\plugins\ionslider\img\sprite-skin-nice.png" />
+    <Content Include="tStyles\plugins\ionslider\ion.rangeSlider.css" />
+    <Content Include="tStyles\plugins\ionslider\ion.rangeSlider.min.js" />
+    <Content Include="tStyles\plugins\ionslider\ion.rangeSlider.skinFlat.css" />
+    <Content Include="tStyles\plugins\ionslider\ion.rangeSlider.skinNice.css" />
+    <Content Include="tStyles\plugins\jQueryUI\jquery-ui.js" />
+    <Content Include="tStyles\plugins\jQueryUI\jquery-ui.min.js" />
+    <Content Include="tStyles\plugins\jQuery\jquery-2.2.3.min.js" />
+    <Content Include="tStyles\plugins\jvectormap\jquery-jvectormap-1.2.2.css" />
+    <Content Include="tStyles\plugins\jvectormap\jquery-jvectormap-1.2.2.min.js" />
+    <Content Include="tStyles\plugins\jvectormap\jquery-jvectormap-usa-en.js" />
+    <Content Include="tStyles\plugins\jvectormap\jquery-jvectormap-world-mill-en.js" />
+    <Content Include="tStyles\plugins\knob\jquery.knob.js" />
+    <Content Include="tStyles\plugins\morris\morris.css" />
+    <Content Include="tStyles\plugins\morris\morris.js" />
+    <Content Include="tStyles\plugins\morris\morris.min.js" />
+    <Content Include="tStyles\plugins\pace\pace.css" />
+    <Content Include="tStyles\plugins\pace\pace.js" />
+    <Content Include="tStyles\plugins\pace\pace.min.css" />
+    <Content Include="tStyles\plugins\pace\pace.min.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ar.js" />
+    <Content Include="tStyles\plugins\select2\i18n\az.js" />
+    <Content Include="tStyles\plugins\select2\i18n\bg.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ca.js" />
+    <Content Include="tStyles\plugins\select2\i18n\cs.js" />
+    <Content Include="tStyles\plugins\select2\i18n\da.js" />
+    <Content Include="tStyles\plugins\select2\i18n\de.js" />
+    <Content Include="tStyles\plugins\select2\i18n\el.js" />
+    <Content Include="tStyles\plugins\select2\i18n\en.js" />
+    <Content Include="tStyles\plugins\select2\i18n\es.js" />
+    <Content Include="tStyles\plugins\select2\i18n\et.js" />
+    <Content Include="tStyles\plugins\select2\i18n\eu.js" />
+    <Content Include="tStyles\plugins\select2\i18n\fa.js" />
+    <Content Include="tStyles\plugins\select2\i18n\fi.js" />
+    <Content Include="tStyles\plugins\select2\i18n\fr.js" />
+    <Content Include="tStyles\plugins\select2\i18n\gl.js" />
+    <Content Include="tStyles\plugins\select2\i18n\he.js" />
+    <Content Include="tStyles\plugins\select2\i18n\hi.js" />
+    <Content Include="tStyles\plugins\select2\i18n\hr.js" />
+    <Content Include="tStyles\plugins\select2\i18n\hu.js" />
+    <Content Include="tStyles\plugins\select2\i18n\id.js" />
+    <Content Include="tStyles\plugins\select2\i18n\is.js" />
+    <Content Include="tStyles\plugins\select2\i18n\it.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ja.js" />
+    <Content Include="tStyles\plugins\select2\i18n\km.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ko.js" />
+    <Content Include="tStyles\plugins\select2\i18n\lt.js" />
+    <Content Include="tStyles\plugins\select2\i18n\lv.js" />
+    <Content Include="tStyles\plugins\select2\i18n\mk.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ms.js" />
+    <Content Include="tStyles\plugins\select2\i18n\nb.js" />
+    <Content Include="tStyles\plugins\select2\i18n\nl.js" />
+    <Content Include="tStyles\plugins\select2\i18n\pl.js" />
+    <Content Include="tStyles\plugins\select2\i18n\pt-BR.js" />
+    <Content Include="tStyles\plugins\select2\i18n\pt.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ro.js" />
+    <Content Include="tStyles\plugins\select2\i18n\ru.js" />
+    <Content Include="tStyles\plugins\select2\i18n\sk.js" />
+    <Content Include="tStyles\plugins\select2\i18n\sr-Cyrl.js" />
+    <Content Include="tStyles\plugins\select2\i18n\sr.js" />
+    <Content Include="tStyles\plugins\select2\i18n\sv.js" />
+    <Content Include="tStyles\plugins\select2\i18n\th.js" />
+    <Content Include="tStyles\plugins\select2\i18n\tr.js" />
+    <Content Include="tStyles\plugins\select2\i18n\uk.js" />
+    <Content Include="tStyles\plugins\select2\i18n\vi.js" />
+    <Content Include="tStyles\plugins\select2\i18n\zh-CN.js" />
+    <Content Include="tStyles\plugins\select2\i18n\zh-TW.js" />
+    <Content Include="tStyles\plugins\select2\select2.css" />
+    <Content Include="tStyles\plugins\select2\select2.full.js" />
+    <Content Include="tStyles\plugins\select2\select2.full.min.js" />
+    <Content Include="tStyles\plugins\select2\select2.js" />
+    <Content Include="tStyles\plugins\select2\select2.min.css" />
+    <Content Include="tStyles\plugins\select2\select2.min.js" />
+    <Content Include="tStyles\plugins\slimScroll\jquery.slimscroll.js" />
+    <Content Include="tStyles\plugins\slimScroll\jquery.slimscroll.min.js" />
+    <Content Include="tStyles\plugins\sparkline\jquery.sparkline.js" />
+    <Content Include="tStyles\plugins\sparkline\jquery.sparkline.min.js" />
+    <Content Include="tStyles\plugins\timepicker\bootstrap-timepicker.css" />
+    <Content Include="tStyles\plugins\timepicker\bootstrap-timepicker.js" />
+    <Content Include="tStyles\plugins\timepicker\bootstrap-timepicker.min.css" />
+    <Content Include="tStyles\plugins\timepicker\bootstrap-timepicker.min.js" />
+    <Content Include="WebService1.asmx" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\BlockedCards\Index.cshtml" />
+    <Content Include="Views\BlockedCards\PartialIndex.cshtml" />
+    <Content Include="Views\Abonent\_PauseCard.cshtml" />
+    <Content Include="Views\Books\_UserEditDetails.cshtml" />
+    <Content Include="Views\Payment\changePayType.cshtml" />
+    <Content Include="Views\Books\ReceiverAttachments.cshtml" />
+    <Content Include="Views\Books\_NewReciverAttachment.cshtml" />
+    <Content Include="Views\Abonent\_ReturnedCard.cshtml" />
+    <Content Include="Views\Abonent\retview.cshtml" />
+    <Content Include="Views\Returned\Index.cshtml" />
+    <Content Include="Views\Accessory\Index.cshtml" />
+    <Content Include="Views\Accessory\_AccessoryInfo.cshtml" />
+    <Content Include="Views\Returned\_bort.cshtml" />
+    <Content Include="Views\Message\_Messages.cshtml" />
+    <Content Include="Views\Shared\_DatetimeAntena.cshtml" />
+    <Content Include="Views\Regulator\Index.cshtml" />
+    <Content Include="Views\Shared\_DatetimePickersStatic.cshtml" />
+    <Content Include="Views\Main\_CardsActive.cshtml" />
+    <Content Include="Views\Books\_userDetailsAttach.cshtml" />
+    <Content Include="Views\CustomerAttach\_AttachInfoEdit.cshtml" />
+    <Content Include="Views\Abonent\_DilerAttachCountUser.cshtml" />
+    <Content Include="Views\CustomerAttach\_attachCode.cshtml" />
+    <Content Include="Views\Returned\_ReturnedCardCancl.cshtml" />
+    <Content Include="Views\PackagesCharges\Index.cshtml" />
+    <Content Include="Views\PackagesCharges\_InfoPlayer.cshtml" />
+    <Content Include="Views\PackagesCharges\Players.cshtml" />
+    <Content Include="Views\Utils\JuridicalInvoce.cshtml" />
+    <Content Include="Views\Utils\DisruptInvoiceBalance.cshtml" />
+    <Content Include="Views\Damage\New.cshtml" />
+    <Content Include="Views\Damage\_GroupChange.cshtml" />
+    <Content Include="Views\Cancellation\Index.cshtml" />
+    <Content Include="Views\Cancellation\New.cshtml" />
+    <Content Include="Views\Cancellation\_GroupChange.cshtml" />
+    <Content Include="Views\Damage\_bortInfo.cshtml" />
+    <Content Include="Views\Damage\_ShowBortInfo.cshtml" />
+    <Content Include="Views\Abonent\GPS.cshtml" />
+    <Content Include="Views\Juridical\_logging.cshtml" />
+    <Content Include="Views\Shared\_DatetimePickerPoll.cshtml" />
+    <Content Include="Views\Abonent\_CardReRegistering.cshtml" />
+    <Content Include="Views\Replacement\Index.cshtml" />
+    <Content Include="Views\CollOperator\Index.cshtml" />
+    <Content Include="Views\CallCenter\Index.cshtml" />
+    <Content Include="Views\CallCenter\_HistoryOrder.cshtml" />
+    <Content Include="Views\CallCenter\_Group_Change_date.cshtml" />
+    <Content Include="Views\CallCenter\_Change_Order.cshtml" />
+    <Content Include="Views\CallCenter\_HistoryDamage.cshtml" />
+    <Content Include="Views\CallCenter\_HistoryCancel.cshtml" />
+    <Content Include="Static\Scripts\jquery.signalR-2.3.0.min.js" />
+    <Content Include="Scripts\jquery-1.12.4.min.map" />
+    <Content Include="Views\Shared\_DatetimeReturned.cshtml" />
+    <Content Include="Static\css\bpg-nino-mtavruli.mini.css" />
+    <Content Include="Views\Juridical\Contracts\ტესტ.cshtml" />
+    <Content Include="Views\JuridicalContracts\Index.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\tinymce_jquery_full.cshtml" />
+    <Content Include="Views\Juridical\_JuridicalDocsInfo.cshtml" />
+    <Content Include="Views\Juridical\Contracts\სააბონენტო_ხელშეკრულება_სტანდარტი+ქირა_Physical.cshtml" />
+    <Content Include="Views\Juridical\Contracts\სააბონენტო_ხელშეკრულება_აქცია 8 აქტივაცია_Physical.cshtml" />
+    <Content Include="Views\Juridical\Contracts\სააბონენტო_ხელშეკრულება_სტანდარტი+ქირა_Juridical.cshtml" />
+    <Content Include="Views\Juridical\Contracts\სააბონენტო_ხელშეკრულება_აქცია 8 აქტივაცია_Juridical.cshtml" />
+    <Content Include="Views\Juridical\Contracts\სააბონენტო_ხელშეკრულება_პრომო პაკეტი_Physical.cshtml" />
+    <Content Include="Views\Juridical\Contracts\danarti.cshtml" />
+    <Content Include="Views\Main2\Index.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="CallCenter\CallData.cs" />
+    <Compile Include="CallCenter\CallLogic.cs" />
+    <Compile Include="CallCenter\CallModel.cs" />
+    <Compile Include="CallCenter\CallPresentation.cs" />
+    <Compile Include="CallCenter\HubMessage.cs" />
+    <Compile Include="CallCenter\Infrastructure\Cancellations.cs" />
+    <Compile Include="CallCenter\Infrastructure\CancellationToGo.cs" />
+    <Compile Include="CallCenter\Infrastructure\CityRegionList.cs" />
+    <Compile Include="CallCenter\Infrastructure\Damages.cs" />
+    <Compile Include="CallCenter\Infrastructure\DamageToGo.cs" />
+    <Compile Include="CallCenter\Infrastructure\DateFrom.cs" />
+    <Compile Include="CallCenter\Infrastructure\CancellationFileter.cs" />
+    <Compile Include="CallCenter\Infrastructure\CancellationData.cs" />
+    <Compile Include="CallCenter\Infrastructure\DamageData.cs" />
+    <Compile Include="CallCenter\Infrastructure\DamageApllication.cs" />
+    <Compile Include="CallCenter\Infrastructure\FilterDamageResult.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryCancellationPartialViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryCancellationViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryDamagePartialViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryDamageViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryOrderPartialViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\HistoryOrderViewModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\OrderData.cs" />
+    <Compile Include="CallCenter\Infrastructure\OrderApllication.cs" />
+    <Compile Include="CallCenter\Infrastructure\RegionGoName.cs" />
+    <Compile Include="CallCenter\Infrastructure\Orders.cs" />
+    <Compile Include="CallCenter\Infrastructure\OrderToGo.cs" />
+    <Compile Include="CallCenter\Infrastructure\NotClosedOrders.cs" />
+    <Compile Include="CallCenter\Infrastructure\ReturningValueCallModel.cs" />
+    <Compile Include="CallCenter\Infrastructure\test.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserRegionGoCancellation.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserRegionGoOrder.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserData.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserRegionGoDamage.cs" />
+    <Compile Include="CallCenter\Infrastructure\Users.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserStatic.cs" />
+    <Compile Include="CallCenter\Infrastructure\UserViewModel.cs" />
+    <Compile Include="CallCenter\InterfaceUser\ICallcenterModel.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IFilterUser.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUser.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUserCancellation.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUserDamage.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUserOrder.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUserReturnModel.cs" />
+    <Compile Include="CallCenter\InterfaceUser\IUserToGo.cs" />
+    <Compile Include="Controllers\Main2Controller.cs" />
+    <Compile Include="Docs\Contracts\AbonentDateAppendix.cs" />
+    <Compile Include="Docs\Contracts\AbonentGenaratorAttachment.cs" />
+    <Compile Include="Docs\Contracts\AbonentGenaratorDate.cs" />
+    <Compile Include="Docs\Contracts\ConvertImageBase.cs" />
+    <Compile Include="Docs\Contracts\DocumentSubscriptionModel.cs" />
+    <Compile Include="Docs\Contracts\DocsAttachment.cs" />
+    <Compile Include="Docs\Contracts\DocsName.cs" />
+    <Compile Include="Docs\Contracts\DocummentAttachmentModel.cs" />
+    <Compile Include="Docs\Contracts\GeneratorDocs.cs" />
+    <Compile Include="Docs\Contracts\RenderViewString.cs" />
+    <Compile Include="Docs\DocsModel\AbonentDocsModel.cs" />
+    <Compile Include="Docs\DocsModel\AttachmentContractModel.cs" />
+    <Compile Include="Docs\JuridicalInterface\IConvertImage.cs" />
+    <Compile Include="Docs\JuridicalInterface\DocumentAttachment.cs" />
+    <Compile Include="Docs\JuridicalInterface\IDocs.cs" />
+    <Compile Include="Docs\JuridicalInterface\IDocsModel.cs" />
+    <Compile Include="Infrastructure\AutomaperWebProfile.cs" />
+    <Compile Include="Infrastructure\IntefaceClass\IOrderUserStatus.cs" />
+    <Compile Include="Infrastructure\Juridical\FilterData.cs" />
+    <Compile Include="Docs\JuridicalDocs\JuridicalDocsView.cs" />
+    <Compile Include="Docs\JuridicalInterface\DocumentType.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalModelData.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalFilter.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalLogginView.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalStatusInfoView.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalStatusList.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalStatusView.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalViewModel.cs" />
+    <Compile Include="Infrastructure\Juridical\JuridicalWhereInfo.cs" />
+    <Compile Include="Infrastructure\Juridical\SaveStatus\CardInfo.cs" />
+    <Compile Include="Infrastructure\Juridical\SaveStatus\SaveJuridicalStatusLogging.cs" />
+    <Compile Include="Infrastructure\Juridical\SaveStatus\UpdateDeleteStatus.cs" />
+    <Compile Include="Infrastructure\Juridical\SaveStatus\SaveStatusView.cs" />
+    <Compile Include="Infrastructure\OSD\SendOSDRequesSMS.cs" />
+    <Compile Include="Infrastructure\Static 2\Blocked.cs" />
+    <Compile Include="Infrastructure\Static 2\Cancel.cs" />
+    <Compile Include="Infrastructure\Static 2\CloseClass.cs" />
+    <Compile Include="Infrastructure\Static 2\Discontinued.cs" />
+    <Compile Include="Infrastructure\Static 2\interfaceBox\IStaticStatusModel.cs" />
+    <Compile Include="Infrastructure\Static 2\Paused.cs" />
+    <Compile Include="Infrastructure\Static 2\Model\StaticStatusModel.cs" />
+    <Compile Include="Infrastructure\Static 2\StaticResult.cs" />
+    <Compile Include="Infrastructure\Static 2\StatusResult.cs" />
+    <Compile Include="Infrastructure\Static 2\StatusQuery.cs" />
+    <Compile Include="Infrastructure\Static 2\DamageDistinguishedAnswers.cs" />
+    <Compile Include="Infrastructure\Static 2\OrderDistinguishedAnswers.cs" />
+    <Compile Include="Infrastructure\Static 2\ReserveFilter.cs" />
+    <Compile Include="Infrastructure\Static 2\interfaceBox\IStaticStatus.cs" />
+    <Compile Include="Infrastructure\Static 2\StatusCoutResult.cs" />
+    <Compile Include="Jobs\ChangeOrderDamageCancellation.cs" />
+    <Compile Include="Jobs\PromoChangePack_8.cs" />
+    <Compile Include="JuridicalInfo\Infrastructure\SaveLoggings.cs" />
+    <Compile Include="JuridicalInfo\Infrastructure\SaveStatusInfos.cs" />
+    <Compile Include="ListModels\ReportCardChargesSummary.cs" />
+    <Compile Include="Models\DamageReserveAnswer.cs" />
+    <Compile Include="Models\JuridicalDocsInfo.cs" />
+    <Compile Include="Models\OrderReserveAnswer.cs" />
+    <Compile Include="Models\Post.cs" />
+    <Compile Include="Models\PromoCahngePack.cs" />
+    <Compile Include="Models\StatusLogging.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Controllers\AbonentController.cs" />
+    <Compile Include="Controllers\AccessoryController.cs" />
+    <Compile Include="Controllers\AccountantController.cs" />
+    <Compile Include="Controllers\AccountantOutsideSalesController.cs" />
+    <Compile Include="Controllers\AccountantPackagesController.cs" />
+    <Compile Include="Controllers\BlankController.cs" />
+    <Compile Include="Controllers\BlockedCardsController.cs" />
+    <Compile Include="Controllers\BooksController.cs" />
+    <Compile Include="Controllers\CallCenterController.cs" />
+    <Compile Include="Controllers\CancellationController.cs" />
+    <Compile Include="Controllers\CardStatController.cs" />
+    <Compile Include="Controllers\ChannelController.cs" />
+    <Compile Include="Controllers\CustomerAttachController.cs" />
+    <Compile Include="Controllers\DamageController.cs" />
+    <Compile Include="Controllers\JuridicalController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Controllers\MessageController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PackagesChargesController.cs" />
+    <Compile Include="Controllers\PayApiController.cs" />
+    <Compile Include="Controllers\PayController.cs" />
+    <Compile Include="Controllers\PaymentController.cs" />
+    <Compile Include="Controllers\RegulatorController.cs" />
+    <Compile Include="Controllers\ReplacementController.cs" />
+    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\ReturnedController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
+    <Compile Include="Controllers\StoppedCardsController.cs" />
+    <Compile Include="Controllers\UtilsApiController.cs" />
+    <Compile Include="Controllers\UtilsController.cs" />
+    <Compile Include="Controllers\VerifyController.cs" />
+    <Compile Include="Filters\HttpAttributeParamHelper.cs" />
+    <Compile Include="Filters\ValidateUserFilter.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\CoreHelper.cs" />
+    <Compile Include="Helpers\PickerHelper.cs" />
+    <Compile Include="Jobs\AutoSubscribJob.cs" />
+    <Compile Include="Jobs\CardsChargeJob.cs" />
+    <Compile Include="Jobs\ChargeCardJob.cs" />
+    <Compile Include="Jobs\DisableCardsJob.cs" />
+    <Compile Include="Jobs\InvoiceSendJob.cs" />
+    <Compile Include="Jobs\JobSheduler.cs" />
+    <Compile Include="Jobs\JuridicalInvoce.cs" />
+    <Compile Include="Jobs\MessageJob.cs" />
+    <Compile Include="Jobs\PostChargeJob.cs" />
+    <Compile Include="Jobs\RentSMSJob.cs" />
+    <Compile Include="Jobs\ReporFreeInstalation.cs" />
+    <Compile Include="Jobs\ReportUserOnDisableShare8Job.cs" />
+    <Compile Include="Jobs\ReportUserAboutDisablingShare8Job.cs" />
+    <Compile Include="Jobs\ReportUserAboutDisablingJob.cs" />
+    <Compile Include="Jobs\ReporOnRentLateJob.cs" />
+    <Compile Include="Jobs\ReportUserOnDisableJob.cs" />
+    <Compile Include="Jobs\ResetCardsPauseJob.cs" />
+    <Compile Include="Jobs\StaffsEmailsJob.cs" />
+    <Compile Include="JuridicalInfo\JuridicalData.cs" />
+    <Compile Include="JuridicalInfo\JuridicalLogic.cs" />
+    <Compile Include="JuridicalInfo\JuridicalModel.cs" />
+    <Compile Include="JuridicalInfo\JuridicalPresentation.cs" />
+    <Compile Include="ListModels\AbonentDoc.cs" />
+    <Compile Include="ListModels\AbonentRecord.cs" />
+    <Compile Include="ListModels\AutoChangeSubscribList.cs" />
+    <Compile Include="ListModels\AutomaticMessage.cs" />
+    <Compile Include="ListModels\BalanceAmounList.cs" />
+    <Compile Include="ListModels\CanceledPaymentList.cs" />
+    <Compile Include="ListModels\CancellationCardNum.cs" />
+    <Compile Include="ListModels\CancellationFilter.cs" />
+    <Compile Include="ListModels\CancelPayment.cs" />
+    <Compile Include="ListModels\CardCustumerID.cs" />
+    <Compile Include="ListModels\CardDetailData.cs" />
+    <Compile Include="ListModels\CardEditCasData.cs" />
+    <Compile Include="ListModels\CardReport.cs" />
+    <Compile Include="ListModels\CardServicesList.cs" />
+    <Compile Include="ListModels\CardStat.cs" />
+    <Compile Include="ListModels\Chat.cs" />
+    <Compile Include="ListModels\CommisionDesc.cs" />
+    <Compile Include="ListModels\DamageFilter.cs" />
+    <Compile Include="ListModels\DamageList.cs" />
+    <Compile Include="ListModels\Diler.cs" />
+    <Compile Include="ListModels\Form4_3_Report.cs" />
+    <Compile Include="ListModels\Form4_4Report.cs" />
+    <Compile Include="ListModels\GPSLocation.cs" />
+    <Compile Include="ListModels\IdName.cs" />
+    <Compile Include="ListModels\InvoicePost.cs" />
+    <Compile Include="ListModels\InvoicePrint.cs" />
+    <Compile Include="ListModels\InvoicesList.cs" />
+    <Compile Include="ListModels\JuridicalList.cs" />
+    <Compile Include="ListModels\LoggingList.cs" />
+    <Compile Include="ListModels\OrderExport.cs" />
+    <Compile Include="ListModels\OrderFilter.cs" />
+    <Compile Include="ListModels\PackagesCargesList.cs" />
+    <Compile Include="ListModels\PayData.cs" />
+    <Compile Include="ListModels\PaymentData.cs" />
+    <Compile Include="ListModels\PhoneCard.cs" />
+    <Compile Include="ListModels\SecureRequest.cs" />
+    <Compile Include="ListModels\UserList.cs" />
+    <Compile Include="ListModels\Verify.cs" />
+    <Compile Include="Models\Abonent.cs" />
+    <Compile Include="ListModels\AbonentDetailInfo.cs" />
+    <Compile Include="ListModels\AbonentList.cs" />
+    <Compile Include="Models\Attachment.cs" />
+    <Compile Include="ListModels\Balance.cs" />
+    <Compile Include="Models\AutoMessageTemplate.cs" />
+    <Compile Include="Models\AutoSubscribChangeCard.cs" />
+    <Compile Include="Models\BortHistory.cs" />
+    <Compile Include="Models\CanceledPayment.cs" />
+    <Compile Include="Models\Cancellation.cs" />
+    <Compile Include="Models\Card.cs" />
+    <Compile Include="Models\CardCharge.cs" />
+    <Compile Include="Models\CardDamage.cs" />
+    <Compile Include="Models\CardInfo.cs" />
+    <Compile Include="Models\CardLog.cs" />
+    <Compile Include="Models\CardService.cs" />
+    <Compile Include="Models\Channel.cs" />
+    <Compile Include="Models\ChargeCrushLog.cs" />
+    <Compile Include="Models\City.cs" />
+    <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\CustomerChat.cs" />
+    <Compile Include="Models\CustomerSellAttachments.cs" />
+    <Compile Include="Models\Damage.cs" />
+    <Compile Include="Models\DamageReason.cs" />
+    <Compile Include="Models\generateRandomAbonentNum.cs" />
+    <Compile Include="Models\InvoceLogging.cs" />
+    <Compile Include="Models\Invoice.cs" />
+    <Compile Include="Models\JuridicalList.cs" />
+    <Compile Include="Models\JuridicalLogging.cs" />
+    <Compile Include="Models\JuridicalStatus.cs" />
+    <Compile Include="Models\JuridicalStatusInfo.cs" />
+    <Compile Include="Models\Logging.cs" />
+    <Compile Include="ListModels\LoggingData.cs" />
+    <Compile Include="Models\LoggingItem.cs" />
+    <Compile Include="Models\Message.cs" />
+    <Compile Include="ListModels\MessagesList.cs" />
+    <Compile Include="Models\MessageAbonent.cs" />
+    <Compile Include="Models\MessageLogging.cs" />
+    <Compile Include="Models\MessageNotSendLog.cs" />
+    <Compile Include="Models\MessageTemplate.cs" />
+    <Compile Include="Models\MiniSMS.cs" />
+    <Compile Include="Models\OfficeCard.cs" />
+    <Compile Include="Models\OperatorGroupUser.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderReason.cs" />
+    <Compile Include="Models\Package.cs" />
+    <Compile Include="Models\PackageChannel.cs" />
+    <Compile Include="Models\Param.cs" />
+    <Compile Include="Models\Payment.cs" />
+    <Compile Include="ListModels\PaymentList.cs" />
+    <Compile Include="Models\PayTransaction.cs" />
+    <Compile Include="Models\PayType.cs" />
+    <Compile Include="Models\Reason.cs" />
+    <Compile Include="Models\Receiver.cs" />
+    <Compile Include="Models\ReceiverAttachment.cs" />
+    <Compile Include="Models\ReceiverSubscribtion.cs" />
+    <Compile Include="Models\RecordAudioFile.cs" />
+    <Compile Include="Models\ReRegistering..cs" />
+    <Compile Include="Models\ReturnedCard.cs" />
+    <Compile Include="Models\ReturnedCardAttachment.cs" />
+    <Compile Include="Models\SellAttachment.cs" />
+    <Compile Include="Models\SellAttachmentsLogging.cs" />
+    <Compile Include="Models\SellerObject.cs" />
+    <Compile Include="Models\Service.cs" />
+    <Compile Include="Models\st_Customers.cs">
+      <DependentUpon>st_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\st_model.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>st_model.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\st_model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>st_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\st_model.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>st_model.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Subscribtion.cs" />
+    <Compile Include="Models\SubscriptionPackage.cs" />
+    <Compile Include="Models\TempCasCard.cs" />
+    <Compile Include="Models\Tower.cs" />
+    <Compile Include="Models\PayTransactionCard.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserDetails.cs" />
+    <Compile Include="Models\UserPermission.cs" />
+    <Compile Include="Models\UserType.cs" />
+    <Compile Include="Rent\OSD\SendOSD.cs" />
+    <Compile Include="Rent\RentAccruals\RentAccrualsData.cs" />
+    <Compile Include="Rent\RentAccruals\RentAccrualsLogic.cs" />
+    <Compile Include="Rent\RentAccruals\RentAccrualsPresentation.cs" />
+    <Compile Include="Rent\RentFilling\RentData.cs" />
+    <Compile Include="Rent\RentFilling\RentLogic.cs" />
+    <Compile Include="Rent\RentFilling\RentModel.cs" />
+    <Compile Include="Rent\RentFilling\RentPresentation.cs" />
+    <Compile Include="Rent\RentSMS\RentSMSData.cs" />
+    <Compile Include="Rent\RentSMS\RentSMSModel.cs" />
+    <Compile Include="Rent\RentSMS\RentSMSLogic.cs" />
+    <Compile Include="Rent\RentSMS\RentSMSPresentation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DPlusAppStartup.cs" />
+    <Compile Include="RequireHttpsAttribute.cs" />
+    <Compile Include="SendSMSFreeInstalation\FreeInstalationData.cs" />
+    <Compile Include="SendSMSFreeInstalation\FreeInstalationLogic.cs" />
+    <Compile Include="SendSMSFreeInstalation\FreeInstalationModel.cs" />
+    <Compile Include="SendSMSFreeInstalation\FreeInstalationPresentation.cs" />
+    <Compile Include="TrapStat.cs" />
+    <Compile Include="Utils\AbstractTrigger.cs" />
+    <Compile Include="Utils\AsyncPagedList.cs" />
+    <Compile Include="Utils\AsyncRawQueryPagedList.cs" />
+    <Compile Include="Utils\BaseController.cs" />
+    <Compile Include="Utils\CASSocket.cs" />
+    <Compile Include="Utils\DataContext.cs" />
+    <Compile Include="Utils\DateTimeModelBinder .cs" />
+    <Compile Include="Utils\EnumModel.cs" />
+    <Compile Include="Utils\Export.cs" />
+    <Compile Include="Utils\JuridicalFilter.cs" />
+    <Compile Include="Utils\NumberToString.cs" />
+    <Compile Include="Utils\InvoicePdf.cs" />
+    <Compile Include="Utils\JsonNetResult.cs" />
+    <Compile Include="Utils\NoLog.cs" />
+    <Compile Include="Utils\PagedListExtendedExtensions.cs" />
+    <Compile Include="Utils\ReturnedCardDelete.cs" />
+    <Compile Include="Utils\RetVal.cs" />
+    <Compile Include="Utils\RsServiceFuncs.cs" />
+    <Compile Include="Utils\SendMiniSMS.cs" />
+    <Compile Include="Utils\SqlExtraQuerys.cs" />
+    <Compile Include="Utils\Utils.cs" />
+    <Compile Include="WebService1.asmx.cs">
+      <DependentUpon>WebService1.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Static\Styles\bootstrap.min.css" />
+    <Content Include="Static\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Static\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Static\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Views\Shared\_Layout_Old.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Main\Index.cshtml" />
+    <Content Include="Views\Abonent\Index.cshtml" />
+    <Content Include="Views\Abonent\New.cshtml" />
+    <Content Include="Views\Abonent\_Card.cshtml" />
+    <Content Include="Views\Abonent\Edit.cshtml" />
+    <Content Include="Views\Channel\Index.cshtml" />
+    <Content Include="Views\Channel\_Package.cshtml" />
+    <Content Include="Views\Channel\Channels.cshtml" />
+    <Content Include="Views\Channel\_Channel.cshtml" />
+    <Content Include="Views\Abonent\_AddSubscription.cshtml" />
+    <Content Include="Views\Abonent\_SubscriptionsList.cshtml" />
+    <Content Include="Views\Payment\Index.cshtml" />
+    <Content Include="Views\Shared\_DatetimePickers.cshtml" />
+    <Content Include="Views\Payment\_NewPayment.cshtml" />
+    <Content Include="Static\Scripts\fina.datepickers.js" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Models\st_model.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>st_model.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\st_model.edmx.diagram">
+      <DependentUpon>st_model.edmx</DependentUpon>
+    </Content>
+    <Content Include="Views\Abonent\_Attachment.cshtml" />
+    <Content Include="Views\Abonent\_CardInfo.cshtml" />
+    <Content Include="Views\Abonent\_CardLogsList.cshtml" />
+    <Content Include="Views\Abonent\_PaymentsList.cshtml" />
+    <Content Include="Views\Setting\Index.cshtml" />
+    <Content Include="Views\Abonent\_OtherChargesList.cshtml" />
+    <Content Include="Views\Abonent\_BalanceList.cshtml" />
+    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Message\Index.cshtml" />
+    <Content Include="Views\Message\_NewMessage.cshtml" />
+    <Content Include="Static\Scripts\typeahead.min.js" />
+    <Content Include="Views\Main\Logs.cshtml" />
+    <Content Include="Views\Message\_MessageTemplateModal.cshtml" />
+    <Content Include="Views\Message\_Templates.cshtml" />
+    <Content Include="Views\Books\Users.cshtml" />
+    <Content Include="Views\Books\Types.cshtml" />
+    <Content Include="Views\Books\Towers.cshtml" />
+    <Content Include="Views\Books\Receivers.cshtml" />
+    <Content Include="Views\Books\_NewUser.cshtml" />
+    <Content Include="Views\Books\_NewType.cshtml" />
+    <Content Include="Views\Books\_NewReceiver.cshtml" />
+    <Content Include="Views\Books\_NewTower.cshtml" />
+    <Content Include="Views\Main\_LogDetails.cshtml" />
+    <Content Include="Views\Abonent\_RestoreMoneyModal.cshtml" />
+    <Content Include="Views\Books\_RightMenu.cshtml" />
+    <Content Include="Views\Books\Services.cshtml" />
+    <Content Include="Views\Books\_NewService.cshtml" />
+    <Content Include="Views\Abonent\_CardServicesList.cshtml" />
+    <Content Include="Views\Abonent\_ServicesList.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
+    <Content Include="Views\Order\New.cshtml" />
+    <Content Include="Views\Damage\Index.cshtml" />
+    <Content Include="Views\Message\_AutoMessages.cshtml" />
+    <Content Include="Views\Books\Index.cshtml" />
+    <Content Include="Views\Abonent\_CardInfoData.cshtml" />
+    <Content Include="Views\Books\Reasons.cshtml" />
+    <Content Include="Views\Books\_NewReason.cshtml" />
+    <Content Include="Views\Order\_SmsDialog.cshtml" />
+    <Content Include="Views\Order\_Detail.cshtml" />
+    <Content Include="Views\Order\_CardsAdd.cshtml" />
+    <Content Include="Views\Order\_FilteredOrders.cshtml" />
+    <Content Include="Views\Payment\_CancelPayment.cshtml" />
+    <Content Include="Views\Payment\CanceledPayments.cshtml" />
+    <Content Include="Views\Utils\OfficeCards.cshtml" />
+    <Content Include="Views\Utils\_NewOfficeCard.cshtml" />
+    <Content Include="Views\Utils\AutoSubscribs.cshtml" />
+    <Content Include="Views\Utils\_NewAutoSubscrib.cshtml" />
+    <Content Include="Views\Login\SmsAutorize.cshtml" />
+    <Content Include="Views\Abonent\_AbonentDetailFilter.cshtml" />
+    <Content Include="Views\Utils\Invoices.cshtml" />
+    <Content Include="Views\Utils\_NewInvoice.cshtml" />
+    <Content Include="Views\Order\_OrderFilter.cshtml" />
+    <Content Include="Views\Damage\_FilteredDamages.cshtml" />
+    <Content Include="Views\Damage\_DamageFilter.cshtml" />
+    <Content Include="Views\Books\PayTypes.cshtml" />
+    <Content Include="Views\Books\_NewPayType.cshtml" />
+    <Content Include="Views\Books\TempCasCards.cshtml" />
+    <Content Include="tStyles\bootstrap\css\bootstrap.css.map" />
+    <Content Include="tStyles\bootstrap\css\bootstrap.min.css.map" />
+    <Content Include="tStyles\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="tStyles\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="tStyles\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="tStyles\bootstrap\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="tStyles\build\bootstrap-less\mixins.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\alerts.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\background-variant.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\border-radius.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\buttons.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\center-block.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\clearfix.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\forms.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\gradients.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\grid-framework.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\grid.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\hide-text.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\image.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\labels.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\list-group.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\nav-divider.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\nav-vertical-align.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\opacity.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\pagination.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\panels.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\progress-bar.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\reset-filter.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\reset-text.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\resize.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\responsive-visibility.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\size.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\tab-focus.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\table-row.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\text-emphasis.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\text-overflow.less" />
+    <Content Include="tStyles\build\bootstrap-less\mixins\vendor-prefixes.less" />
+    <Content Include="tStyles\build\bootstrap-less\variables.less" />
+    <Content Include="tStyles\build\less\.csslintrc" />
+    <Content Include="tStyles\build\less\404_500_errors.less" />
+    <Content Include="tStyles\build\less\AdminLTE.less" />
+    <Content Include="tStyles\build\less\alerts.less" />
+    <Content Include="tStyles\build\less\bootstrap-social.less" />
+    <Content Include="tStyles\build\less\boxes.less" />
+    <Content Include="tStyles\build\less\buttons.less" />
+    <Content Include="tStyles\build\less\callout.less" />
+    <Content Include="tStyles\build\less\carousel.less" />
+    <Content Include="tStyles\build\less\control-sidebar.less" />
+    <Content Include="tStyles\build\less\core.less" />
+    <Content Include="tStyles\build\less\direct-chat.less" />
+    <Content Include="tStyles\build\less\dropdown.less" />
+    <Content Include="tStyles\build\less\forms.less" />
+    <Content Include="tStyles\build\less\fullcalendar.less" />
+    <Content Include="tStyles\build\less\header.less" />
+    <Content Include="tStyles\build\less\info-box.less" />
+    <Content Include="tStyles\build\less\invoice.less" />
+    <Content Include="tStyles\build\less\labels.less" />
+    <Content Include="tStyles\build\less\lockscreen.less" />
+    <Content Include="tStyles\build\less\login_and_register.less" />
+    <Content Include="tStyles\build\less\mailbox.less" />
+    <Content Include="tStyles\build\less\miscellaneous.less" />
+    <Content Include="tStyles\build\less\mixins.less" />
+    <Content Include="tStyles\build\less\modal.less" />
+    <Content Include="tStyles\build\less\navs.less" />
+    <Content Include="tStyles\build\less\print.less" />
+    <Content Include="tStyles\build\less\products.less" />
+    <Content Include="tStyles\build\less\profile.less" />
+    <Content Include="tStyles\build\less\progress-bars.less" />
+    <Content Include="tStyles\build\less\select2.less" />
+    <Content Include="tStyles\build\less\sidebar-mini.less" />
+    <Content Include="tStyles\build\less\sidebar.less" />
+    <Content Include="tStyles\build\less\skins\skin-black-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-black.less" />
+    <Content Include="tStyles\build\less\skins\skin-blue-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-blue.less" />
+    <Content Include="tStyles\build\less\skins\skin-green-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-green.less" />
+    <Content Include="tStyles\build\less\skins\skin-purple-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-purple.less" />
+    <Content Include="tStyles\build\less\skins\skin-red-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-red.less" />
+    <Content Include="tStyles\build\less\skins\skin-yellow-light.less" />
+    <Content Include="tStyles\build\less\skins\skin-yellow.less" />
+    <Content Include="tStyles\build\less\skins\_all-skins.less" />
+    <Content Include="tStyles\build\less\small-box.less" />
+    <Content Include="tStyles\build\less\social-widgets.less" />
+    <Content Include="tStyles\build\less\table.less" />
+    <Content Include="tStyles\build\less\timeline.less" />
+    <Content Include="tStyles\build\less\users-list.less" />
+    <Content Include="tStyles\build\less\variables.less" />
+    <Content Include="tStyles\plugins\ckeditor\CHANGES.md" />
+    <Content Include="tStyles\plugins\ckeditor\LICENSE.md" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\scayt\CHANGELOG.md" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\scayt\LICENSE.md" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\scayt\README.md" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\LICENSE.md" />
+    <Content Include="tStyles\plugins\ckeditor\plugins\wsc\README.md" />
+    <Content Include="tStyles\plugins\ckeditor\README.md" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\assets\posteddata.php" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\htmlwriter\assets\outputforflash\outputforflash.fla" />
+    <Content Include="tStyles\plugins\ckeditor\samples\old\sample_posteddata.php" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\config.json" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\fontello.eot" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\fontello.ttf" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\font\fontello.woff" />
+    <Content Include="tStyles\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
+    <Content Include="tStyles\plugins\ckeditor\skins\moono\readme.md" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColReorder\Readme.md" />
+    <Content Include="tStyles\plugins\datatables\extensions\ColVis\Readme.md" />
+    <Content Include="tStyles\plugins\datatables\extensions\FixedColumns\Readme.md" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\css\dataTables.responsive.scss" />
+    <Content Include="tStyles\plugins\datatables\extensions\Responsive\Readme.md" />
+    <Content Include="tStyles\plugins\datatables\extensions\Scroller\examples\data\ssp.php" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\psd\collection.psd" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\psd\copy document.psd" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\psd\file_types.psd" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\images\psd\printer.psd" />
+    <Content Include="tStyles\plugins\datatables\extensions\TableTools\Readme.md" />
+    <Content Include="tStyles\plugins\input-mask\phone-codes\phone-be.json" />
+    <Content Include="tStyles\plugins\input-mask\phone-codes\phone-codes.json" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Abonent\_ExistingCard.cshtml" />
+    <None Include="Properties\PublishProfiles\DigitalTVBilling.pubxml" />
+    <Content Include="Views\Books\Cities.cshtml" />
+    <Content Include="Views\Books\_NewCity.cshtml" />
+    <Content Include="Views\Books\Sellers.cshtml" />
+    <Content Include="Views\Books\_NewSeller.cshtml" />
+    <Content Include="Views\Abonent\__Card.cshtml" />
+    <Content Include="Views\Abonent\__AddSubscription.cshtml" />
+    <Content Include="Views\Abonent\__New.cshtml" />
+    <Content Include="Views\Shared\__Layout.cshtml" />
+    <Content Include="Views\Books\_UserDetails.cshtml" />
+    <Content Include="Views\Accountant\Index.cshtml" />
+    <Content Include="Views\Verify\Index.cshtml" />
+    <Content Include="Views\Verify\_VerifyInfo.cshtml" />
+    <Content Include="Docs\Doc1.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalRent\სააბონენტო ხელშეკრულება - დროებითი სარგებლობისას - თანამშრომელზე.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalRent\სააბონენტო ხელშეკრულება - დროებითი სარგებლობისას - ფიზიკური პირიw1.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalByFromDiller\მიღება-ჩაბარება დილერისთვის ფიზიკური.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalByFromDiller\ნასყიდობა ფიზიკური პირი.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalBuyFromOffice\მიღება-ჩაბარება ოფისიდან ფიზიკური პირისთვის.cshtml" />
+    <Content Include="Views\Abonent\Docs\PhisycalBuyFromOffice\ნასყიდობა ფიზიკური პირი.cshtml" />
+    <Content Include="Views\Abonent\მიღება-ჩაბარება ოფისიდან ფიზიკური პირისთვის.cshtml" />
+    <Content Include="Views\Abonent\ნასყიდობა-ფიზიკური-პირი.cshtml" />
+    <Content Include="Views\Abonent\მიღება-ჩაბარება დილერისთვის ფიზიკური.cshtml" />
+    <Content Include="Views\Abonent\სააბონენტო ხელშეკრულება - დროებითი სარგებლობისას - თანამშრომელზე.cshtml" />
+    <Content Include="Views\Abonent\სააბონენტო ხელშეკრულება - დროებითი სარგებლობისას - ფიზიკური პირი.cshtml" />
+    <Content Include="Views\CardStat\Index.cshtml" />
+    <Content Include="Views\CardStat\_CardStatDetailFilter.cshtml" />
+    <Content Include="Views\AccountantOutsideSales\Index.cshtml" />
+    <Content Include="Views\AccountantPackages\Index.cshtml" />
+    <Content Include="Views\Books\SellAttachments.cshtml" />
+    <Content Include="Views\Books\_NewAttachment.cshtml" />
+    <Content Include="Views\Books\__UserDetails.cshtml" />
+    <Content Include="Views\CustomerAttach\Index.cshtml" />
+    <Content Include="Views\Blank\Index.cshtml" />
+    <Content Include="Views\Order\_GroupChange.cshtml" />
+    <Content Include="Views\StoppedCards\Index.cshtml" />
+    <Content Include="Views\StoppedCards\_StatusInfo.cshtml" />
+    <Content Include="Views\CustomerAttach\_AttachInfo.cshtml" />
+    <Content Include="Views\CustomerAttach\_NewAttachment.cshtml" />
+    <Content Include="Views\Juridical\Index.cshtml" />
+    <Content Include="Views\Juridical\_StatusInfo.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Docs\PhysicalBuyOffice\" />
+    <Folder Include="FileSource\PackagesChargesRecord\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>21181</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:3383/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.3\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

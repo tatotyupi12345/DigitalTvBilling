@@ -1,0 +1,52 @@
+﻿@model City
+@{
+    ViewBag.AddUser = Utils.GetPermission("USER_ADD");
+    ViewBag.EditUser = Utils.GetPermission("USER_EDIT");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+        {
+            Url = Url.Action("NewCity"),
+            OnSuccess = "onSuccessNewCity",
+            HttpMethod = "POST"
+        }, new { @class = "form-horizontal", role = "form", id = "city_form", name = "CityForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი ქალაქი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            @Html.HiddenFor(m => m.ID)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.ID > 0 && ViewBag.EditUser) || (Model.ID == 0 && ViewBag.AddUser))
+                    {
+                        <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,188 @@
+﻿@model Package
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+    ViewBag.AddPackage = Utils.GetPermission("PACKAGE_ADD");
+    ViewBag.EditPackage = Utils.GetPermission("PACKAGE_EDIT");
+}
+<div class="modal fade" id="package_modal" style="overflow:auto;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("", null, new AjaxOptions() { Url = Url.Action("Package"), HttpMethod = "POST", OnSuccess = "onSuccessPackage" }, new { @class = "form-horizontal", id = "package_form", name = "PackageForm" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">პაკეტი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.Logging)
+                        
+                        <div class="col-md-10">
+                            @*<div class="form-group">
+                                @Html.LabelFor(model => model.is_group, new { @class = "control-label col-md-3" })
+                                <div class="col-md-3">
+                                    @Html.CheckBoxFor(model => model.is_group, new { data_tag = Model.is_group})
+
+                                    @Html.ValidationMessageFor(model => model.is_group)
+                                </div>
+                            </div>*@
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus="autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus="autofocus", data_tag = Model.Name  })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                            @*@if (!Model.is_group)
+                            {*@
+                            <div class="form-group none_group">
+                                @Html.LabelFor(model => model.Price, new { @class = "control-label col-md-3" })
+                                <div class="col-md-4">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Price, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Price, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.Price })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Price)
+                                </div>
+                            </div>
+                            <div class="form-group none_group">
+                                @Html.LabelFor(model => model.JuridPrice, new { @class = "control-label col-md-3" })
+                                <div class="col-md-4">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.JuridPrice, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.JuridPrice, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.JuridPrice })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.JuridPrice)
+                                </div>
+                            </div>
+                            <div class="form-group none_group">
+                                @Html.LabelFor(model => model.MinPrice, new { @class = "control-label col-md-3" })
+                                <div class="col-md-4">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.MinPrice, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.MinPrice, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.MinPrice })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.MinPrice)
+                                </div>
+                            </div>
+                            <div class="form-group none_group">
+                                @Html.LabelFor(model => model.CasId, new { @class = "control-label col-md-3" })
+                                <div class="col-md-4">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.CasId, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.CasId, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.CasId })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.CasId)
+                                </div>
+                            </div>
+                            @*}*@
+                                <div class="form-group  in_group">
+                                    @Html.Label("მიბმული პაკეტები:", new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9" style="padding-left:0px;">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title">პაკეტები</h3>
+                                            </div>
+                                            <div class="panel-body" style="padding-left: 5px;">
+                                                <div style="max-height: 250px; overflow-x: auto;">
+                                                    <ul class="list-group checked-list-box">
+                                                        @if (ViewBag.package_list != null)
+                                                        {
+                                                            List<Package> packages = ViewBag.package_list;
+                                                            for (int i = 0; i < packages.Count; i++)
+                                                            {
+
+                                                                <li class="list-group-item">
+                                                                    <div class="checkbox">
+                                                                        <label>
+                                                                            <input id="" name="BindedPackages[@i].Sign" type="checkbox" value="true">
+                                                                            <input id="" name="BindedPackages[@i].ID" type="hidden" value="@packages[i].Id">
+                                                                            @Html.Raw(packages[i].Name)
+                                                                        </label>
+                                                                    </div>
+                                                                </li>
+                                                                @*<input type="hidden" value="@Model.UserPermissions.ElementAt(i).Id" name="UserPermissions[@i].Id" />
+                                                                <input type="hidden" value="@Model.UserPermissions.ElementAt(i).Name" name="UserPermissions[@i].Name" />
+                                                                <input type="hidden" value="@Model.UserPermissions.ElementAt(i).Tag" name="UserPermissions[@i].Tag" />*@
+                                                            }
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RentType, new { @class = "control-label col-md-3" })
+                                <div class="col-md-4" style="padding-left:0px;">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.EnumDropDownListFor(model => model.RentType, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                        //@Html.CheckBoxFor(model => model.IsDefault, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.EnumDropDownListFor(model => model.RentType, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.CasId })
+                                        //@Html.CheckBoxFor(model => model.IsDefault, new { @class = "form-control input-sm", data_tag = Model.IsDefault })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.RentType)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IsDefault, new { @class = "control-label col-md-3" })
+                                <div class="col-md-3" style="padding-left:0px;">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.CheckBoxFor(model => model.IsDefault, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.CheckBoxFor(model => model.IsDefault, new { @class = "form-control input-sm", data_tag = Model.IsDefault })
+                                    }
+                                </div>
+                            </div>
+                       </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditPackage) || (Model.Id == 0 && ViewBag.AddPackage))
+                    {
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

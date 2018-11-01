@@ -1,0 +1,85 @@
+﻿@model List<BortHistory>
+@using DigitalTVBilling.Helpers
+@{
+    List<User> user = ViewBag.Bort;
+    //List<BortHistory> bort_history = ViewBag.Bort_History;
+
+}
+
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    @*<input type="hidden" value="@ViewBag.card_id" id="card_id" />*@
+    <div class="modal-dialog modal-lg" id="bort_body">
+        <div class="modal-content" @*style="overflow:auto;*@ width:700px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="col-md-2"></label>
+                <div class="col-md-9 ">
+                    <select class=" form-control " multiple id="search" style="width:350px;">
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.ReturnedCardID">@user.Where(u => u.Id == item.BortID).FirstOrDefault().Name &#x21E9;</option>
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top:15%" id="modal_bort">
+                @* <label class="control-label col-md-3" for="Customer_Desc">ბორტი:</label>*@
+                <label class="col-md-2"></label>
+                <div class="col-md-5 input-lg">
+
+                    <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" id="select" style="height:30px;" @*multiple data-max-options="20"*@>
+                        @foreach (var item in user)
+                        {
+
+                            <option value="@item.Id">@item.Name</option>
+
+                        }
+                    </select>
+
+                </div>
+            </div>
+
+            <br />
+
+            <div class="modal-footer" style="margin-top:20%">
+                <button type="button" class="btn btn-default btn-xs btn-warning" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="return_save" class="btn btn-default btn-xs btn-success">შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

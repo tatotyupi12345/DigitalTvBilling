@@ -1,0 +1,71 @@
+﻿@model List<Subscribtion>
+@using DigitalTVBilling.Helpers
+
+@if (ViewBag.CardId != 0)
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 25%;">თარიღი
+                    @*<div>თარიღი</div>*@
+                </th>
+                <th style="width: 15%;">სტატუსი
+                    @*<div>სტატუსი</div>*@
+                </th>
+                <th style="width: 10%;">თანხა
+                    @*<div>თანხა</div>*@
+                </th>
+                <th style="width: 50%;">პაკეტები
+                    @*<div>პაკეტები</div>*@
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Subscribtion list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@Html.SetPacketStatusDisplay(list.Status)</td>
+                    <td>@list.Amount</td>
+                    <td>@Html.SetPackageNames(list.SubscriptionPackages.Select(s => s.Package.Name).ToList())</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 25%;">თარიღი
+                    <div>თარიღი</div>
+                </th>
+                <th style="width: 20%;">ბარათი
+                    <div>ბარათი</div>
+                </th>
+                <th style="width: 15%;">სტატუსი
+                    <div>სტატუსი</div>
+                </th>
+                <th style="width: 10%;">თანხა
+                    <div>თანხა</div>
+                </th>
+                <th style="width: 30%;">პაკეტები
+                    <div>პაკეტები</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Subscribtion list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.Card.AbonentNum</td>
+                    <td>@Html.SetPacketStatusDisplay(list.Status)</td>
+                    <td>@list.Amount</td>
+                    <td>@Html.SetPackageNames(list.SubscriptionPackages.Select(s => s.Package.Name).ToList())</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

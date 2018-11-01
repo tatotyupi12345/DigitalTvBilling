@@ -1,0 +1,316 @@
+﻿@model Abonent
+@using DigitalTVBilling.Helpers
+@{
+    Page.Title = "ახალი აბონენტი";
+    Layout = "~/Views/Shared/__Layout.cshtml";
+
+    ViewBag.AddAbonent = true;// Utils.GetPermission("ABONENT_ADD");
+    ViewBag.AddCard = true;// Utils.GetPermission("CARD_ADD");
+}
+
+@section head {
+    <script src="~/Static/Scripts/md5.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/dynamic_parse.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_all.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_new.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/typeahead.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/cities.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/get_card.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+}
+
+@using (Html.BeginForm("New", "Abonent", FormMethod.Post, new { @class = "form-horizontal", id="abonent_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Logging)
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+            <strong>შეცდომა!</strong> @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-default" id="abonent_panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">აბონენტი</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Type, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.Type, @Model.Customer.GetCustomerTypes, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Type)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+                    <div class="form-group" id="juridical" style="display: none;">
+                        @Html.LabelFor(model => model.Customer.JuridicalType, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.JuridicalType, @Model.Customer.GetJuridicalTypes, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.JuridicalType)
+                        </div>
+                    </div>
+                    <div id="budget" style="display:none;">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.JuridicalFinishDate, new { @class = "control-label col-md-3" })
+                            <div class="col-md-7">
+                                <div class="input-group input-group-sm date" id="txt_date">
+                                    @Html.DatetimeTextBoxFor(model => model.Customer.JuridicalFinishDate, "dd/MM/yyyy", new { @class = "form-control input-sm", data_val=false, @readonly = "readonly" })
+                                    <a class="input-group-addon" style="cursor: pointer;">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.IsBudget, new { @class = "control-label col-md-3" })
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.Customer.IsBudget, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.IsFacktura, new { @class = "control-label col-md-3" })
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.Customer.IsFacktura, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Name, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Name, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Name)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="last_name">
+                        @Html.LabelFor(model => model.Customer.LastName, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.LastName, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.LastName)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Code, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            <div class="input-group input-group-sm">
+                                @Html.TextBoxFor(model => model.Customer.Code, new { @class = "form-control input-sm" })
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm" id="btn_code"><span class="glyphicon glyphicon-user"></span></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Customer.Code)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Address, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Address, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Address)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+ 
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.City, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.City, new { @class = "form-control input-sm", autocomplete="off" })
+                            @Html.ValidationMessageFor(model => model.Customer.City)
+                        </div>
+                        <div class="col-md-1" id="status_alert">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.District, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.District, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Village, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Village, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Region, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Region, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Region)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone1, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone1, new { @class = "form-control input-sm", type="tel" })
+                            @Html.ValidationMessageFor(model => model.Customer.Phone1)
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone2, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone2, new { @class = "form-control input-sm", type="tel", autocomplete="off" })
+                            @Html.ValidationMessageFor(model => model.Customer.Phone2)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Email, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Email, new { @class = "form-control input-sm", type = "tel", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.Customer.Email)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Desc, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextAreaFor(model => model.Customer.Desc, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Desc)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.SecurityCode, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            <input class="form-control input-sm" autocomplete="off" data-val="true" data-val-required="შეიყვანეთ კოდური სიტყვა" id="Customer_SecurityCode" name="Customer.SecurityCode" type="password">
+                            <span class="field-validation-valid" data-valmsg-for="Customer.SecurityCode" data-valmsg-replace="true"></span>
+                        </div>
+                        <div class="col-md-1">
+                            *
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <label class="control-label col-md-4">RS.ge განახლება:</label>
+                <div class="col-md-7">
+                    <button type="button" id="btn_res" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </div>
+            </div>
+            @*@if (Model.attachments != null)
+            {
+            <div class="form-group diler_filter">
+                <div id="attachmentsWrapper" class="" style="overflow: auto; overflow-y: hidden; ">
+                    <table class="table table-bordered table-hover" style="text-align:center;">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="text-align:center;">აქსესუარი</th>
+                                <th style="text-align:center;">რაოდენობა</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.attachments.Count(); i++)
+                            {
+
+                                <tr>
+                                    <td><img src="@Model.attachments[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                    <td>@Model.attachments[i].Name</td>
+                                    <td>
+                                        <input type="number" min="0" name="attachments[@i].Value" value="0" class="form-control input-sm" autocomplete="off" />
+                                        <input type="hidden" name="attachments[@i].Id" value="@Model.attachments[i].Id" />
+                                        @Html.TextBoxFor(model => model.attachments[i].Value, new { @class = "form-control input-sm", autocomplete = "off" })
+                                        @Html.ValidationMessageFor(model => model.attachments[i].Value)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }*@
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-default" id="cards_panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ბარათები</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    <div id="cards">
+                        @{Html.RenderPartial("~/Views/Abonent/__Card.cshtml", Model);}
+                         @if(ViewBag.AddCard)
+                        {
+                        <span style="float: right; margin-right: 4px; cursor: pointer;" id="card_add">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span> ახალი ბარათი</span>
+                        </span>
+
+                        <span style="float: left; margin-right: 4px; cursor: pointer;" id="showModal">
+                            <span class="glyphicon glyphicon-magnet"></span>
+                            <span> არსებული ბარათის მიბმა</span>
+                        </span>
+                         }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (ViewBag.AddAbonent)
+        {
+            <div class="col-md-12">
+                <input type="submit" value="შენახვა" class="btn btn-default btn-sm pull-right" />
+            </div>
+        }
+    </div>
+}
+
+<div class="modal fade" id="serv_res_modal">
+    <div class="modal-dialog modal-dialog-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">არჩეული მომსახურებები</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal" id="services_save">შენახვა</button>
+            </div>
+        </div>
+    </div>
+</div>

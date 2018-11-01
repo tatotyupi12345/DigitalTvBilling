@@ -1,0 +1,96 @@
+﻿@model DigitalTVBilling.CancelPayment
+<div class="modal fade" id="cancel_payment_modal">
+    <div class="modal-dialog">
+        <form action="/Payment/CancelPayment" class="form-horizontal" enctype="multipart/form-data" method="post" role="form">
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">გადახდის გადატანა</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="@ViewBag.CardId" />
+                    @Html.HiddenFor(m => m.CardId)
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">ოპერაცია:</label>
+                                <div class="col-md-7">
+                                    <select class="form-control input-sm" name="Type" id="cancel_operation">
+                                        <option value="1">გატანა</option>
+                                        <option value="2">ძველ ბილინგში გადატანა</option>
+                                        <option value="3">აბონენტის ბარათზე</option>
+                                        <option value="4">გაურკვეველი</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="cards_find_area" style="display:none;">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">ძებნა:</label>
+                                <div class="col-md-4">
+                                    <select class="form-control input-sm" id="find_by">
+                                        <option value="1">პირადი ნომრით</option>
+                                        <option value="0">ხელშ. ნომრით</option>
+                                        <option value="2">აბონენტის ნომრით</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control" id="payment_find" autocomplete="off">
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" id="find">
+                                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7 col-md-offset-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="form-group">
+                                            <div id="cards">
+                                            </div>
+                                            <div id="abonent_area">
+                                            </div>
+                                            <span style="color: red;" id="card_message"></span>
+                                            <div class="btn-group-vertical" role="group" id="cards_area" style="padding-left:15px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">თანხა:</label>
+                                <div class="col-md-2">
+                                    @Html.TextBoxFor(c => c.Amount, new { @class = "form-control input-sm", data_tag = @Model.Amount })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3">ფაილი:</label>
+                                <div class="col-md-7">
+                                    <input type="file" name="fl" class="form-control input-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

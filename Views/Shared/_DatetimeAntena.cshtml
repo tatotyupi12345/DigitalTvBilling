@@ -1,0 +1,17 @@
+﻿@using DigitalTVBilling.Helpers
+
+
+
+    <div class="row">
+        <div class='col-sm-3'>
+
+                <div class='input-group date' id='datetimepicker5' style="margin-left:-20px;margin-top:10px;">
+                    @*<input type="text" name="daterange" value="01/01/2015 1:30 PM - 01/01/2015 2:00 PM" />*@
+                    <input type="text"  name="daterange" id="@ViewData["ID"]_picker_to" class="form-control" style="width:300px;" value="@if(ViewData.ContainsKey("date_to")) {@ViewData["date_to"]} else { @Html.GetToDate(Convert.ToString(ViewData["YEAR"])) }" />
+                </div>
+           
+        </div>
+    
+    </div>
+
+

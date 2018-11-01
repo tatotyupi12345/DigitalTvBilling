@@ -1,0 +1,17 @@
+﻿@model List<CustomerSellAttachments>
+@using DigitalTVBilling.Helpers
+
+@{
+    List<SellAttachment> attachs = ViewBag.attachmenlist;
+    List<User> user = ViewBag.Bort;
+}
+
+        @for (int i = 0; i < 12; i++)
+        {
+            <tr>
+                <td id="add_">
+                    <input data-val="0" type="number" min="0" id="attachments_0" value="" class="form-control input-sm for_hiden" autocomplete="off" disabled />
+                    <input type="hidden" id="attachments[0].Id" value="0" />
+                </td>
+            </tr>
+        }

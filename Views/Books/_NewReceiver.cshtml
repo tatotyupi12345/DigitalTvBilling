@@ -1,0 +1,54 @@
+﻿@model Receiver
+@{
+    ViewBag.EditRec = Utils.GetPermission("REC_EDIT");
+    ViewBag.AddRec = Utils.GetPermission("REC_ADD");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+                                         {
+                                             Url = Url.Action("NewReceiver"),
+                                             OnSuccess = "onSuccessNewReceiver",
+                                             HttpMethod = "POST"
+                                         }, new { @class = "form-horizontal", role = "form", id = "receiver_form", name="ReceiverForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი რესივერი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.HiddenFor(model => model.Logging)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditRec) || (Model.Id == 0 && ViewBag.AddRec))
+                    {
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

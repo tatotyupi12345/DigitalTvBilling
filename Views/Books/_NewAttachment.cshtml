@@ -1,0 +1,105 @@
+﻿@model SellAttachment
+@{
+    ViewBag.EditRec = true;// Utils.GetPermission("REC_EDIT");
+    ViewBag.AddRec = true;// Utils.GetPermission("REC_ADD");
+}
+
+<div class="modal fade">
+    <style type="text/css">
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 30px;
+            width: 200px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+    </style>
+    <div class="modal-dialog">
+        @using (Html.BeginForm("NewSellAttachment", "Books", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", id = "SellAttachmentForm", name = "SellAttachmentForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი რესივერი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.HiddenFor(model => model.Logging)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm textbox", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm textbox", autofocus = "autofocus", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ImagePath, new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+
+                                    @if (Model.ImagePath == "" || Model.ImagePath == null)
+                                    {
+
+                                        <input type="file" name="Picture" id="Picture" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.ImagePath" alt="" style="width:200px;height:100px;">
+                                        <br />
+                                        <br />
+                                        <input type="file" name="Picture" id="Picture" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3">მიუთითეთ თანხა</label>
+                                <div class="col-md-4">
+                                    @if (Model.Price == 0)
+                                    {
+                                    <input data-val="28" type="number" min="0" id="attachment" name="Price" value="0" class="form-control input-sm textbox" style="width:100px;" autocomplete="on">
+                                    }
+                                    else
+                                    {
+                                        <input data-val="28" type="number" min="0" id="attachment" name="Price" value="@Model.Price" class="form-control input-sm textbox" style="width:100px;" autocomplete="on">
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditRec) || (Model.Id == 0 && ViewBag.AddRec))
+                    {
+                        <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

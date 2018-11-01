@@ -1,0 +1,390 @@
+﻿@model List<AttachmentContractModel>
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@using DigitalTVBilling.Docs.DocsModel;
+@using DigitalTVBilling.ListModels;
+@{
+    Layout = null;
+    //var emailstring = Model.customer.Email == null || Model.customer.Email == "" ? "_____________________" : Model.customer.Email;
+    //var isFromDiller = ViewBag.isFromDiller;
+    //string username = isFromDiller == true ? "---------------------------------------(პ/ნ-------------------------; )" : @Model.user.Name;
+}
+<!DOCTYPE html>
+@{
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Doc1</title>
+    <style>
+        /*.doc_wrapper[size="A4"] {
+            width: 21cm;
+            height: 29.7cm;
+        }*/
+
+        table, th, td {
+            border: 1px solid black;
+            margin-left: 60px;
+        }
+
+        li {
+            margin-left: 30px;
+        }
+
+        .doc_wrapper {
+            /*position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;*/
+            margin: 0 auto;
+        }
+
+        /*#doc_wrapper {
+            page-break-after: always;
+        }*/
+
+        .pageBreak {
+            page-break-after: always;
+        }
+
+        ul {
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .sign {
+            display: inline-block;
+        }
+
+        ol {
+            list-style-type: none;
+            counter-reset: item;
+            margin: 0;
+            padding: 0;
+        }
+
+            ol > li {
+                display: table;
+                counter-increment: item;
+                margin-bottom: 0.6em;
+            }
+
+                ol > li:before {
+                    content: counters(item, ".") ". ";
+                    display: table-cell;
+                    padding-right: 0.6em;
+                }
+
+        li ol > li {
+            margin: 0;
+        }
+
+        * {
+            font-size: 10.2pt;
+            font-family: "Sylfaen";
+        }
+
+        li ol > li:before {
+            content: counters(item, ".") " ";
+        }
+
+        #left-sign {
+            float: left;
+        }
+
+        #right-sign {
+            float: right;
+        }
+
+        .clearfix:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div id="doc_wrapper" class="doc_wrapper">
+        <p style="margin-top:50px; margin-left:15px;"><strong>&nbsp;&nbsp;&nbsp;დანართი #</strong><strong>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+        <p><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; მიღება-ჩაბარების აქტი</strong></p>
+        <ol>
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;კომპანიამ აბონენტს დროებით სარგებლობაში გადასცა:</li>
+        </ol>
+        <table style="height: 379px;" width="776">
+            <tbody>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ჩამონათვალი</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;ღირებულება</p>
+                        <p>&nbsp; &nbsp; &nbsp;მოცემულია ერთეულის ღირებულება</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;რაოდენობა</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ მიმღები BTV-5K</p>
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; მიმღები DTV-5K</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;70 (სამოცდაათი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ CI მოდული</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;80 (ოთხმოცი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;0</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; პულტი</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;10 (ათი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; HDMI კაბელი</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;5 (ხუთი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; ანალოგური კაბელი</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;3 (სამი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; ბარათი</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;15 (თხუთმეტი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;1</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 289px;">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; კვების წყარო</p>
+                    </td>
+                    <td style="width: 284px;">
+                        <p>&nbsp; &nbsp; &nbsp;10 (ათი) ლარი</p>
+                    </td>
+                    <td style="width: 181px;">
+                        <p>&nbsp; &nbsp; &nbsp;1</p>
+                    </td>
+                </tr>
+                <tr>
+                    @if (Model.Select(s => s.Temporaryse).FirstOrDefault() == null && Model.Select(s => s.Temporaryse).FirstOrDefault() == 0)
+                    {
+                        <td style="width: 293px;">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; ანტენა DTV-K7</p>
+                        </td>
+                        <td style="width: 287px;">
+                            <p>&nbsp; &nbsp; &nbsp;15 (თხუთმეტი) ლარი</p>
+                        </td>
+                        <td style="width: 180px;">
+                            <p>&nbsp; &nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 42 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="width: 293px;">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; ანტენა DTV-K7</p>
+                        </td>
+                        <td style="width: 287px;">
+                            <p>&nbsp; &nbsp; &nbsp;15 (თხუთმეტი) ლარი</p>
+                        </td>
+                        <td style="width: 180px;">
+                            <p>&nbsp; &nbsp; &nbsp; 0 </p>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;  &nbsp; მონტაჟისთვის დახარჯული მასალა:</p>
+        <table width="0">
+            <tbody>
+                <tr>
+                    <td width="352">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;დასახელება</p>
+                    </td>
+                    <td width="352">
+                        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;რაოდენობა</p>
+                    </td>
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 28 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp; F-კონექტორი</p>
+                        </td>
+                        <td width="352">
+                            <p> &nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 28 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□&nbsp; F-კონექტორი</p>
+                        </td>
+                        <td width="352">
+                            <p> &nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 29 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; IEC-მამალი-F დედალზე</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 29 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ IEC-მამალი-F დედალზე</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 30 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; კაბელი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 30 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ კაბელი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 31 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; F-დამაკავშირებელი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 31 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+
+                    }
+                    else
+                    {
+
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ F-დამაკავშირებელი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 33 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp;&nbsp; სკარტი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 33 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□&nbsp; სკარტი</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Where(c => c.attachments.Any(a => a.Id == 35 && a.Value != 0)).FirstOrDefault() != null)
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="glyphicon glyphicon-ok"></span>&nbsp; IEC დედალი F მამალზე</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;@Model.SelectMany(ss => ss.attachments).Where(c => c.Id == 35 && c.Value != 0).FirstOrDefault().Value</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="352">
+                            <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;□ IEC დედალი F მამალზე</p>
+                        </td>
+                        <td width="352">
+                            <p>&nbsp; &nbsp;&nbsp; &nbsp;0</p>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+        <p>&nbsp;</p>
+        <ol >
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <li>აბონენტი, წინამდებარე აქტზე ხელმოწერით, აცნობიერებს, რომ ხელშეკრულების თანახმად, მას სარგებლობის უფლებით გადაეცემა კომპანიის საკუთრებაში არსებული ქონება და რომ იგი ვალდებულია განახორციელოს გადაცემული ქონების მოვლა/პატრონობა, წინააღმდეგ შემთხვევაში, ხელშეკრულებით დადგენილი პირობების თანახმად იგი პასუხს აგებს მიყენებული ზიანისათვის.</li>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <li>აქტი შედგენილია ქართულ ენაზე ორი თანაბარი იურიდიული ძალის მქონე ეგზემპლარად და ინახება მხარეებთან;</li>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <li>აქტის სისწორეს ვადასტურებთ ხელმოწერით;</li>
+        </ol>
+        <p>&nbsp;</p>
+        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong>მხარეთა ხელმოწერა</strong></p>
+        <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="@Model.Select(s => s.AttachmentSignature).FirstOrDefault()" style="width:180px; height:150px;" alt="description here" />  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="@Model.Select(s => s.AttachmentSignature).FirstOrDefault()" style="width:180px; height:150px;" alt="description here" /></p>
+    </div>
+</body>
+</html>

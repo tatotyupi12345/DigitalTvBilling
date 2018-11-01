@@ -1,0 +1,290 @@
+﻿@model Damage
+@using DigitalTVBilling.Helpers
+@{
+    ViewBag.Title = "დაზიანება";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript" src="/Static/Scripts/typeahead.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/cities.js"></script>
+    <script type="text/javascript">
+        function isInt(n) {
+            return Number(n) === n && n % 1 === 0;
+        }
+        $(function () {
+            $("form").each(function (i, form) {
+                GeoKBD.map($(form).attr("name"), $.map($(form).find("input[type='text'], textarea"), function (item, k) { return $(item).attr("name") }));
+            });
+
+            $("#txt_date").datepicker({
+                autoclose: true,
+                language: "ka",
+                format: 'dd/mm/yyyy'
+            }).on("changeDate", function (ev) {
+                $(this).datepicker("hide");
+            });
+
+            $("#btn_res").on("click", function (e) {
+                e.preventDefault();
+                $.post("/Setting/UpdateRs", {}, function (data) {
+                    if (data === true)
+                        alert("RS.ge-ის მონაცემები განახლდა");
+                }, "json");
+            });
+
+            $("#Customer_Type").on("change", function () {
+                if ($(this).find("option:selected").val() === "Juridical") {
+                    $("#juridical, #budget").show();
+                    $("#last_name").hide().find("#Customer_LastName").val("");
+                    $("#Customer_JuridicalType").find("option:selected").val("0");
+                    $("label[for='Customer_Code']").html("ს/კ:");
+                    var dt = new Date();
+                    $("#Customer_JuridicalFinishDate").val(dt.toDateString());
+                } else {
+                    $("#juridical, #budget").hide();
+                    $("#Customer_JuridicalType").find("option").eq(0).val("99");
+                    $("label[for='Customer_Code']").html("პ/ნ:");
+                    $("#Customer_JuridicalFinishDate").val("");
+                }
+            });
+
+            $("#btn_abonent").on("click", function (e) {
+                e.preventDefault();
+                $.post("/Damage/CheckCustomer", { code: $("#Customer_Code").val() }, function (data) {
+                    if (data != null) {
+                        if (isInt(data)) {
+                            alert("შეკვეთა უკვე გაფორმებულია, № " + data);
+                        } else {
+                            $("#Customer_Address").val(data.Address);
+                            $("#Customer_City").val(data.City);
+                            $("#Customer_Village").val(data.Village);
+                            $("#Customer_Region").val(data.Region);
+                            $("#Customer_Phone1").val(data.Phone1);
+                            $("#Customer_Phone2").val(data.Phone2);
+                            $("#Customer_Desc").val(data.Desc);
+                            $("#Customer_District").val(data.District);
+                            $("#Customer_Village").val(data.Village);
+                            $("#card_address").removeClass("hide");
+                            $("#Customer_Type").val(data.Type === 0 ? "Physical" : (data.Type === 1 ? "Juridical" : "Technic"));
+                            if ($("#Customer_Type").find("option:selected").val() === "Juridical") {
+                                $("#Customer_Name").val(data.Name);
+                            } else {
+                                $("#Customer_Name").val(data.Name.split(' ')[0]);
+                                $("#Customer_LastName").val(data.Name.split(' ')[1]);
+                            }
+                        }
+                    }
+                }, "json");
+            });
+
+        });
+
+    </script>
+}
+
+@using (Html.BeginForm("New", "Damage", FormMethod.Post, new { @class = "form-horizontal", id = "abonent_form" }))
+{
+    @Html.AntiForgeryToken()
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+            <strong>შეცდომა!</strong> ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-default" id="abonent_panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">აბონენტი</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">სავ. მისვლის თარიღი</label>
+                        <div class="col-sm-4">
+                            <div class="input-group input-group-sm date" id="txt_date">
+                                @Html.DatetimeTextBoxFor(model => model.GetDate, "dd/MM/yyyy", new { @class = "form-control input-sm", data_val = false })
+                                <a class="input-group-addon" style="cursor: pointer;">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Type, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.Type, @Model.Customer.GetCustomerTypes, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="juridical" style="display: none;">
+                        @Html.LabelFor(model => model.Customer.JuridicalType, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.JuridicalType, @Model.Customer.GetJuridicalTypes, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    <div id="budget" style="display:none;">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.JuridicalFinishDate, new { @class = "control-label col-md-3" })
+                            <div class="col-md-7">
+                                <div class="input-group input-group-sm date" id="txt_date">
+                                    @Html.TextBoxFor(model => model.Customer.JuridicalFinishDate, new { @class = "form-control input-sm", data_tag = Model.Customer.JuridicalFinishDate, @readonly = "readonly" })
+                                    <a class="input-group-addon" style="cursor: pointer;">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.IsBudget, new { @class = "control-label col-md-3" })
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.Customer.IsBudget, new { @class = "form-control input-sm" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Name, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Name, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.Name)
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="last_name">
+                        @Html.LabelFor(model => model.Customer.LastName, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.LastName, new { @class = "form-control input-sm" })
+                            @Html.ValidationMessageFor(model => model.Customer.LastName)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Code, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            <div class="input-group input-group-sm">
+                                @Html.TextBoxFor(model => model.Customer.Code, new { @class = "form-control input-sm damage_code" })
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm" id="btn_abonent"><span class="glyphicon glyphicon-user"></span></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Customer.Code)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Address, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Address, new { @class = "form-control input-sm", data_val = false })
+                        </div>
+                    </div>
+
+                    <div class="form-group hide" id="card_address">
+                        <label class="control-label col-md-3">ბარათის მისამართი:</label>
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.CardAddress, new { @class = "form-control input-sm", data_val = false })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.City, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.City, new { @class = "form-control input-sm", data_val = false, autocomplete = "off" })
+                        </div>
+                        <div class="col-md-1" id="status_alert">
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.District, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.District, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Village, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Village, new { @class = "form-control input-sm", data_val = false })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Region, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Region, new { @class = "form-control input-sm", data_val = false })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone1, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone1, new { @class = "form-control input-sm damage_phone", type = "tel" })
+                            @Html.ValidationMessageFor(model => model.Customer.Phone1)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone2, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone2, new { @class = "form-control input-sm", type = "tel", autocomplete = "off" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Email, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Email, new { @class = "form-control input-sm", type = "tel", autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.Customer.Email)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Desc, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextAreaFor(model => model.Customer.Desc, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    @if (Utils.GetPermission("Technical_Girls_Status_Display"))
+                    {
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Status, @Model.GetDamageTypes, new { @class = "form-control input-sm" })
+                        </div>
+                    </div>
+                    }
+                    <div class="form-group">
+                        <label class="control-label col-md-3">რესივერების რაოდ.</label>
+                        <div class="col-md-2">
+                            @Html.TextBoxFor(model => model.ReceiversCount, new { @class = "form-control input-sm", type = "number" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label class="control-label col-md-4">RS.ge განახლება:</label>
+                <div class="col-md-7">
+                    <button type="button" id="btn_res" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <input type="submit" value="შენახვა" class="btn btn-default btn btn-success btn-sm pull-right" />
+        </div>
+    </div>
+}
+

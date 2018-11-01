@@ -1,0 +1,46 @@
+﻿@model List<Package>
+<div class="modal fade" id="addsubscr_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">პაკეტის გამოწერა</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" name="card_id" value="@ViewBag.CardId" />
+                    <ul class="list-group checked-list-box">
+                        @{double price = 0;}
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+
+                            if (Model[i].RentType == RentType.block || Model[i].RentType == RentType.technic || ( (Model[i].Id == 304084) && !ViewBag.ShowShare) || (Model[i].Id == 304085 && !ViewBag.ShowShare8))
+                            {
+                                continue;
+                            }
+
+
+                            price = 0;
+                            if ((CustomerType)ViewBag.Type == CustomerType.Juridical)
+                            {
+                                price = Model[i].JuridPrice - (Model[i].JuridPrice * (double)ViewBag.Discount) / 100;
+                            }
+                            else
+                            {
+                                price = Model[i].Price - (Model[i].Price * (double)ViewBag.Discount) / 100;
+                            }
+
+                            <li class="list-group-item" data-index="@i" data-id="@Model[i].Id" data-price="@price"><span>@Model[i].Name</span><span class="pull-right" style="margin-right: 10px;">@price ლარი</span></li>
+                        }
+                    </ul>
+                </div>
+                <span class="label label-default">ჯამი: <span class="badge" id="packages_summ"></span>ლარი</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-primary btn-xs" id="add_new_subscrb">შენახვა</button>
+            </div>
+            <script type="text/javascript" src="~/Static/Scripts/checkboxlist.js"></script>
+        </div>
+    </div>
+</div>

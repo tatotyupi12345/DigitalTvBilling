@@ -1,0 +1,21 @@
+﻿@model List<Attachment>
+<input type="file" class="form-control input-sm" name="attach_file" multiple="multiple" style="margin-bottom:5px;" />
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th style="width: 90%;">დასახელება
+            </th>
+            <th style="width: 10%;">
+            </th>
+        </tr>
+    </thead>
+    <tbody id="files_body">
+        @foreach(DigitalTVBilling.Models.Attachment att in Model)
+        {
+        <tr data-id="@att.Id">
+            <td>@att.OriginalName</td>
+            <td style="text-align:center;"><span class="glyphicon glyphicon-remove"></span></td>
+        </tr>
+        }
+    </tbody>
+</table>

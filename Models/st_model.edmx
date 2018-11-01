@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DigitalTVBillingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DigitalTVBilling.dbo.st_Customers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="st_Customers">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Firstname" />
+            <PropertyRef Name="Lastname" />
+            <PropertyRef Name="PersonalNo" />
+            <PropertyRef Name="Address" />
+            <PropertyRef Name="CardNo" />
+            <PropertyRef Name="CarNo" />
+            <PropertyRef Name="ActiveDate" />
+            <PropertyRef Name="Balance" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="IsInBilling" />
+            <PropertyRef Name="IsDisabled" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Firstname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Lastname" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PersonalNo" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CardNo" Type="bigint" Nullable="false" />
+          <Property Name="Phone" Type="nvarchar" MaxLength="50" />
+          <Property Name="CarNo" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ActiveDate" Type="datetime" Nullable="false" />
+          <Property Name="Balance" Type="decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="IsInBilling" Type="bit" Nullable="false" />
+          <Property Name="IsRegistered" Type="bit" />
+          <Property Name="IsDisabled" Type="bit" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" />
+          <Property Name="Send_Status" Type="bit" />
+          <Property Name="Before_ActiveDate_Send" Type="bit" />
+          <Property Name="After_ActiveDate_Send" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="DigitalTVBillingModelStoreContainer">
+          <EntitySet Name="st_Customers" EntityType="Self.st_Customers" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [st_Customers].[ID] AS [ID], 
+    [st_Customers].[Firstname] AS [Firstname], 
+    [st_Customers].[Lastname] AS [Lastname], 
+    [st_Customers].[PersonalNo] AS [PersonalNo], 
+    [st_Customers].[Address] AS [Address], 
+    [st_Customers].[CardNo] AS [CardNo], 
+    [st_Customers].[Phone] AS [Phone], 
+    [st_Customers].[CarNo] AS [CarNo], 
+    [st_Customers].[ActiveDate] AS [ActiveDate], 
+    [st_Customers].[Balance] AS [Balance], 
+    [st_Customers].[CreateDate] AS [CreateDate], 
+    [st_Customers].[IsInBilling] AS [IsInBilling], 
+    [st_Customers].[IsRegistered] AS [IsRegistered], 
+    [st_Customers].[IsDisabled] AS [IsDisabled], 
+    [st_Customers].[Password] AS [Password], 
+    [st_Customers].[Send_Status] AS [Send_Status], 
+    [st_Customers].[Before_ActiveDate_Send] AS [Before_ActiveDate_Send], 
+    [st_Customers].[After_ActiveDate_Send] AS [After_ActiveDate_Send]
+    FROM [dbo].[st_Customers] AS [st_Customers]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DigitalTVBillingModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="st_Customers">
+          <Key>
+            <PropertyRef Name="ID" />
+            <PropertyRef Name="Firstname" />
+            <PropertyRef Name="Lastname" />
+            <PropertyRef Name="PersonalNo" />
+            <PropertyRef Name="Address" />
+            <PropertyRef Name="CardNo" />
+            <PropertyRef Name="CarNo" />
+            <PropertyRef Name="ActiveDate" />
+            <PropertyRef Name="Balance" />
+            <PropertyRef Name="CreateDate" />
+            <PropertyRef Name="IsInBilling" />
+            <PropertyRef Name="IsDisabled" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Firstname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Lastname" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PersonalNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CardNo" Type="Int64" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CarNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ActiveDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Balance" Type="Decimal" Precision="5" Scale="2" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsInBilling" Type="Boolean" Nullable="false" />
+          <Property Name="IsRegistered" Type="Boolean" />
+          <Property Name="IsDisabled" Type="Boolean" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Send_Status" Type="Boolean" />
+          <Property Name="Before_ActiveDate_Send" Type="Boolean" />
+          <Property Name="After_ActiveDate_Send" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="DigitalTVBillingEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="st_Customers" EntityType="Self.st_Customers" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DigitalTVBillingModelStoreContainer" CdmEntityContainer="DigitalTVBillingEntities">
+          <EntitySetMapping Name="st_Customers">
+            <EntityTypeMapping TypeName="DigitalTVBillingModel.st_Customers">
+              <MappingFragment StoreEntitySet="st_Customers">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Firstname" ColumnName="Firstname" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="PersonalNo" ColumnName="PersonalNo" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CardNo" ColumnName="CardNo" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="CarNo" ColumnName="CarNo" />
+                <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="IsInBilling" ColumnName="IsInBilling" />
+                <ScalarProperty Name="IsRegistered" ColumnName="IsRegistered" />
+                <ScalarProperty Name="IsDisabled" ColumnName="IsDisabled" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Send_Status" ColumnName="Send_Status" />
+                <ScalarProperty Name="Before_ActiveDate_Send" ColumnName="Before_ActiveDate_Send" />
+                <ScalarProperty Name="After_ActiveDate_Send" ColumnName="After_ActiveDate_Send" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

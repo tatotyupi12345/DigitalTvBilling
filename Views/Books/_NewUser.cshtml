@@ -1,0 +1,190 @@
+﻿@model User
+@{
+    ViewBag.AddUser = Utils.GetPermission("USER_ADD");
+    ViewBag.EditUser = Utils.GetPermission("USER_EDIT");
+    ViewBag.PasswordChange = Utils.GetPermission("USER_PASSWORD_CHANGE");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Html.BeginForm("NewUser", "Books", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal", role = "form", id = "SellAttachmentForm", name = "SellAttachmentForm" }))
+       
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი მომხმარებელი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.HiddenFor(model => model.Logging)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Phone, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Phone, new { @class = "form-control input-sm", data_tag = Model.Phone })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Phone)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm", })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Email, new { @class = "form-control input-sm", data_tag = Model.Email })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Email)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.DropDownListFor(model => model.Type, new SelectList((List<IdName>)ViewBag.UserTypes, "Id", "Name", Model.Type), new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.Type, new SelectList((List<IdName>)ViewBag.UserTypes, "Id", "Name", Model.Type), new { @class = "form-control input-sm", data_tag = Model.Type })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Type)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.@object, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        <select class="form-control input-sm" data_tag="object" data-val="true" id="object" name="object">
+                                            <option value=""></option>
+                                            @foreach (SellerObject seller in ViewBag.sellers)
+                                            {
+                                                <option value="@seller.ID">@seller.name @(" - ") @seller.address</option>
+                                            }
+                                        </select>
+                                        //@Html.DropDownListFor(model => model.Type, new SelectList((List<IdName>)ViewBag.UserTypes, "Id", "Name", Model.Type), new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control input-sm" data-val="true" data_tag="object" id="object" name="object">
+                                            <option value=""></option>
+                                            @foreach (SellerObject seller in ViewBag.sellers)
+                                            {
+                                                <option value="@seller.ID" @if (@seller.ID == Model.@object) { @Html.Raw("selected='selected'") }>@seller.name @(" - ") @seller.address</option>
+                                            }
+                                        </select>
+                                        //@Html.DropDownListFor(model => model.Type, new SelectList((List<IdName>)ViewBag.UserTypes, "Id", "Name", Model.Type), new { @class = "form-control input-sm", data_tag = Model.Type })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.@object)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CodeWord, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.CodeWord, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.CodeWord, new { @class = "form-control input-sm", data_tag = Model.CodeWord })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.CodeWord)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Login, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Login, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Login, new { @class = "form-control input-sm", data_tag = Model.Login })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Login)
+                                </div>
+                            </div>
+                            @if (ViewBag.PasswordChange)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-3" })
+                                    <div class="col-md-8">
+                                        @Html.PasswordFor(model => model.Password, new { @class = "form-control input-sm" })
+                                        @Html.ValidationMessageFor(model => model.Password)
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.HardAutorize, new { @class = "control-label col-md-3" })
+                                <div class="col-md-2">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.CheckBoxFor(model => model.HardAutorize, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.CheckBoxFor(model => model.HardAutorize, new { @class = "form-control input-sm", data_tag = Model.HardAutorize })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Login)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.image, new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+
+                                    @if (Model.image == "" || Model.image == null)
+                                    {
+
+                                        <input type="file" name="Picture" id="Picture" />
+                                    }
+                                    else
+                                    {
+                                        <img src="@Model.image" alt="" style="width:200px;height:100px;">
+                                        <br />
+                                        <br />
+                                        <input type="file" name="Picture" id="Picture" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditUser) || (Model.Id == 0 && ViewBag.AddUser) || (Model.Id > 0 && ViewBag.PasswordChange))
+                    {
+                        <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

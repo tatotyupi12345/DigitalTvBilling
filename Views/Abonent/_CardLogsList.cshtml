@@ -1,0 +1,59 @@
+﻿@model List<CardLog>
+@using DigitalTVBilling.Helpers
+
+@if (ViewBag.CardId != 0)
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 30%;">თარიღი
+                   @* <div>თარიღი</div>*@
+                </th>
+                <th style="width: 30%;">სტატუსი
+                   @* <div>სტატუსი</div>*@
+                </th>
+                <th style="width: 40%;">სტატუსი
+                    @*<div>მომხარებელი</div>*@
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.CardLog list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Date)</td>
+                    <td>@Html.GetCardLogStatus(list.Status)</td>
+                    <td>@list.User.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 30%;">თარიღი
+                    <div>თარიღი</div>
+                </th>
+                <th style="width: 30%;">ბარათი
+                    <div>ბარათი</div>
+                </th>
+                <th style="width: 40%;">სტატუსი
+                    <div>სტატუსი</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.CardLog list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Date)</td>
+                    <td>@list.Card.AbonentNum</td>
+                    <td>@Html.GetCardLogStatus(list.Status)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

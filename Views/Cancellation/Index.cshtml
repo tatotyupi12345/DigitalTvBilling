@@ -1,0 +1,412 @@
+﻿@model IPagedList<Cancellation>
+
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "გაუქმებები";
+
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+    ViewBag.Addcancel = Utils.GetPermission("cancel_ADD");
+    ViewBag.cancelStatusesAdd = Utils.GetPermission("cancel_STATUSES_ADD");
+    ViewBag.cancelMontagesSeniors = Utils.GetPermission("cancel_MONTAGES_SENIORS");
+    ViewBag.AbonentAddFromcancel = Utils.GetPermission("ABONENT_ADD_FROM_cancel");
+    ViewBag.ApproveDamage = Utils.GetPermission("DAMAGE_APPROVE");
+    ViewBag.Cancled = Utils.GetPermission("CANCEL_EDITING");
+    List<User> execUsers = ViewBag.ExecutorUsers;
+    List<CardCustumerID> card_cutumer = ViewBag.cards;
+    List<ReturnedCard> returned_card = ViewBag.Returned;
+
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/cancel.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    @*<script src="~/Static/Scripts/View/returned_index.js"></script>*@
+    <script src="~/Static/Scripts/View/returned_card.js"></script>
+    <script type="text/javascript">
+        @*var groups = @Html.Raw(ViewBag.UserGroups);
+        var reasons = @Html.Raw(ViewBag.Reasons);*@
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .cancled {
+            background-color: #e41d1d;
+        }
+        .ServiceCenter {
+            background-color: #ffd800;
+        }
+        .success__ {
+            background-color: #a4ff7e;
+        }
+
+        .canceledOerders {
+            background-color: #ff8080;
+        }
+
+        .not {
+            background-color: #4bff00;
+        }
+
+        .yesCancled {
+            background-color: #ff6a00;
+        }
+
+        .loading {
+            background-color: #ffb366;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-1">
+        @*@if (ViewBag.Addcancel)
+            {*@
+        @Html.ActionLink("ახალი გაუქმება", "New", "Cancellation", null, new { @class = "btn btn-xs btn-primary" })
+        @*}*@
+    </div>
+    <div class="col-sm-1">
+        <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+            <span class="fa-stack">
+                <i class="fa fa-filter fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+            </span>
+        </button>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <select class="form-control input-sm valid" data-tag="" data-val="true" id="cancled_status_filter" name="status">
+            <option value="-1">სტატუსი</option>
+            @foreach (CancleStatus l_s in Enum.GetValues(typeof(CancleStatus)))
+            {
+                var val = (int)Enum.Parse(typeof(CancleStatus), l_s.ToString());
+                string selected = "";
+                if (val == (int)ViewBag.selectedStatus)
+                {
+                    selected = "selected";
+                }
+                <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                selected = "";
+            }
+        </select>
+    </div>
+    <div class="col-sm-2" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_filter">
+                <option value="0">ბორტი</option>
+                @foreach (var item in execUsers.Where(u => u.Type == 4 || u.Type==44).ToList())
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1">
+        <button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+            <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+        </button>
+    </div>
+</div>
+<div class="row" style="margin-top: 8px;">
+    <table class="table table-bcanceled" style="overflow-x:auto;">
+        <thead>
+            <tr>
+                <th style="width:3%;">
+                    №
+                </th>
+                <th style="width:12%;">
+                    თარიღი
+                </th>
+                <th style="width:15%;">
+                    აბონენტი
+                </th>
+                <th style="width:10%;">
+                    ქალაქი
+                </th>
+                <th style="width:5%;">
+                    საკონტაქტო
+                </th>
+                <th style="width:5%;">
+                    ბარათის №
+                </th>
+                <th style="width:5%;">
+                    რესივ. რაოდ.
+                </th>
+                <th style="width:10%;">
+                    სტატუსი
+                </th>
+                <th style="width: 10%;">
+                    მომხმარებლები
+                </th>
+                <th style="width: 10%;">
+                    შენიშვნა
+                </th>
+                <th style="width: 10%;">
+                    ჯგუფი
+                </th>
+                <th style="width: 10%;">
+                    კომენტარი
+                </th>
+                <th style="width: 5%;">
+                    დად.
+                </th>
+                @if (ViewBag.Cancled)
+                {
+                    <th style="width:5%; text-align:center;">
+                        რედაქტირება
+                        @*<button type="button" class="btn btn-default btn-xs" id="btn_send_sms"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                <input type="checkbox" id="check_all">*@
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody id="cancels_body">
+            @foreach (Cancellation cancel in Model)
+            {
+                string classname = "";
+                string is_canceled = "";
+                //if (cancel.Status == cancelStatus.Canceled)
+                //{
+                //    is_canceled = "canceledOerders";
+                //}
+
+                //switch (cancel.Status)
+                //{
+                //    case cancelStatus.Registered:
+                //        break;
+                //    case cancelStatus.Montage:
+                //        break;
+                //    case cancelStatus.Canceled:
+                //        break;
+                //    case cancelStatus.Worked:
+                //        break;
+                //    case cancelStatus.Delayed:
+                //        break;
+                //    case cancelStatus.Loading:
+                //        classname = "loading";
+                //        break;
+                //    case cancelStatus.Sended:
+                //        break;
+                //    case cancelStatus.Closed:
+                //        break;
+                //    default:
+                //        break;
+                //}
+
+                { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<CancellationCardNum>(cancel.Data); }
+                <tr data-code="@cancel.Code" data-id="@cancel.Id" data-status="@cancel.Status" class="@classname @if(cancel.Status == CancleStatus.Closed) {@Html.Raw("success__")}
+                else
+                {
+                    if (cancel.Status == CancleStatus.NotClosed)
+                    {
+                        @Html.Raw("not")
+                    }
+                    else
+                    {
+
+
+                        if (cancel.Status == CancleStatus.ReallyCancled)
+                        {
+                        @Html.Raw("yesCancled")
+                        }
+                        if (cancel.Status == CancleStatus.Cancel)
+                        {
+                            @Html.Raw("cancled")
+                        }
+                        else
+                        {
+                            @Html.Raw("")
+                        }
+                        if (cancel.Status == CancleStatus.ServiceCenter)
+                        {
+                            @Html.Raw("ServiceCenter")
+                        }
+               
+                    }
+                } @is_canceled">
+                    <td>@cancel.Id</td>
+                    <td>
+                        @Html.SetDateDisplay(cancel.Tdate)
+                        <br />
+                        <small>@Html.SetDateDisplay(cancel.GetDate)</small>
+                        <br />
+                        <small>@Html.SetDateDisplay(cancel.ChangeDate)</small>
+                    </td>
+                    <td>
+                        @cancel.Name.Split('/')[0]
+                        <br />
+                        <small>@cancel.Code</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer_City
+                        <br />
+                        @*@if (!string.IsNullOrEmpty(ViewBag.Data.Customer.District))
+                            {
+                                @ViewBag.Data.Customer.District
+                                <br />
+                            }*@
+                        <small>@ViewBag.Data.Customer_Region</small>
+                        <br />
+                        <small>@ViewBag.Data.Customer_Address</small>
+                        <br />
+                        <small>@ViewBag.Data.Customer_Village</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer_Phone1
+                        <br />
+                        <small>@ViewBag.Data.Customer_Phone2</small>
+                    </td>
+                    <td>@cancel.card_num</td>
+                    <td>@cancel.ReceiversCount</td>
+                    <td class="_status">
+                        @Utils.GetEnumDescription(cancel.Status)
+                        <br />
+                        <small>
+
+                            @if (cancel.ExecutorID != 0)
+                            {
+                                var nm = execUsers.Where(e => e.Id == cancel.ExecutorID).FirstOrDefault();
+                                if (nm != null)
+                                {
+                                    <label>
+                                        @nm.Name
+                                    </label>
+                                }
+                            }
+
+                        </small>
+                    </td>
+                    <td>
+                        @*@cancel.UserUser.Name*@
+                        <br />
+                        <small>@cancel.ChangerUser</small>
+                        <br />
+                        <small>@cancel.ApproveUser</small>
+                    </td>
+                    <td>
+                        @*@Html.Raw(String.Join("<br />", @cancel.cancelReasons.Select(r=>r.Reason.Name)))*@
+                        @ViewBag.Data.Customer_Desc
+                    </td>
+                    <td id="executor_wrapper_@cancel.Id">
+                        @if (cancel.ExecutorID != 0)
+                        {
+
+
+                            var nm = execUsers.Where(e => e.Id == cancel.ExecutorID).FirstOrDefault();
+                            if (nm != null)
+                            {
+                                <label>
+                                    @nm.Name
+                                </label>
+                            }
+
+                            @*@cancel.UserGroup.Name*@
+
+                        }
+                    </td>
+                    <td>
+                        @cancel.comment
+                    </td>
+                    <td>
+                        @if (cancel.IsApproved)
+                        {
+                            <span class="bg-success">დად.</span>
+                        }
+                        else
+                        {
+                            if (!ViewBag.ApproveDamage)
+                            {
+                                <span class="glyphicon glyphicon-minus"></span>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-xs" type="button" onclick="cancelApprove(@cancel.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                            }
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        @if (ViewBag.Cancled)
+                        {
+                            if (cancel.Status == CancleStatus.Closed)
+                            {
+                                var _returned_id = @returned_card.Where(c => c.card_id == card_cutumer.Where(cc => cc.code == ViewBag.Data.Customer_Code).Select(s => s.id).FirstOrDefault()).Select(s => s.Id).FirstOrDefault();
+                                <button class="btn btn-default btn-xs " type="button" style="color: #3c8dbc; font-size:17px;" onclick="updateReturnedCard(@_returned_id)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+
+                            }
+                            else
+                            {
+                                @*var returned_id = returned_card.Where(c => c.card_id == card_cutumer.Where(cc => cc.code == ViewBag.Data.Customer.Code).Select(s => s.id).FirstOrDefault()).Select(s => s.Id).FirstOrDefault();*@
+
+                                <button class="btn btn-default btn-xs disabled" type="button" style="color: #3c8dbc; font-size:17px;" @*onclick="updateReturnedCard(@returned_id)"*@><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="Cancellation_dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <ul class="list-group">
+                @*@if (ViewBag.AbonentAddFromcancel)*@
+
+                <li class="list-group-item" data-index="0">აბონენტის დამატება</li>
+
+                @*@if (ViewBag.Addcancel || ViewBag.cancelMontagesSeniors)*@
+
+                <li class="list-group-item" data-index="1">შეკვეთის რედაქტირება</li>
+
+                @*@if (ViewBag.cancelMontagesSeniors)*@
+
+                <li class="list-group-item" data-index="2">მისვლის თარიღის შეცვლა</li>
+                <li class="list-group-item" data-index="3">სტატუსის შეცვლა</li>
+                <li class="list-group-item" data-index="4">ჯგუფის შეცვლა</li>
+                <li class="list-group-item" data-index="5">კომენტარის რედაქტირება</li>
+            </ul>
+        </div>
+    </div>
+</div>

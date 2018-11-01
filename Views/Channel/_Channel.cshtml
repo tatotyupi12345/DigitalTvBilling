@@ -1,0 +1,43 @@
+﻿@model Channel
+<div class="modal fade" id="channel_modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("", null, new AjaxOptions() { Url = Url.Action("Channel"), HttpMethod = "POST", OnSuccess = "onSuccessChannel" }, new { @class = "form-horizontal", id = "channel_form", name = "ChannelForm" }))
+            {
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">არხი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.Id)
+                        @Html.HiddenFor(model => model.Logging)
+                        <input type="hidden" name="package_id" value="@ViewBag.Package" />
+                        <div class="col-md-10">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus="autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus="autofocus", data_tag = Model.Name  })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

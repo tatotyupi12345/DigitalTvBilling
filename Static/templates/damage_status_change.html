@@ -1,0 +1,44 @@
+﻿<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">სტატუსის შეცვლა</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">სტატუსი:</label>
+                            <div class="col-sm-4">
+                                <select id="drp_status" class="form-control input-sm">
+                                    <option value="loading">ლოდინი</option>
+                                    <option value="CardProblem">ბარათის პრობლემა</option>
+                                    <option value="TVTransfer">TV/AV გადაყვანა</option>
+                                    <option value="SenderProblem">sender-ის პრობლემა</option>
+                                    <option value="FactoryDefects">ქარხნული წუნი</option>
+                                    <option value="ProgramNew">პროგრამული განახლება</option>
+                                    <option value="AntenProblem">ანტენა/კაბელის პრობლემები</option>
+                                    <option value="OtherReason">მიზეზი სხვა</option>
+                                    <option value="NoSignal">სიგნალი არ არის</option>
+                                    <option value="ImprovedInstallerDidNot">თვითონ გამოსწორდა ისე რომ ინსტალატორი არ მივიდა</option>
+                                    <option value="Closed">დასრულდა</option>
+                                    <option value="Processing">დამუშავება</option>
+                                    <option value="Unresolved">მოუგვარებელი</option>
+                                    <option value="Processd">პროცესი</option>
+
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-xs btn-default" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-xs btn-primary" id="status_change">შენახვა</button>
+            </div>
+        </div>
+    </div>
+</div>
+

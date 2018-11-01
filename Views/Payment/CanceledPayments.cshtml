@@ -1,0 +1,65 @@
+﻿@model PagedListExtended<CanceledPaymentList>
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Page.Title = "დაბრუნებული თანხები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+}
+
+<div class="row">
+    <div class="col-sm-7">
+    </div>
+    <div class="col-sm-5">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+</div>
+<div style="margin-top: 8px;">
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 15%;">
+                    თარიღი
+                </th>
+                <th style="width: 50%;">
+                    აბონენტი
+                </th>
+                <th style="width: 20%;">
+                    ბარათიდან
+                </th>
+                <th style="width: 15%;">
+                    თანხა
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (CanceledPaymentList cancel in Model)
+            {
+                <tr data-id="@cancel.Id">
+                    <td>@Html.SetDateDisplay(cancel.Date)</td>
+                    <td>
+                        @cancel.CustomerName
+                        <br />
+                        <small>@cancel.Code</small>
+                    </td>
+                    <td>@cancel.FromCard</td>
+                    <td>@cancel.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.PageNumbersOnly)
+    </div>
+</div>

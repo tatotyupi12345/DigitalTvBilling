@@ -1,0 +1,85 @@
+﻿@model List<Package>
+@{
+    Page.Title = "პაკეტები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.AddPackage = Utils.GetPermission("PACKAGE_ADD");
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/channel_index.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <style type="text/css">
+        .table tbody tr td:last-child {
+            text-align: center;
+        }
+    </style>
+}
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            @RenderPage("/Views/Books/_RightMenu.cshtml")
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-sm-2">
+                @if (ViewBag.AddPackage)
+                {
+                    <button class="btn btn-xs btn-primary" id="showModal">ახალი პაკეტი</button>
+                }
+            </div>
+        </div>
+        <div style="margin-top:8px;">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">
+                            დასახელება
+                        </th>
+                        <th style="width: 15%;">
+                            ფასი
+                        </th>
+                        <th style="width: 15%;">
+                            იურიდ. ფასი
+                        </th>
+                        <th style="width: 15%;">
+                            მინ. ფასი
+                        </th>
+                        <th style="width: 15%;">
+                            გასაღების ტიპი
+                        </th>
+                        <th style="width: 5%;">
+                        </th>
+                        <th style="width: 5%;">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="packages_body">
+                    @foreach (DigitalTVBilling.Models.Package package in Model)
+                    {
+                        <tr data-id="@package.Id">
+                            <td>@package.Name</td>
+                            <td>@package.Price</td>
+                            <td>@package.JuridPrice</td>
+                            <td>@package.MinPrice</td>
+                            <td>@Utils.GetEnumDescription(package.RentType)</td>
+                            <td><span class="glyphicon glyphicon-edit" id="edit_package"></span></td>
+                            <td><span id="remove_package" class="glyphicon glyphicon-remove" onclick=""></span></td>
+                        </tr>
+                    }
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="5" style="text-align:center;">სია ცარიელია</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

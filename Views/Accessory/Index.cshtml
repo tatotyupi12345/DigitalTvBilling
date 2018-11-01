@@ -1,0 +1,223 @@
+﻿@model IPagedList<ReturnedCardAttachment>
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "დაუბრუნებელი აქსესუარი";
+}
+
+@{ 
+    List<ReceiverAttachment> attachments = (List<ReceiverAttachment>)ViewBag.attachments;
+    var customerSellAttachs = from custAttachs in Model
+                              group custAttachs by custAttachs.ReturnedCard.card_id into cGroup
+                              select new
+                              {
+                                  Key = cGroup.Key,
+                                  customerAttachs = cGroup
+                              };
+
+    List<User> users = ViewBag.Users;
+}
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @*<script src="~/Static/Scripts/View/sell_attachs_index.js"></script>*@
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+        <style> 
+        table tr:hover {
+                background-color: #c4ffab;
+            }
+        </style>
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+
+}
+<div class="row">
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+
+    <div class="col-sm-2 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_filter">
+                <option value="0"></option>
+                @foreach (var item in users.Where(u => u.Type == 4).ToList())
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+    <div class="col-sm-1 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="attachFilter" class="form-control" id="drp_filter">
+                <option value="0"></option>
+                @foreach (var item in attachments)
+                {
+                    if (ViewBag.selectedFilter != null && (int)ViewBag.selectedFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+
+        </div>
+    </div>
+    
+</div>
+<div class="row" style="margin-top: 8px; overflow: auto;">
+    <table class="table table-bordered" style="text-align: center;">
+        <thead style="text-align: center;">
+            <tr>
+                @*<th style="width:200px;">
+                    id
+                </th>*@
+                <th style="">
+                    აბონენტი
+                </th>
+                <th style="">
+                    ტიპი
+                </th>
+                <th style="">
+                    ქალაქი
+                </th>
+                <th style="">
+                    ტელეფონი
+                </th>
+                <th style="">
+                    პირადი №
+                </th>
+                <th style="">
+                    მომხმარებელი
+                </th>
+                @foreach (var item in attachments)
+                {
+                    <th style="">
+                        @item.Name
+                    </th>
+                }
+                <th style="width: 2%;">
+
+                </th>
+                @*<th style="">
+                        აქსესუარი
+                    </th>
+                    <th style="">
+                        რაოდენობა
+                    </th>*@
+                @*<th style="width: 2%;">
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (var group in customerSellAttachs)
+            {
+                string classname = "";
+                switch (group.customerAttachs.First().ReturnedCard.Card.Customer.AttachmentApproveStatus)
+                {
+                    case 2:
+                        {
+                            classname = "approved";
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            classname = "approved_edited";
+                        }
+                        break;
+
+                    case 4:
+                        {
+                            classname = "edit";
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                @*<tr>
+                        <td>
+                            @group.Key -- > @group.customerAttachs.First().Customer.Name @group.customerAttachs.First().Customer.LastName
+                            <br>
+                            @foreach (var item in group.customerAttachs)
+                            {
+                                <span>@item.Attachment.Name</span>
+                                <br />
+                            }
+                        </td>
+                    </tr>*@
+
+                <tr data-val="" data-id="@group.customerAttachs.First().ReturnedCardsID" class="@classname">
+                    @*<td>@group.customerAttachs.First().Id</td>*@
+                    <td>
+                        @group.customerAttachs.First().ReturnedCard.Card.Customer.Name @group.customerAttachs.First().ReturnedCard.Card.Customer.LastName
+                    </td>
+                    <td>@Html.GetCustomerTypeDesc(@group.customerAttachs.First().ReturnedCard.Card.Customer.Type)</td>
+                    <td>@group.customerAttachs.First().ReturnedCard.Card.Customer.City</td>
+                    <td>@group.customerAttachs.First().ReturnedCard.Card.Customer.Phone1</td>
+                    <td>@group.customerAttachs.First().ReturnedCard.Card.Customer.Code</td>
+                    <td>@users.Where(u => u.Id == group.customerAttachs.First().ReturnedCard.Card.Customer.UserId).FirstOrDefault().Name</td>
+                    @foreach (var item in attachments)
+                    {
+                        var gs = group.customerAttachs.Where(cc => cc.ReceiverAttachmentsID == item.Id).FirstOrDefault();
+                        if (gs != null)
+                        {
+                            <td><span class="glyphicon glyphicon-remove" aria-hidden="true" style="color:red"></span></td>
+
+                        }
+                        else
+                        {
+                            <td><span class="glyphicon glyphicon-check" aria-hidden="true" style="color:green"></span></td>
+                        }
+                    }
+                    <td data-approve="@group.customerAttachs.First().ReturnedCard.Card.Customer.Id" id="data-approve-@group.customerAttachs.First().ReturnedCard.Card.Customer.Id">
+                        @*@if (@group.customerAttachs.First().ReturnedCard.Card.Customer.AttachmentApproveStatus == 2)
+                        {
+                            <span class="bg-success">OK</span>
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-xs" type="button" onclick="recordApprove(@group.customerAttachs.First().ReturnedCard.Card.Customer.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                        }*@
+                    </td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, accessory_filter_id = Request.QueryString["accessory_filter_id"], user_id = Request.QueryString["user_id"] }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+    <script src="~/Static/Scripts/View/accsessory_index.js"></script>
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <script type="text/javascript">
+
+    </script>
+</div>

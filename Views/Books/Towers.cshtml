@@ -1,0 +1,105 @@
+﻿@model List<Tower>
+
+@{
+    ViewBag.Title = "ანძები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.AddRec = Utils.GetPermission("REC_ADD");
+}
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+}
+<div class="row">
+    <div class="col-md-3">
+         <div class="list-group">
+             @RenderPage("_RightMenu.cshtml")
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-sm-2">
+                @if(ViewBag.AddRec)
+                {
+                <button type="button" id="openModal" class="btn btn-xs btn-primary" data-id="0">ახალი ანძა</button>
+                }
+            </div>
+        </div>
+        <div style="margin-top: 8px;">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>დასახელება
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="users_body">
+                    @foreach (Tower user in Model)
+                    {
+                        <tr data-id="@user.Id">
+                            <td>@user.Name</td>
+                        </tr>
+                    }
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td style="text-align: center;">სია ცარიელია</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#users_body").on("click", "tr", function (e) {
+            openModal($(this).data("id"));
+        });
+
+        $("#openModal").on("click", function (e) {
+            e.preventDefault();
+            openModal($(this).data("id"));
+        });
+    });
+
+    function openModal(id) {
+        $.get("/Books/NewTower", { id: id }, function (data) {
+            var content = $(data);
+            $.validator.unobtrusive.parse(content.find("#tower_form"));
+            content.modal("show");
+            content.on('hidden.bs.modal', function () {
+                content.remove();
+            });
+            content.find("form").each(function (i, form) {
+                GeoKBD.map($(form).attr("name"), $.map($(form).find("input[type='text'], textarea"), function (item, k) {
+                    return $(item).attr("name");
+                }), $(form).get(0));
+            });
+            content.find("form").submit(function (e) {
+                setFieldsChange($(this).find("input[data-tag]"));
+            });
+        });
+    }
+
+    function onSuccessNewTower(res) {
+        if (res)
+            location.href = "/Books/Towers";
+    }
+
+    function onAddRange(button, index) {
+        index++;
+        $(button).parent().after('<div class="input-group input-group-sm" style="margin-top:4px;">' +
+                                 '<input type="text" class="form-control input-sm" value="" name="Ranges[' + index + ']">' +
+                                 '<span class="input-group-addon" style="cursor:pointer;" onclick="onAddRange(this, ' + index + ')"><span class="glyphicon glyphicon-plus"></span></span>' +
+                                 '</div>');
+        $(button).remove();
+    }
+</script>
+
+
+
+
+
+
+

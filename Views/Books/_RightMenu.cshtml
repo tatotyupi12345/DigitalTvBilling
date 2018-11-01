@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.ShowRec = Utils.GetPermission("REC_SHOW");
+    ViewBag.ShowGroup = Utils.GetPermission("GROUP_SHOW");
+    ViewBag.ShowUser = Utils.GetPermission("USER_SHOW");
+    ViewBag.PackageShow = Utils.GetPermission("PACKAGE_SHOW");
+    if (Session["CurrentUser"] != null)
+    {
+        ViewBag.IsAdmin = ((User)Session["CurrentUser"]).Type == 1;
+    }
+}
+<div class="list-group">
+    @if (ViewBag.ShowUser)
+    {
+    <a href="/Books/Users" class="list-group-item">მომხმარებლები</a>
+    }
+    @if(ViewBag.ShowGroup)
+    {
+    <a href="/Books/Types" class="list-group-item">ჯგუფები</a>
+    }
+    @if(ViewBag.ShowRec)
+    {
+    <a href="/Books/Receivers" class="list-group-item">რესივერები</a>
+    <a href="/Books/Towers" class="list-group-item">ანძები</a>
+    <a href="/Books/Services" class="list-group-item">გაწეული მომსახურება</a>
+    <a href="/Books/PayTypes" class="list-group-item">გადახდის სახეობები</a>
+    <a href="/Books/Reasons" class="list-group-item">მიზეზები</a>
+    <a href="/Books/Sellers" class="list-group-item">გაყიდვის ობიექტები</a>
+    <a href="/Books/SellAttachments" class="list-group-item">აქსესუარები</a>
+    <a href="/Books/ReceiverAttachments" class="list-group-item">დასაბრუნებელი მოწყობილობები</a>
+    @*<a href="/Books/Cities" class="list-group-item">ქალაქები</a>*@
+    }
+    @if (ViewBag.PackageShow)
+    {
+        <a href="/Channel" class="list-group-item">პაკეტები</a>
+    }
+    @if (ViewBag.IsAdmin)
+    {
+        @*<a href="/Books/TempCasCards" class="list-group-item">Cas დროებითი ბარათები</a>*@
+    }
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("div.list-group a")
+                .removeClass("active")
+                .parent().find("a[href='" + document.location.pathname + "']")
+                .addClass("active");
+    });
+</script>

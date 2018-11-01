@@ -1,0 +1,538 @@
+﻿@model IPagedList<Damage>
+
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "დაზიანებები";
+
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+    ViewBag.AddOrder = Utils.GetPermission("ORDER_ADD");
+    ViewBag.DamageStatusesAdd = Utils.GetPermission("ORDER_STATUSES_ADD");
+    ViewBag.OrderMontagesSeniors = Utils.GetPermission("ORDER_MONTAGES_SENIORS");
+    ViewBag.AbonentAddFromOrder = Utils.GetPermission("ABONENT_ADD_FROM_ORDER");
+    ViewBag.ApproveDamage = Utils.GetPermission("DAMAGE_APPROVE");
+    List<User> execUsers = ViewBag.ExecutorUsers;
+    List<User> operatorUsers = ViewBag.OperatorUsers;
+    List<Customer> _custumers = ViewBag.Custumers;
+    List<OperatorGroupUser> group = ViewBag.GroupUser;
+
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/damage.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript">
+        var groups = @Html.Raw(ViewBag.UserGroups);
+        var reasons = @Html.Raw(ViewBag.Reasons);
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .instalatorstatus {
+            background-color: #ff6a00;
+        }
+
+        .processing {
+            background-color: #ffd800;
+        }
+
+        .success__ {
+            background-color: #a4ff7e;
+        }
+
+        .canceledOerders {
+            background-color: #dddcdc;
+        }
+
+        .loading {
+            background-color: #ecf0f5;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+
+        .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            right: 0;
+            bottom: 0;
+            left: 5px;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #ffd800;
+            border: none;
+            color: #ff0000;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+        }
+
+            .option-input:hover {
+                background: #ff6a00;
+            }
+
+            .option-input:checked {
+                background: #24694c;
+            }
+
+                .option-input:checked::before {
+                    /*height: 40px;*/
+                    width: 20px;
+                    position: absolute;
+                    content: '✔';
+                    display: inline-block;
+                    font-size: 14.66667px;
+                    text-align: center;
+                    line-height: 22px;
+                }
+
+                .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: #40e0d0;
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .option-input.radio::after {
+                    border-radius: 50%;
+                }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-1">
+        @if (ViewBag.AddOrder)
+        {
+            @Html.ActionLink("ახალი დაზიანება", "New", "Damage", null, new { @class = "btn btn-xs btn-primary" })
+        }
+    </div>
+    @*<div class="col-sm-1">
+            <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+                <span class="fa-stack">
+                    <i class="fa fa-filter fa-stack-1x"></i>
+                    <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+                </span>
+            </button>
+        </div>*@
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <select class="form-control input-sm valid" data-tag="" data-val="true" id="order_status_filter" name="status">
+            <option value="-1" selected>სტატუსი</option>
+            @foreach (DamageStatus l_s in Enum.GetValues(typeof(DamageStatus)))
+            {
+                var val = (int)Enum.Parse(typeof(DamageStatus), l_s.ToString());
+                string selected = "";
+                if (val == (int)ViewBag.selectedStatus)
+                {
+                    selected = "selected";
+                }
+                <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                selected = "";
+            }
+        </select>
+    </div>
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_filter" placeholder="ბორტი">
+                <option value="0" selected>ბორტი</option>
+                @foreach (var item in execUsers.Where(u => u.Type == 4 || u.Type == 44).ToList())
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="Button" style="width:100%">
+            <button type="button" id="show_modal_bort" class="btn btn-default  btn-success" value="0">Show</button>
+        </div>
+        @*<div class="input-group input-group-sm" style="width: 100%;">
+                <input type="checkbox" class="option-input radio" id="checked_bort" title="მონიშნეთ თუ გსურთ რომ გაფილტროთ ბორტის მიხედვით" />
+            </div>
+            <div class="input-group input-group-sm" style="width: 100%; margin-top:-24px; margin-left:50px;">
+                <input type="checkbox" class="option-input radio" id="checked_bort_end" style="background:#808080" title="მონიშნეთ თუ გსურთ რომ გაფილტროთ ბორტის მიხედვით" />
+            </div>*@
+    </div>
+    @*<div class="col-sm-1" style="padding-left: 0px;">
+            <div class="input-group input-group-sm" style="width: 100%;">
+                <input type="checkbox" class="option-input radio" id="checked_bort_end" title="მონიშნეთ თუ გსურთ რომ გაფილტროთ ბორტის მიხედვით" />
+            </div>
+        </div>*@
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="userOperator_filter">
+                <option value="0" selected>ოპერატორი</option>
+                @foreach (var item in operatorUsers)
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-1" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_answers">
+
+                @foreach (DamageCommitStatic l_s in Enum.GetValues(typeof(DamageCommitStatic)))
+                {
+                    var val = (int)Enum.Parse(typeof(DamageCommitStatic), l_s.ToString());
+                    string selected = "";
+                    if (val == (int)ViewBag.selectedStatus)
+                    {
+                        selected = "selected";
+                    }
+                    <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                    selected = "";
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    @*<div class="col-sm-1">
+            <button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+            </button>
+        </div>*@
+</div>
+<div class="row" style="margin-top: 8px;">
+    <table class="table table-bordered" style="overflow-x:auto;">
+        <thead>
+            <tr>
+                <th style="width:3%;">
+                    №
+                </th>
+                <th style="width:12%;">
+                    თარიღი
+                </th>
+                <th style="width:15%;">
+                    აბონენტი
+                </th>
+                <th style="width:10%;">
+                    ქალაქი
+                </th>
+                <th style="width:5%;">
+                    საკონტაქტო
+                </th>
+                <th style="width:5%;">
+                    რესივ. რაოდ.
+                </th>
+                <th style="width:10%;">
+                    სტატუსი
+                </th>
+                <th style="width: 10%;">
+                    მომხმარებლები
+                </th>
+                <th style="width: 5%;">
+                    შენიშვნა
+                </th>
+                <th style="width: 10%;">
+                    ჯგუფი
+                </th>
+                <th style="width: 5%;">
+                    კომენტარი
+                </th>
+                <th style="width: 5%;">
+                    დარ:პასუხები
+                </th>
+                <th style="width: 5%;">
+                    დად.
+                </th>
+                <th style="width:5%; text-align:center;">
+                    <button type="button" class="btn btn-default btn-xs" id="btn_send_sms"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+                    <input type="checkbox" id="check_all">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="damages_body">
+            @foreach (Damage damage in Model)
+            {
+                string classname = "";
+                string class_proces = "instalatorstatus";
+                string is_closed = "success__";
+                //if (damage.Status == DamageStatus.Canceled)
+                //{
+                //    is_canceled = "canceledOerders";
+                //}
+
+                switch (damage.Status)
+                {
+                    case DamageStatus.loading:
+                        classname = "loading";
+                        break;
+                    case DamageStatus.CardProblem:
+
+                        break;
+                    case DamageStatus.TVTransfer:
+
+                        break;
+                    case DamageStatus.SenderProblem:
+
+                        break;
+                    case DamageStatus.FactoryDefects:
+
+                        break;
+                    case DamageStatus.ProgramNew:
+
+                        break;
+                    case DamageStatus.AntenProblem:
+
+                        break;
+                    case DamageStatus.Closed:
+                        break;
+                    case DamageStatus.OtherReason:
+
+                        break;
+                    case DamageStatus.NoSignal:
+
+                        break;
+                    case DamageStatus.ImprovedInstallerDidNot:
+
+                        break;
+                    case DamageStatus.Processing:
+                        classname = "processing";
+                        break;
+                    case DamageStatus.Processd:
+                        classname = "instalatorstatus";
+                        break;
+                    default:
+                        break;
+                }
+
+                { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(damage.Data); }
+                //if (damage.Group_User!=null)
+                //{ ViewBag.User = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(damage.Group_User); }
+                <tr data-code="@damage.Code" data-id="@damage.Id" data-status="@damage.Status" class="@if (damage.MontageStatus == true && damage.Status != DamageStatus.Closed)
+                {@class_proces}
+                else {
+                    if (damage.Status == DamageStatus.Closed)
+                    {
+                    @is_closed
+                    }
+                    else {
+
+                            @classname
+                         }
+                } @*@is_canceled*@">
+                    <td>@damage.Id</td>
+                    <td>
+                        @Html.SetDateDisplay(damage.Tdate)
+                        <br />
+                        <small>@Html.SetDateDisplay(damage.GetDate)</small>
+                        <br />
+                        <small>@Html.SetDateDisplay(damage.ChangeDate)</small>
+                    </td>
+                    <td>
+                        @damage.Name.Split('/')[0]
+                        <br />
+                        <small>@damage.Code</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.City
+                        <br />
+                        @if (!string.IsNullOrEmpty(ViewBag.Data.Customer.District))
+                        {
+                            @ViewBag.Data.Customer.District
+                            <br />
+                        }
+                        <small>@ViewBag.Data.Customer.Address</small>
+                        <br />
+                        <small>@ViewBag.Data.Customer.Village</small>
+                    </td>
+                    <td>
+                        @ViewBag.Data.Customer.Phone1
+                        <br />
+                        <small>@ViewBag.Data.Customer.Phone2</small>
+                    </td>
+                    <td>@damage.ReceiversCount</td>
+                    <td class="_status">
+                        @Utils.GetEnumDescription(damage.Status)
+                        <br />
+                        <small>
+
+                            @if (damage.ExecutorID != 0)
+                            {
+                                var nm = execUsers.Where(e => e.Id == damage.ExecutorID).FirstOrDefault();
+                                if (nm != null)
+                                {
+                                    <label>
+                                        @nm.Name
+                                    </label>
+                                }
+                            }
+
+                        </small>
+                    </td>
+                    <td>
+                        @if (damage.UserUser != null)
+                        {
+                            @damage.UserUser.Name;
+                        }
+                        <br />
+                        @foreach (var item in group.Where(c => c.d_id == damage.Id).ToList())
+                        {
+                            <small>@item.name</small>
+                            <br />
+                        }
+                        @*<small>@damage.ChangerUser</small>
+                            <br />*@
+                        <small>@damage.ApproveUser</small>
+                    </td>
+                    <td>
+                        @*@Html.Raw(String.Join("<br />", @order.OrderReasons.Select(r=>r.Reason.Name)))*@
+                        @ViewBag.Data.Customer.Desc
+                    </td>
+                    <td id="executor_wrapper_@damage.Id">
+                        @{
+                            var user_name = _custumers.Where(e => e.Code == damage.Code).Select(s => s.UserId).FirstOrDefault();
+                            var bort_name = Model.Where(c => c.Code == damage.Code).OrderBy(c => c.ChangeDate).Select(s => s.ExecutorID).ToList();
+                            <label>
+                                @execUsers.Where(e => e.Id == user_name).Select(s => s.Name).FirstOrDefault()
+                            </label>
+                            <br />
+                            foreach (var item in bort_name)
+                            {
+                                <label>
+                                    @execUsers.Where(e => e.Id == item).Select(s => s.Name).FirstOrDefault()
+                                </label>
+                                <br />
+                            }
+                        }
+                        @*@if (damage.ExecutorID != 0)
+                            {
+
+                                var nm = execUsers.Where(e => e.Id == damage.ExecutorID).FirstOrDefault();
+                                if (nm != null)
+                                {
+                                    <label>
+
+                                        @nm.Name
+                                    </label>
+                                }
+
+
+
+                            }*@
+                    </td>
+                    <td>
+                        @damage.comment
+                    </td>
+                    <td>
+                        @if (damage.DamageReserveAnswers != null)
+                        {
+                            foreach (var item in damage.DamageReserveAnswers.ToList())
+                            {
+                                @Utils.GetEnumDescription(item.reserve_answer)
+                                <br />
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (damage.IsApproved)
+                        {
+                            <span class="bg-success">დად.</span>
+                        }
+                        else
+                        {
+                            if (!ViewBag.ApproveDamage)
+                            {
+                                <span class="glyphicon glyphicon-minus"></span>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-xs" type="button" onclick="damageApprove(@damage.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                            }
+                        }
+                    </td>
+                    <td style="text-align:center;">
+                        <input type="checkbox" value="@damage.Id">
+                    </td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="damage_dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <ul class="list-group">
+                @if (ViewBag.AbonentAddFromOrder)
+                {
+                    <li class="list-group-item" data-index="0">აბონენტის დამატება</li>
+                }
+                @if (ViewBag.AddOrder || ViewBag.OrderMontagesSeniors)
+                {
+                    <li class="list-group-item" data-index="1">შეკვეთის რედაქტირება</li>
+                }
+                @if (ViewBag.OrderMontagesSeniors)
+                {
+                    <li class="list-group-item" data-index="2">მისვლის თარიღის შეცვლა</li>
+                    <li class="list-group-item" data-index="4">ჯგუფის შეცვლა</li>
+                }
+                @if (ViewBag.OrderMontagesSeniors || ViewBag.DamageStatusesAdd)
+                {
+                    <li class="list-group-item" data-index="3">სტატუსის შეცვლა</li>
+                }
+                <li class="list-group-item" data-index="5">დეტალური</li>
+            </ul>
+        </div>
+    </div>
+</div>

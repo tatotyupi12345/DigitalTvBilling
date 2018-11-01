@@ -1,0 +1,582 @@
+﻿@model CallModel
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.CallCenter
+@using DigitalTVBilling.Helpers
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<CallUser> execUsers = Model.users;
+    var damage_reserve_answer = new List<DamageReserveAnswer>();
+    using (DataContext db = new DataContext())
+    {
+        damage_reserve_answer = db.DamageReserveAnswers.ToList();
+    }
+}
+
+@section head {
+    <link rel="stylesheet" href="/bower_components/bpg-nino-mtavruli/css/bpg-nino-mtavruli.css">
+    <script src="~/Static/Scripts/View/call_static_damage.js"></script>
+    @*<script type="text/javascript" src="~/Static/Scripts/View/call_static.js"></script>*@
+
+}
+<div class="modal fade" id="subscr_modal">
+    <style type="text/css">
+
+        .bootstrap-select.btn-group.show-tick .dropdown-menu li a span.text {
+            margin-right: -40px;
+        }
+
+        .bootstrap-select.form-control:not([class*=col-]) {
+            width: 70%;
+        }
+
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 30px;
+            width: 70px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+
+        font-face {
+            font-family: 'BPG Nino Mtavruli';
+            src: url('../fonts/bpg-nino-mtavruli-webfont.eot'); /* IE9 Compat Modes */
+            src: url('../fonts/bpg-nino-mtavruli-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+            url('../fonts/bpg-nino-mtavruli-webfont.woff2') format('woff2'), /* Super Modern Browsers */
+            url('../fonts/bpg-nino-mtavruli-webfont.woff') format('woff'), /* Pretty Modern Browsers */
+            url('../fonts/bpg-nino-mtavruli-webfont.ttf') format('truetype'), /* Safari, Android, iOS */
+            url('../fonts/bpg-nino-mtavruli-webfont.svg#bpg_nino_mtavruliregular') format('svg'); /* Legacy iOS */
+        }
+
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        .closed {
+            background: linear-gradient(to top, #112d00 0%, #0e5200 100%) !important;
+        }
+        /*table tr:hover {
+                    background-color: #c4ffab;
+                }*/
+        table tr, th {
+            text-align: center;
+        }
+
+        font-face {
+            font-family: mygeofont;
+            src: url(/tStyles/bootstrap/fonts/bpg_nino_mtavruli_bold.ttf);
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .goingToPay {
+            background-color: #4dff4d;
+        }
+
+        .goingToCancel {
+            background-color: #ff3333;
+        }
+
+        .technicalProblem {
+            background-color: #ffff4d;
+        }
+
+        .unConnected {
+            background-color: #66b3ff;
+        }
+
+        /*.closed {
+                background-color: #a4ff7e;
+            }*/
+
+        .write {
+            background-color: #fff;
+        }
+
+        /*table tr:hover {
+                background-color: #c4ffab;
+            }*/
+
+        .shadow {
+            -moz-box-shadow: inset 0 0 10px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 10px #fff;
+            text-align: center;
+            padding: 0 !important;
+            background-color: #313131 !important;
+        }
+
+        .vamp {
+            text-shadow: 1px 4px 14px rgba(47,47,47,0.47);
+            color: white;
+            font-size: 14px;
+            font-family: BPG Nino Mtavruli;
+        }
+
+        .headerVamp {
+            margin: auto;
+            margin-left: 25px;
+        }
+
+        .borders {
+            border-right: 1px solid #767676;
+            border-top: 1px solid #767676;
+            border-left: 1px solid #767676;
+            border-bottom: 1px solid #767676;
+        }
+
+        .pictures {
+            padding: 0 !important;
+            min-width: 258px;
+            position: relative;
+            vertical-align: top !important;
+            /*border-bottom: 1px solid #767676 !important;
+                border-right: 1px solid #767676 !important;
+                border-left: 1px solid #767676 !important;
+                border-top: 1px solid #767676 !important;*/
+        }
+
+        .picturesimg {
+            display: inline-block;
+            width: 90px;
+            height: 110px;
+        }
+
+        .pictures_work {
+            display: inline-block;
+            width: 155px;
+            height: 110px;
+        }
+
+        .pictures img:first-child {
+            float: left;
+        }
+
+        .pictures img:nth-child(2) {
+            float: right;
+        }
+
+        .tableCell {
+            padding: 0 !important;
+            /*border-bottom: 1px solid #313131 !important;*/
+            border-right: 1px solid #767676 !important;
+            border-left: 1px solid #313131 !important;
+            border-top: 1px solid #313131 !important;
+        }
+
+        .table {
+            /*max-height: 87%;*/
+            height: 137px !important;
+            argin-bottom: 0px !important;
+            /*margin-top: 4px !important;*/
+        }
+
+        .statusBar {
+            -moz-box-shadow: inset 0 0 15px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 15px #fff;
+            position: absolute;
+            transform: rotate(-90deg);
+            font-size: 19px;
+            margin-left: 47px;
+            margin-top: 42px;
+            text-align: center;
+            width: 110px;
+            height: 25px;
+            font-family: BPG Nino Mtavruli;
+            font-size: 15px;
+            color: white;
+        }
+
+        .count {
+            display: inline-block;
+            width: 50px;
+            float: right;
+            color: white;
+            background-color: #787878;
+            -moz-box-shadow: inset 0 0 10px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 10px #fff;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        td {
+            display: table-cell !important;
+            vertical-align: middle !important;
+            font-size: 14px;
+            text-align: center;
+            background-color: #767676;
+        }
+
+        .header {
+            width: 5px;
+        }
+
+        select {
+            width: 400px;
+            text-align-last: center;
+            font-size: 19px !important;
+            box-shadow: inset 0 0 10px #060606 !important;
+            background-color: #313131 !important;
+            color: white !important;
+        }
+
+        input {
+            background-color: #313131 !important;
+            color: #b1b1b1 !important;
+            font-size: 19px !important;
+            text-align: center;
+        }
+
+        a {
+            background-color: dimgrey !important;
+        }
+
+        .glyphicon-calendar {
+            color: white !important;
+        }
+
+        .modal-footer {
+            border-top: 0px solid #e5e5e5 !important;
+        }
+    </style>
+    <div class="modal-dialog modal-lg" style="width:100%; ">
+        <div class="modal-content" style="background-color: #767676;">
+            @*<div class="modal-header">
+
+                    <h4 class="modal-title">@ViewBag.Bort_name</h4>
+                </div>*@
+            <div class="modal-body scroll">
+                <div class="row">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="float:none !important; color:white; margin-left: 65% !important;  opacity: 5;">&times;</button>
+
+                    <div class="col-sm-3">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+                            <input type="search" class="form-control" id="txt_filter_damage" />
+                        </div>
+                    </div>
+
+                    <div class="col-sm-1">
+                        <input type="checkbox" id="check_user" style="width:25px;height:25px;" />
+                    </div>
+                </div>
+
+                <br />
+                <div class="row" id="modal_bort">
+                    <div class="row" id="height_damage" style=" overflow: auto;  width: 100%;height:-webkit-fill-available; margin-left: 0px;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr class="shadow">
+                                    <th class="shadow" style="width:2%; vertical-align: inherit;">
+                                        <b class="vamp"> ინსტალატორი</b>
+                                    </th>
+                                    <th class="shadow" style="width:5%; vertical-align: inherit;">
+                                        <b class="vamp">  თარიღი</b>
+                                    </th>
+                                    <th class="shadow" style="width:5%; vertical-align: inherit;">
+                                        <b class="vamp"> აბონენტი</b>
+                                    </th>
+                                    <th class="shadow" style="width:5%; vertical-align: inherit;">
+                                        <b class="vamp">  ქალაქი</b>
+                                    </th>
+                                    <th class="shadow" style="width:5%; vertical-align: inherit;">
+                                        <b class="vamp">  საკონტაქტო</b>
+                                    </th>
+                                    <th class="shadow" style="width:10%; vertical-align: inherit;">
+                                        <b class="vamp">  სტატუსი</b>
+                                    </th>
+                                    <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                                        <b class="vamp"> მენეჯერი</b>
+                                    </th>
+                                    <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                                        <b class="vamp">  შენიშვნა</b>
+                                    </th>
+                                    <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                                        <b class="vamp"> კომენტარი</b>
+                                    </th>
+                                    <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                                        <b class="vamp"> დარ:პასუხები</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="orders_body">
+                                @foreach (var order in Model.damage)
+                                {
+                                    string classname = "";
+                                    string is_canceled = "";
+                                    //if (order.Status == DamageStatus.c)
+                                    //{
+                                    //    is_canceled = "canceledOerders";
+                                    //}
+
+                                    switch (order.Status)
+                                    {
+                                        case DamageStatus.AntenProblem:
+                                            break;
+                                        case DamageStatus.CardProblem:
+                                            break;
+                                        case DamageStatus.FactoryDefects:
+                                            break;
+                                        case DamageStatus.ImprovedInstallerDidNot:
+                                            break;
+                                        case DamageStatus.loading:
+                                            classname = "loading";
+                                            break;
+                                        case DamageStatus.NoSignal:
+
+                                            break;
+                                        case DamageStatus.OtherReason:
+                                            break;
+                                        case DamageStatus.Closed:
+                                            classname = "closed";
+                                            break;
+                                        case DamageStatus.Processd:
+                                            break;
+                                        case DamageStatus.Processing:
+                                            break;
+                                        case DamageStatus.ProgramNew:
+                                            break;
+                                        case DamageStatus.SenderProblem:
+                                            break;
+                                        case DamageStatus.TVTransfer:
+                                            break;
+                                        case DamageStatus.Unresolved:
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(order.Data); }
+                                    <tr class="header"></tr>
+                                    <tr data-code="@order.Code" id="clone" data-id="@order.Id" data-status="@order.Status" class="shadow vamp @classname @if(order.Status == DamageStatus.Closed) {@Html.Raw("success__")} else {@Html.Raw("")} @is_canceled">
+                                        <td id="executor_wrapper_@order.Id" class="pictures">
+                                            @if (order.ExecutorID != 0)
+                                            {
+
+
+                                                var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                                                if (nm != null)
+                                                {
+
+                                                    <img src="@nm.image" class="user-image picturesimg" alt="User Image" id="user_image_@order.Id">
+
+                                                    if (order.to_go == 0)
+                                                    {
+                                                        if (order.Status == DamageStatus.Closed)
+                                                        {
+                                                            <img id="work_id_@nm.Id" src="~/tStyles/dist/img/closed1.gif" class="pictures_work" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img id="work_id_@nm.Id" src="~/tStyles/dist/img/damage.gif" class="pictures_work" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (order.Status == DamageStatus.Closed)
+                                                        {
+                                                            < img id = "work_id_@nm.Id" src = "~/tStyles/dist/img/closed1.gif" class="pictures_work" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <img id="work_id_@nm.Id" src="~/tStyles/dist/img/work1.gif" class="pictures_work" />
+                                                        }
+                                                    }
+
+
+                                                    <p class="statusBar">სტატუსი</p>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                <img src="~/tStyles/dist/img/user9-128x128.png" class="user-image picturesimg" alt="User Image" id="user_image_@order.Id">
+                                                <img src="~/tStyles/dist/img/damage.gif" class="pictures_work" />
+
+                                                <p class="statusBar">სტატუსი</p>
+                                            }
+                                            <br />
+                                            <div>
+                                                @*<label class="control-label ">ჯგუფი</label>*@
+                                                <div>
+                                                    <select class="form-control input-sm shadow" id="group_combo">
+                                                        <option id="0"></option>
+                                                        @foreach (var user in Model.users.Where(c => c.Type == 4 || c.Type == 44).Select(s => s).ToList())
+                                                        {
+                                                            if (order.ExecutorID == user.Id)
+                                                            {
+                                                                <option selected id="@user.Id" value="@order.Id" data-value="@user.image" onclick="groupsChange(@user.Id)">@user.Name</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option id="@user.Id" value="@order.Id" data-value="@user.image" onclick="groupsChange(@user.Id)">@user.Name</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+
+                                                <div class="">
+                                                    <div class="input-group input-group-sm date" id="txt_date" value="@order.Id">
+                                                        <input type="text" class="form-control input-sm" readonly />
+                                                        <a class="input-group-addon" style="cursor: pointer;">
+                                                            <span class="glyphicon glyphicon-calendar"></span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="@classname">
+                                            @Html.SetDateDisplay(order.Tdate)
+                                            <br />
+                                            <p id="change_date_@order.Id">@Html.SetDateDisplay(order.GetDate)</p>
+                                            <br />
+                                            <p>@Html.SetDateDisplay(order.ChangeDate)</p>
+                                        </td>
+                                        <td class="@classname">
+                                            @order.Name.Split('/')[0]
+                                            <br />
+                                            <p>@order.Code</p>
+                                        </td>
+                                        <td class="@classname">
+                                            @ViewBag.Data.Customer.City
+                                            <br />
+                                            @if (!string.IsNullOrEmpty(ViewBag.Data.Customer.District))
+                                            {
+                                                @ViewBag.Data.Customer.District
+                                                <br />
+                                            }
+                                            <p>@ViewBag.Data.Customer.Region</p>
+                                            <br />
+                                            <p>@ViewBag.Data.Customer.Address</p>
+                                            <br />
+                                            <p>@ViewBag.Data.Customer.Village</p>
+                                        </td>
+                                        <td class="@classname">
+                                            @ViewBag.Data.Customer.Phone1
+                                            <br />
+                                            <p>@ViewBag.Data.Customer.Phone2</p>
+                                        </td>
+                                        @*<td class="@classname">@order.ReceiversCount</td>*@
+                                        <td class="_status @classname">
+                                            <div>
+                                                <select class="form-control input-sm valid shadow" data-tag="" data-val="true" id="damage_status_filter" name="status">
+                                                    @foreach (DamageStatus l_s in Enum.GetValues(typeof(DamageStatus)))
+                                                    {
+                                                        var val = (int)Enum.Parse(typeof(DamageStatus), l_s.ToString());
+                                                        string selected = "";
+                                                        if (val == (int)order.Status)
+                                                        {
+                                                            selected = "selected";
+                                                        }
+                                                        <option @selected value="@order.Id" data-value="@l_s">@Utils.GetEnumDescription(l_s)</option>
+                                                        selected = "";
+                                                    }
+                                                </select>
+                                            </div>
+                                            @*@Utils.GetEnumDescription(order.Status)
+            <br />*@
+                                            <p>
+
+                                                @if (order.ExecutorID != 0)
+                                                {
+                                                    var nm = execUsers.Where(e => e.Id == order.ExecutorID).FirstOrDefault();
+                                                    if (nm != null)
+                                                    {
+                                                        <label data-id="@order.ExecutorID" id="user_name_group_@order.Id">
+                                                            @nm.Name
+                                                        </label>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <label data-id="@order.ExecutorID" id="user_name_group_@order.Id">
+
+                                                    </label>
+                                                }
+
+                                            </p>
+                                        </td>
+                                        <td class="@classname">
+                                            @execUsers.Where(e => e.Id == order.UserId).Select(s => s.Name).FirstOrDefault()
+                                            <br />
+                                            <p>@order.ChangerUser</p>
+                                            <br />
+                                            <p>@order.ApproveUser</p>
+                                        </td>
+                                        <td class="@classname">
+                                            @*@Html.Raw(String.Join("<br />", @order.OrderReasons.Select(r=>r.Reason.Name)))*@
+                                            @ViewBag.Data.Customer.Desc
+                                        </td>
+                                        <td class="@classname">@order.comment</td>
+                                        <td class="@classname">
+                                            @foreach (var item in damage_reserve_answer.Where(c => c.damage_id == order.Id).ToList())
+                                            {
+                                                @Utils.GetEnumDescription(item.reserve_answer)
+                                                <br />
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr class="header"></tr>
+                                }
+                                @if (Model.damage.Count() == 0)
+                                {
+                                    <tr>
+                                        <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        @*<div id="paging">
+                                @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+                            </div>*@
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">დახურვა</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

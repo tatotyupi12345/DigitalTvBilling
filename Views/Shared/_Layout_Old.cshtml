@@ -1,0 +1,174 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Page.Title</title>
+    <link href="/Static/Styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/Static/Styles/styles.css" rel="stylesheet" type="text/css" />
+    <script src="/Static/Scripts/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="/Static/Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Static/Scripts/core.js" type="text/javascript"></script>
+    <script src="/Static/Scripts/geokbd.js" type="text/javascript"></script>
+    @RenderSection("head", required: false)
+    <script type="text/javascript">
+        var userModalInstance = null;
+        $(document).ready(function () {
+            $("nav ul li")
+                .find("a[href='" + document.location.pathname + "']")
+                .parent().addClass("active").siblings().removeClass("active");
+
+            $(document).on("keypress", function (e) {
+                if (e.keyCode === 96) {
+                    var chk = $("#kbdgeo1").find("input");
+                    chk.prop("checked", !chk.prop("checked"));
+                    e.preventDefault();
+                }
+            });
+
+            $("#cur_user").on("click", function () {
+                $.get("/Books/NewUser", { id: $(this).data("id") }, function (data) {
+                    userModalInstance = showModal(data);
+                    $.getScript("/Static/Scripts/jquery.validate.min.js", function () { });
+                    $.getScript("/Static/Scripts/jquery.validate.unobtrusive.min.js", function () { $.validator.unobtrusive.parse(userModalInstance.find("#user_form")); });
+                    $.getScript("/Static/Scripts/jquery.unobtrusive-ajax.min.js", function () { });
+                    userModalInstance.find("form").each(function (i, form) {
+                        GeoKBD.map($(form).attr("name"), $.map($(form).find("input[type='text'], textarea"), function (item, k) {
+                            return $(item).attr("name");
+                        }), $(form).get(0));
+                    }); 
+                    userModalInstance.find("#Login").attr("disabled", "disabled");
+                    userModalInstance.find("#HardAutorize").attr("disabled", "disabled");
+                    userModalInstance.find("#Type").attr("disabled", "disabled");
+                    userModalInstance.find("form").submit(function (e) {
+                        setFieldsChange($(this).find("input[data-tag], select[data-tag]"));
+                    });
+                });
+            });
+
+        });
+
+        function onSuccessNewUser(res) {
+            if (res) {
+                userModalInstance.modal("hide");
+                alert("ცვლილება წარმატებით შესრულდა");
+            }   
+        }
+    </script>
+</head>
+<body>
+    @{
+        if (Session["CurrentUser"] != null)
+        {
+            ViewBag.User = ((User)Session["CurrentUser"]).Name;
+            ViewBag.UserId = ((User)Session["CurrentUser"]).Id;
+        }
+        ViewBag.LogShow = Utils.GetPermission("LOG_SHOW");
+        ViewBag.ReportShow = true; //Utils.GetPermission("REPORT_SHOW");
+        ViewBag.PaymentShow = Utils.GetPermission("PAYMENT_SHOW");
+        ViewBag.MessageShow = Utils.GetPermission("MESSAGE_SHOW");
+        ViewBag.AbonentShow = Utils.GetPermission("ABONENT_SHOW");
+        ViewBag.SettingShow = Utils.GetPermission("SETTING_SHOW");
+        ViewBag.DamageShow = Utils.GetPermission("DAMAGE_SHOW");
+        ViewBag.ShowOrder = false;//Utils.GetPermission("ORDER_SHOW");
+        ViewBag.ShowInvoice = Utils.GetPermission("INVOICES");
+    }
+    <div class="container">
+        <header>
+            <div class="row" style="margin:5px 0px;">
+                <div class="col-md-2">
+                    <img src="~/Static/Images/logos.png" alt="logo" class="img-responsive" />
+                </div>
+                <div class="col-md-7 col-md-offset-3">
+                    @if (ViewBag.UserId == 1)
+                    {
+                    @*<button id="message_test">ავტო ინვოისი</button>*@
+                    <button id="charge_test">დღის დარიცხვა</button>
+                    }
+                    <label id="kbdgeo1">
+                        '~' ქართული კლავიატურა <input type="checkbox" name="geo" checked="checked">
+                    </label>
+                    <div class="logout">
+                        <span style="margin-right: 5px;" data-id="@ViewBag.UserId" id="cur_user"><span class="glyphicon glyphicon-user" style="margin-top: 4px !important;"></span> @ViewBag.User</span>
+                        <a href="/Login/Logout" style="vertical-align: top;">გასვლა <span class="glyphicon glyphicon-log-out" style="margin-top: 4px !important;"></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <nav class="navbar navbar-inverse" role="navigation" style="">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-ex1-collapse">
+                        <ul class="nav navbar-nav">
+                            @*<li><a href="/Main">მთავარი</a></li>*@
+                            @if (ViewBag.AbonentShow)
+                            {
+                                <li><a href="/Abonent">აბონენტები</a></li>
+                            }
+                            @if (ViewBag.ShowOrder)
+                            {
+                                <li><a href="/Order">შეკვეთები</a></li>
+                            }
+                            @if (ViewBag.DamageShow)
+                            {
+                                <li><a href="/Damage">დაზიანებები</a></li>
+                            }
+
+                            @if (ViewBag.PaymentShow)
+                            {
+                                <li><a href="/Payment">გადახდები</a></li>
+                            }
+                            @if (ViewBag.ReportShow)
+                            {
+                                <li><a href="/Report">რეპორტები</a></li>
+                            }
+                            @if (ViewBag.MessageShow)
+                            {
+                                <li><a href="/Message">შეტყობინებები</a></li>
+                            }
+                            @if (ViewBag.ShowInvoice)
+                            {
+                                <li><a href="~/Utils/Invoices">ინვოისები</a></li>
+                            }
+                            <li><a href="/Books">ცნობარები</a></li>
+                            @if (ViewBag.LogShow)
+                            {
+                                <li><a href="/Main/Logs">ლოგი</a></li>
+                            }
+                            @if (ViewBag.SettingShow)
+                            {
+                                <li><a href="/Setting">პარამეტრები</a></li>
+                            }
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </header>
+        @RenderBody()
+        <footer>
+            @*<p>&copy; @DateTime.Now.Year - Global TV  v-4</p>*@
+        </footer>
+    </div>
+    <script type="text/javascript">
+        document.querySelector("#charge_test").addEventListener("click", function (e) {
+            e.preventDefault();
+            $.post("/Main/DaylyCharge", {}, function (data) {
+                alert(data);
+            }, "json")
+        });
+
+        document.querySelector("#message_test").addEventListener("click", function (e) {
+            e.preventDefault();
+            $.post("/Main/DaylyMessage", {}, function (data) {
+                alert(data);
+            }, "json")
+        });
+    </script>
+</body>
+</html>

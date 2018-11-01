@@ -1,0 +1,211 @@
+﻿@model SellerObject
+@{
+    ViewBag.AddUser = Utils.GetPermission("USER_ADD");
+    ViewBag.EditUser = Utils.GetPermission("USER_EDIT");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+        {
+            Url = Url.Action("NewSeller"),
+            OnSuccess = "onSuccessNewCity",
+            HttpMethod = "POST"
+        }, new { @class = "form-horizontal", role = "form", id = "seller_form", name = "SellerForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი ობიექტი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-9">
+                            @Html.HiddenFor(m => m.ID)
+                            
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.type, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        //@Html.TextBoxFor(model => model.type, new { @class = "form-control input-sm" })
+                                        @Html.EnumDropDownListFor(model => model.type, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        //@Html.TextBoxFor(model => model.type, new { @class = "form-control input-sm", data_tag = Model.type })
+                                        @Html.EnumDropDownListFor(model => model.type, new { @class = "form-control input-sm", data_tag = Model.type })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.type)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.name, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.name, new { @class = "form-control input-sm", data_tag = Model.name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.name)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.city, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.city, new { @class = "form-control input-sm", autocomplete = "off" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.city, new { @class = "form-control input-sm", data_tag = Model.city, autocomplete = "off" })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.city)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.address, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.address, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.address, new { @class = "form-control input-sm", data_tag = Model.address })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.address)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.region, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.region, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.region, new { @class = "form-control input-sm", data_tag = Model.region })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.region)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ident_code, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.ident_code, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.ident_code, new { @class = "form-control input-sm", data_tag = Model.ident_code })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.ident_code)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.hostname, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.hostname, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.hostname, new { @class = "form-control input-sm", data_tag = Model.hostname })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.hostname)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.phone, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.phone, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.phone, new { @class = "form-control input-sm", data_tag = Model.phone })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.phone)
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.info, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.ID == 0)
+                                    {
+                                        @Html.TextAreaFor(model => model.info, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextAreaFor(model => model.info, new { @class = "form-control input-sm", data_tag = Model.info })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.info)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.ID > 0 && ViewBag.EditUser) || (Model.ID == 0 && ViewBag.AddUser))
+                    {
+                        <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+    <script type="text/javascript">
+    $(function () {
+            var timeout;
+            $("#city").typeahead({
+                source: function (query, process) {
+                    if (timeout) {
+                        clearTimeout(timeout);
+                    }
+
+                    timeout = setTimeout(function () {
+                        return $.post('/Abonent/GetCities/', { query: query }, function (data) {
+                            process(data);
+                        }, "json");
+                    }, 200);
+                },
+                updater: function (item) {
+                    var sp = item.split('-');
+                    $.post('/Abonent/GetRegion/', { city: $.trim(sp[0]), raion: $.trim(sp[1]) }, function (data) {
+                        if (data != "") {
+                            $("#city").val($.trim(sp[0]));
+                            //$("#Customer_Village").val($.trim(sp[1]));
+                            //$("#Customer_Region").val(data.region);
+                            if (data.status === 'ok')
+                                $('#status_alert').html('<div class="alert alert-success" style="padding:5px;margin-bottom:0px;" role="alert">ok</div>');
+                            else if (data.status === 'soon')
+                                $('#status_alert').html('<div class="alert alert-warning" style="padding:5px;margin-bottom:0px;" role="alert">ok</div>');
+                            else
+                                $('#status_alert').html('<div class="alert alert-danger" style="padding:5px;margin-bottom:0px;" role="alert">no</div>');
+                        }
+                    }, "json");
+                    return item;
+                }
+            });
+        });
+    </script>
+</div>
+

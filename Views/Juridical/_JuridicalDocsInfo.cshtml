@@ -1,0 +1,102 @@
+﻿@model JuridicalDocsInfo
+@using DigitalTVBilling.Helpers
+@{
+   
+}
+
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">სტატუსი</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 20%;">
+                                    ხელ: დასახელება
+                                </th>
+                                <th style="width: 30%;">
+                                    აბონენტი
+                                </th>
+                                <th style="width:20%">
+                                    გადმოწერა
+                                </th>
+
+                            </tr>
+                        </thead>
+                        @if (Model.subscription_docs != null)
+                        {
+                            <tr>
+                                <td>@Model.subscription_docs</td>
+                                <td>@Model.abonent_name</td>
+                                <td id="dowloaddoc" data-value="@Model.abonent_name"><div class="fa fa-download" style="font-size:24px;cursor:pointer"></div></td>
+                            </tr>
+                        }
+                        @if (Model.attachment_docs != null)
+                        {
+                            <tr>
+                                <td>@Model.attachment_docs</td>
+                                <td>@Model.abonent_name</td>
+                                <td id="dowloaddoc" data-value="@Model.abonent_name"><div class="fa fa-download" style="font-size:24px;cursor:pointer"></div></td>
+                            </tr>
+                        }
+                        @if (Model.cancled_docs != null)
+                        {
+                            <tr>
+                                <td>@Model.cancled_docs</td>
+                                <td>@Model.abonent_name</td>
+                                <td id="dowloaddoc" data-value="@Model.abonent_name"><div class="fa fa-download" style="font-size:24px;cursor:pointer"></div></td>
+                            </tr>
+                        }
+                        @if (Model.re_registering_docs != null)
+                        {
+                            <tr>
+                                <td>@Model.re_registering_docs</td>
+                                <td>@Model.abonent_name</td>
+                                <td id="dowloaddoc" data-value="@Model.abonent_name"><div class="fa fa-download" style="font-size:24px;cursor:pointer"></div></td>
+                            </tr>
+                        }
+                        <tbody id="_each"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="save" class="btn btn-default btn-xs">შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

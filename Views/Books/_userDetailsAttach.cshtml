@@ -1,0 +1,54 @@
+﻿@model List<DigitalTVBilling.Models.UserDetails>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@{
+    List<SellAttachment> attachments = ViewBag.attachs;
+    UserType userType = ViewBag.UserType;
+    Layout = null;
+}
+
+<table class="table ">
+    <thead>
+        <tr>
+            <th></th>
+            <th>სახელი</th>
+            <th>ტელეფონი</th>
+            <th>ჯგუფი</th>
+            <th>კოდი</th>
+            <th>მისამართი</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (UserDetails item in Model)
+        {
+            <tr>
+                <td><input name="dilerCards.diler_id" type="radio" id="@item.user.Id" value="@item.user.Id" checked="checked" /></td>
+                <td>
+                    @if (item.user != null)
+                    {
+                        @Html.Raw(item.user.Name);
+                    }
+                </td>
+                <td>@if (item.user != null)
+                {@Html.Raw(item.user.Phone);
+                }</td>
+                <td>
+                    @if (item.userType != null)
+                    {
+                        @Html.Raw(item.userType.Name);
+                    }
+                </td>
+                <td>@if (item.user != null)
+                {@Html.Raw(item.user.CodeWord);
+                }</td>
+                <td>@if (item.sellerObj != null)
+                { @Html.Raw(item.sellerObj.city + ", " + item.sellerObj.address);
+                }</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

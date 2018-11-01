@@ -1,0 +1,139 @@
+﻿@model List<JuridicalStatus>
+@using DigitalTVBilling.Helpers
+@{
+    var val = 0;
+    JuridicalStatus sstatus = new JuridicalStatus();
+    List<JuridicalStatus> juridicals = Model;/*ViewBag.Juridical*/;
+}
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">სტატუსი</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    @*<div class="col-md-2">
+                            <button class="btn btn-default btn-xs" id="btn_excel">
+                                <span class="glyphicon glyphicon-print"></span> ექპორტი
+                            </button>
+                        </div>*@
+                    @*<div class="col-md-6 pull-right">
+                            <div class="form-group">
+                                @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="hidden" id="abonent_id" value="@ViewBag.AbonentID" />
+
+                        @*card tab content*@
+                        <div class="tab-content card-info">
+                            <div class="tab-pane active" id="card">
+                                <section>
+                                    <div class="cont" id="cardlogs_table">
+
+                                        @*card table content*@
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 20%;">
+                                                        თარიღი
+                                                    </th>
+                                                    <th style="width: 30%;">
+                                                        სტატუსი
+                                                    </th>
+                                                    <th style="width:20%">
+                                                        მონიშნეთ
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="_each">
+                                                @foreach (CardJuridicalVerifyStatus l_s in Enum.GetValues(typeof(CardJuridicalVerifyStatus)))
+                                                {
+                                                    sstatus = juridicals.Where(s => s.status == (int)l_s).Select(s=>s).FirstOrDefault();
+                                                    <tr id="card_" data-val="@juridicals.Select(s=>s.card_id).FirstOrDefault()">
+                                                        <td>
+                                                         
+                                                            @if (sstatus!=null)
+                                                            {
+                                                                @sstatus.tdate;
+                                                            }
+                                                        </td>
+
+                                                        <td>
+                                                            <small value="@val">@Utils.GetEnumDescription(l_s)</small>
+                                                        </td>
+
+                                                        <td id="_selected">
+                                                            @if (sstatus != null)
+                                                            {
+                                                                <input type="checkbox" id="manual_@val" checked class="option-input radio" name="manual" />
+                                                            }
+                                                            else
+                                                            {
+                                                                <input type="checkbox" id="manual_@val" class="option-input radio" name="manual" />
+                                                            }
+                                                        </td>
+                                                    </tr>
+                                                    val++;
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                        @*@Html.Partial("~/Views/Abonent/_CardLogsList.cshtml", @Model.CardLogs)*@
+                                    </div>
+                                </section>
+                            </div>
+                            @*@{Html.RenderPartial("~/Views/Abonent/_CardInfoData.cshtml", @Model);}*@
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/View/stoppedcards_info.js"></script>
+                <script type="text/javascript" src="/Static/Scripts/dropdowns-enhancement.js"></script>
+                <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+                <link rel="stylesheet" type="text/css" href="~/Static/Styles/dropdowns-enhancement.css" />
+                <link href="~/Static/Styles/JuridicalStyle.css" rel="stylesheet" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="save" class="btn btn-default btn-xs">შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

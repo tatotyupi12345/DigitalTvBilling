@@ -1,0 +1,280 @@
+﻿@{
+
+}
+<div id="map" style="width:100%;height:1000px;"></div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type="text/javascript">
+    //$(document).ready(function () {
+        var GPSLocations = @Html.Raw(Json.Encode(ViewBag.GPS));
+    var TowerGPS =@Html.Raw(Json.Encode(ViewBag.Tower));
+
+    var newstyle = [{
+        "elementType": "labels",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.country",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.country",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.country",
+        "elementType": "labels.text",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.country",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.country",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative.province",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "stylers": [
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "labels.text",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.place_of_worship",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway.controlled_access",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.line",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit.station",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    }, {
+        "featureType": "administrative.country",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            {
+                weight: "3"
+            },
+        ]
+    }
+    ]
+   
+
+
+    function initMap() {
+        // Styles a map in night mode.
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 42.315407, lng: 43.356892 },
+            mapTypeId: google.maps.MapTypeId.HYBRID,
+            zoom: 8,
+            panControl: true,
+            zoomControl: true,
+            mapTypeControl: false,
+            scaleControl: false,
+            streetViewControl: false,
+            overviewMapControl: false,
+            provinceControl: false,
+            mapTypeControl: false,
+            scrollwheel: true
+        });
+        //$.post("/Map/style", {}, function (response) {
+        //    styles = JSON.parse(response);
+        //    map.setOptions({ styles: styles });
+        //}, 'json');
+
+        //styles = JSON.parse(mapStart);
+        //map.setOptions({ styles: styles });
+
+        //  var newst = JSON.parse(mapStart);
+        map.setOptions({ styles: newstyle });
+
+        var myCenter = new google.maps.LatLng(42.280200, 42.736320);
+        var image = {
+            url: "../Static/Images/antenna.gif", // url
+            size: new google.maps.Size(100, 100),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(50, 74),
+            scaledSize: new google.maps.Size(60, 60),
+
+        };
+        var img = {
+            url: "../Static/Images/pegman.png", // url
+            size: new google.maps.Size(50, 50),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(5, 5),
+            scaledSize: new google.maps.Size(15, 15),
+
+        };
+        //if (towerLine.length > 0) {
+
+        //    $.each(towerLine, function (j, value) {
+        //        if (cordXP == value.parentlattitube && cordYP == value.parentlongitube) {
+        //            startposition = new google.maps.LatLng(value.parentlattitube, value.parentlongitube);
+        //            LC.push(new google.maps.LatLng(value.childlattitube, value.childlongitube));
+        //        }
+        //        else {
+        //            if (startposition != null) {
+        //                LineConnection.push({ startposition, LC, flightPath });
+        //            }
+        //            LC = [];
+        //            flightPath = [];
+        //            LC.push(new google.maps.LatLng(value.childlattitube, value.childlongitube));
+        //            startposition = new google.maps.LatLng(value.parentlattitube, value.parentlongitube);
+        //            cordXP = value.parentlattitube;
+        //            cordYP = value.parentlongitube;
+        //        }
+        //         childposition = new google.maps.LatLng(value.childlattitube, value.childlongitube);
+        //        flightPath.push(new google.maps.Polyline({
+        //            path: [startposition, childposition],
+        //            geodesic: true,
+        //            strokeColor: '#009900',
+        //            strokeOpacity: 1,
+        //            strokeWeight: 2,
+        //            map: map,
+        //            icons: [{
+        //                icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
+        //                offset: '100%',
+        //                repeat: '80px'
+        //            }]
+        //        }));
+        //    });
+        //}
+        $.each(TowerGPS, function (i, val) {
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(val.towerLat, val.towerLon),
+                map: map,
+                id: val.Id,
+                icon: image,
+                type: 'point',
+                title: val.Name
+            });
+            //map.setCenter(marker.getPosition());
+           // var infowindow = new google.maps.InfoWindow();
+           
+        });
+        var markers = new google.maps.Marker({
+            position: new google.maps.LatLng(GPSLocations.Latitude, GPSLocations.Longitude),
+            map: map,
+            icon: img,
+            animation: google.maps.Animation.BOUNCE
+
+        });
+
+        var flightPath = new google.maps.Polyline({
+            path: [Tower, Abonnent],
+            geodesic: true,
+            strokeColor: '#009900',
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            map: maps,
+            icons: [{
+                icon: { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW },
+                offset: '100%',
+                repeat: '80px'
+            }]
+        });
+    }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAOjC5S0IeB6iri-m5G82-PNMu4EfyrqIs&callback=initMap"></script>
+<div></div>

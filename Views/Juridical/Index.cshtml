@@ -1,0 +1,344 @@
+﻿@model AsyncRawQueryPagedList<JuridicalResult>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using DigitalTVBilling.Juridical;
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "იურიდიული ვერიფიკაცია";
+    JuridicalModel juridicalModel = ViewBag.Models;
+    int totalcount = juridicalModel.totalItemsCount;
+    int _page = juridicalModel.page;
+    int pagesize = juridicalModel.pageSize;
+    int pos = totalcount - ((_page - 1) * pagesize);
+    int ind = 0;
+    List<JuridicalStatus> juridicalStatus = juridicalModel.JuridicalStatus;
+}
+
+@section head {
+
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <link href="~/Static/Styles/JuridicalStyle.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Static/Scripts/md5.min.js"></script>
+
+    <script src="~/Static/Scripts/View/juridical_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+
+        .Delivered {
+            background-color: #ffd633;
+        }
+
+        .Passed {
+            background-color: #47d147;
+        }
+
+        .FixableProblematic {
+            background-color: #ffa64d;
+        }
+
+        .PassedProblematic {
+            background-color: #4d94ff;
+        }
+
+        .NotFixableProblem {
+            background-color: #ff3333;
+        }
+
+        .InvalidIncomplete {
+            background-color: #ff6a00;
+        }
+
+        .WithoutAnAttachment {
+            background-color: #808080;
+        }
+
+        .Stopped {
+            background-color: #adad85;
+        }
+
+        .Uploaded {
+            background-color: #ff00a4
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<body>
+    <div id="Save_Status">
+        <div class="row">
+
+
+
+            <div class="col-sm-4 pull-right">
+                @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+            </div>
+            <div class="col-sm-3 pull-right" style="margin-top: -10px;">
+
+                <div class="input-group input-group-sm input-lg">
+                    <span class="input-group-addon" id="filter_title" data-sign="text"><span>სტატუსი:</span> <input type="checkbox" id="j_checked" name="j_checked" class="option-input" /></span>
+                    <select class="form-control selectpicker show-tick bootstrap-select filter_status" data-selected-text-format="count" data-show-subtext="true" data-live-search="true" @*data-actions-box="true"*@ name="filter_status" id="filter_status" multiple data-max-options="100">
+                        @*<select class="form-control" id="filter_status">*@
+                        @*<option value="-2"></option>*@
+                        @foreach (CardJuridicalVerifyStatus l_s in Enum.GetValues(typeof(CardJuridicalVerifyStatus)))
+                        {
+
+                            var val = (int)Enum.Parse(typeof(CardJuridicalVerifyStatus), l_s.ToString());
+                            //if (val == -1)
+                            //{
+                            //    continue;
+                            //}
+                            string selected = "";
+                            if (val == -2)
+                            {
+                                selected = "selected";
+                            }
+                            if (val != 11)
+                            {
+                                <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                            }
+                            else
+                            {
+                                <option @selected value="-1">@Utils.GetEnumDescription(l_s)</option>
+                            }
+                            selected = "";
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+                    <span class="fa-stack">
+                        <i class="fa fa-filter fa-stack-1x"></i>
+                        <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="col-sm-2 pull-right">
+                <div class="input-group input-group-sm pull-left">
+                    <select class="form-control" id="drp_filter" value="@ViewBag.drpfiltet">
+                        <option @Html.Raw((juridicalModel.drpfiltet == "cr.doc_num" ? "selected" : "")) value="cr.doc_num">ხელშ. №</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "c.lastname+c.name" ? "selected" : "")) value="c.lastname+c.name">აბონენტი</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "c.code" ? "selected" : "")) value="c.code">პ/ნ</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "cr.abonent_num" ? "selected" : "")) value="cr.abonent_num">აბონენტის №</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "c.phone1" ? "selected" : "")) value="c.phone1">ტელეფონი</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "us.name" ? "selected" : "")) value="us.name">მომხმარებელი</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "jl.name" ? "selected" : "")) value="jl.name">ავტორიზებული/პირი</option>
+                        <option @Html.Raw((juridicalModel.drpfiltet == "ty.name" ? "selected" : "")) value="ty.name">ჯგუფი</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2 pull-right">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+                    <input type="search" class="form-control" value="@juridicalModel.filterText" id="txt_filter" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 8px; overflow: auto;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width: 1%;">
+                            №
+                        </th>
+                        <th style="width: 10%;">
+                            თარიღი
+                        </th>
+                        <th style="width: 5%;">
+                            სახელი
+                        </th>
+                        <th style="width: 10%;">
+                            პირ. ნომერი
+                        </th>
+                        <th style="width: 10%;">
+                            პაკეტი
+                        </th>
+                        <th style="width: 10%;">
+                            მისამართი
+                        </th>
+                        @*<th style="width: 8%;">
+                                ბარათის №
+                            </th>*@
+                        <th style="width: 5%;">
+                            ხელშეკრულების №
+                        </th>
+                        <th style="width: 5%;">
+                            აბონენტის №
+                        </th>
+                        <th style="width: 5%";>
+                            ტელეფონი
+                        </th>
+                        <th style="width: 10%;">
+                            ვერიფიკაციის სტატუსი
+                        </th>
+
+                        <th style="width: 10%;">
+                            სტატუსი
+                        </th>
+                        <th style="width: 10%;">
+                            მომხმარებელი
+                        </th>
+
+                        <th style="width: 10%;">
+                            სტატუსის შეცვლა
+                        </th>
+                        @*<th style="width: 5%;">
+                            ხელმოწერა
+                        </th>*@
+
+                        @*<th style="width: 2%;">
+                            </th>*@
+                    </tr>
+                </thead>
+                <tbody id="abonents_body">
+                    @foreach (var card in Model)
+                    {
+                        ind = 0;
+                        string classname = "";
+
+                        switch (card.JuridicalVerifical)
+                        {
+                            case (int)CardJuridicalVerifyStatus.Delivered:
+                                classname = "Delivered";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.Passed:
+                                classname = "Passed";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.FixableProblematic:
+                                classname = "FixableProblematic";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.PassedProblematic:
+                                classname = "PassedProblematic";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.NotFixableProblem:
+                                classname = "NotFixableProblem";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.Stopped:
+                                classname = "Stopped";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.Uploaded:
+                                classname = "Uploaded";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.InvalidIncomplete:
+                                classname = "InvalidIncomplete";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.WithoutSigning:
+                                classname = "InvalidIncomplete";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.PackageMessedUp:
+                                classname = "InvalidIncomplete";
+                                break;
+                            case (int)CardJuridicalVerifyStatus.WithoutAnAttachment:
+                                classname = "InvalidIncomplete";
+                                break;
+                            default:
+                                break;
+                        }
+
+                    <tr data-id="@card.Id" data-card="@card.Id" data-value="@card.Name" class="@classname ">
+                        <td>
+                            @pos
+                        </td>
+                        <td>
+                            @card.Tdate
+                        </td>
+                        <td>
+                            @card.Name
+                        </td>
+                        <td>@card.Code</td>
+                        <td class="packages" data-id="@card.Id" style="cursor:pointer">
+                            <span>@card.ActivePacket</span>
+                        </td>
+                        <td>
+                            <small>@card.City</small>
+                            <br />
+                            <small>@card.Address</small>
+
+                        </td>
+                        @*<td>@card.CardNum</td>*@
+                        <td>@card.DocNum</td>
+                        <td>@card.Abonent_Num</td>
+                        @*<td data-id="@card.Id" class="bort" style="cursor:pointer">
+
+        </td>*@
+                        <td>
+                            @card.Phone
+                        </td>
+                        <td data-id="@card.Id" id="status" class="bort">
+                            @*@Html.GetCardJuridStatusTypeDesc(card.JuridVerifyStatus)*@
+
+                            @foreach (var item in juridicalStatus.Where(c => c.card_id == card.Id).Select(s => s).ToList())
+                            {
+
+                                if ((item.status == 6 || item.status == 7 || item.status == 8 || item.status == 9) && ind == 0)
+                                {
+                                    <small>პრობლემური</small>
+                                    <hr style="background-color:black" />
+                                    ind = 1;
+                                }
+                                else
+                                {
+                                    <small>@Html.GetCardJuridStatusTypeDesc((CardJuridicalVerifyStatus)Enum.Parse(typeof(CardJuridicalVerifyStatus), item.status.ToString()))</small>
+                                    <hr style="color:black" />
+                                }
+                            }
+                        </td>
+
+                        <td>
+                            @Html.GetCardStatus(card.Status)
+                        </td>
+
+                        <td>
+                            @card.UsName
+                            <br />
+                            <small>ჯგუფი: @card.UsType</small>
+                        </td>
+
+                        <td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit change_card_status" id="change_card_status"></span></a></td>
+                        @*<td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit dwoload_doc_abonent" id="dwoload_doc_abonent"></span></a></td>*@
+                        @*<td id="" data-id="@card.DocNum" data-value="@card.Name"><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit  dwoload_doc_abonent" id=""></span></a></td>*@
+                        @*<td id="edit_abonent"><a href=""><span class="glyphicon glyphicon-edit" id="edit_abonent"></span></a></td>*@
+                    </tr>
+                        pos--;
+                    }
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="10" style="text-align: center;">სია ცარიელია</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div id="paging">
+                @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+            </div>
+
+            <script type="text/javascript">
+
+            </script>
+        </div>
+    </div>
+</body>
+

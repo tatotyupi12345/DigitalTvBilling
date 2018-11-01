@@ -1,0 +1,703 @@
+﻿@model Abonent
+@using DigitalTVBilling.Helpers;
+@{
+    Page.Title = "აბონენტი";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.EditAbonent = Utils.GetPermission("ABONENT_EDIT");
+    ViewBag.CardHistoryShow = Utils.GetPermission("CARD_HISTORY_SHOW");
+    ViewBag.BalanceShow = Utils.GetPermission("ABONENT_BALANCE_SHOW");
+    ViewBag.AddCard = Utils.GetPermission("CARD_ADD");
+    ViewBag.CardShow = Utils.GetPermission("CARD_SHOW");
+    ViewBag.ChatShow = Utils.GetPermission("CHAT_SHOW");
+    ViewBag.BalanceMoveShow = Utils.GetPermission("BALANCEMOVE_SHOW");
+    ViewBag.RemoveChat = Utils.GetPermission("REMOVE_CHAT");
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/dynamic_parse.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/typeahead.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/cities.js"></script>
+    <script type="text/javascript">
+        var has_readonly = @ViewBag.HasReadonly;
+    </script>
+
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_all.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/abonent_edit.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <script src="~/Static/Scripts/View/returned_card.js"></script>
+    <link href="~/Static/Styles/Returned_.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Static/Scripts/spinner/dist/css/gspinner.min.css">
+    <script src="~/Static/Scripts/spinner/dist/js/g-spinner.min.js"></script>
+    @*<link rel="stylesheet" href="https://silviomoreto.github.io/bootstrap-select/">*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <style type="text/css">
+        .chat {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+            .chat li {
+                margin-bottom: 10px;
+                padding-bottom: 5px;
+                border-bottom: 1px dotted #B3A9A9;
+            }
+
+                .chat li.left .chat-body {
+                    margin-left: 10px;
+                }
+
+                .chat li.right .chat-body {
+                    margin-right: 60px;
+                }
+
+                .chat li .chat-body p {
+                    margin: 0;
+                    color: #777777;
+                }
+
+            .panel .slidedown .glyphicon, .chat .glyphicon {
+                margin-right: 5px;
+            }
+
+        .chat-panel {
+            overflow-y: scroll;
+            height: 250px;
+        }
+    </style>
+}
+
+@using (Html.BeginForm("Edit", "Abonent", FormMethod.Post, new { @class = "form-horizontal", id = "abonent_form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Customer.Id)
+    @Html.HiddenFor(model => model.Logging)
+    if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+            <strong>შეცდომა!</strong> @ViewBag.Error
+        </div>
+    }
+    <div class="row">
+        <div class="col-md-7">
+            <div class="panel panel-default" id="abonent_panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">აბონენტი</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Type, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.Type, @Model.Customer.GetCustomerTypes, new { @class = "form-control input-sm", data_tag = Model.Customer.Type })
+                            @Html.ValidationMessageFor(model => model.Customer.Type)
+                        </div>
+                    </div>
+                    <div class="form-group" id="juridical" style="@Html.SetJuriticalDisplay(@Model.Customer.Type)">
+                        @Html.LabelFor(model => model.Customer.JuridicalType, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.DropDownListFor(model => model.Customer.JuridicalType, @Model.Customer.GetJuridicalTypes, new { @class = "form-control input-sm", data_tag = Model.Customer.JuridicalType })
+                            @Html.ValidationMessageFor(model => model.Customer.JuridicalType)
+                        </div>
+                    </div>
+                    <div id="budget" style="@Html.SetJuriticalDisplay(@Model.Customer.Type)">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.JuridicalFinishDate, new { @class = "control-label col-md-3" })
+                            <div class="col-md-7">
+                                <div class="input-group input-group-sm date" id="txt_date">
+                                    @Html.DatetimeTextBoxFor(model => model.Customer.JuridicalFinishDate, "dd/MM/yyyy", new { @class = "form-control input-sm", data_val = false, data_tag = Model.Customer.JuridicalFinishDate, @readonly = "readonly" })
+                                    <a class="input-group-addon" style="cursor: pointer;">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.IsBudget, new { @class = "control-label col-md-3" })
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.Customer.IsBudget, new { @class = "form-control input-sm", data_tag = Model.Customer.IsBudget })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Customer.IsFacktura, new { @class = "control-label col-md-3" })
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(model => model.Customer.IsFacktura, new { @class = "form-control input-sm", data_tag = Model.Customer.IsFacktura })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Name, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Name, new { @class = "form-control input-sm", data_tag = Model.Customer.Name })
+                            @Html.ValidationMessageFor(model => model.Customer.Name)
+                        </div>
+                    </div>
+                    <div class="form-group" id="last_name" @if (@Model.Customer.Type == CustomerType.Juridical) { @Html.Raw("style=\"display:none;\"")  } else { @Html.Raw("") }>
+                        @Html.LabelFor(model => model.Customer.LastName, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.LastName, new { @class = "form-control input-sm", data_tag = Model.Customer.LastName })
+                            @Html.ValidationMessageFor(model => model.Customer.LastName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Code, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            <div class="input-group input-group-sm">
+                                @Html.TextBoxFor(model => model.Customer.Code, new { @class = "form-control input-sm", data_tag = Model.Customer.Code })
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm" id="btn_code"><span class="glyphicon glyphicon-user"></span></button>
+                                </div>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.Customer.Code)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Address, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Address, new { @class = "form-control input-sm", data_tag = Model.Customer.Address })
+                            @Html.ValidationMessageFor(model => model.Customer.Address)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.City, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.City, new { @class = "form-control input-sm", data_tag = Model.Customer.City, autocomplete = "off" })
+                            @Html.ValidationMessageFor(model => model.Customer.City)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.District, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.District, new { @class = "form-control input-sm", data_tag = Model.Customer.District })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Village, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Village, new { @class = "form-control input-sm", data_tag = Model.Customer.Village })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Region, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Region, new { @class = "form-control input-sm", data_tag = Model.Customer.Region })
+                            @Html.ValidationMessageFor(model => model.Customer.Region)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone1, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone1, new { @class = "form-control input-sm", type = "tel", data_tag = Model.Customer.Phone1 })
+                            @Html.ValidationMessageFor(model => model.Customer.Phone1)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Phone2, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Phone2, new { @class = "form-control input-sm", type = "tel", autocomplete = "off", data_tag = Model.Customer.Phone2 })
+                            @Html.ValidationMessageFor(model => model.Customer.Phone2)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Email, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextBoxFor(model => model.Customer.Email, new { @class = "form-control input-sm", type = "tel", autocomplete = "off", data_tag = Model.Customer.Email })
+                            @Html.ValidationMessageFor(model => model.Customer.Email)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.Desc, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            @Html.TextAreaFor(model => model.Customer.Desc, new { @class = "form-control input-sm", data_tag = Model.Customer.Desc })
+                            @Html.ValidationMessageFor(model => model.Customer.Desc)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Customer.SecurityCode, new { @class = "control-label col-md-3" })
+                        <div class="col-md-7">
+                            <input type="text" data-val="false" class="form-control input-sm" id="Customer_SecurityCode" autocomplete="off" data-original="@Model.Customer.SecurityCode" name="Customer.SecurityCode" value="@Model.Customer.SecurityCode" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">დეტალები</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    @if (ViewBag.BalanceShow)
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-4">ბალანსი</label>
+                            <div class="col-md-8">
+                                <h3 class="label label-default">@Model.AbonentDetailInfo.Balanse ლარი</h3>
+                            </div>
+                        </div>
+                    }
+                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-md-4">იჯარა-ბალანსი</label>
+                            <div class="col-md-8">
+                                <h3 class="label label-default">@Model.AbonentDetailInfo.RentBalanse ლარი</h3>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="control-label col-md-4">თავისუფალი თანხა</label>
+                        <div class="col-md-8">
+                            <h3 class="label label-default">@Model.AbonentDetailInfo.CanceledCardAmount ლარი</h3>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4">გათიშვის თარიღი</label>
+                        <div class="col-md-8">
+                            <h3 class="label label-default">@Html.SetDateDisplay(Model.AbonentDetailInfo.FinishDate)</h3>
+                        </div>
+                    </div>
+                    @if (ViewBag.CardHistoryShow)
+                    {
+                        <button type="button" class="btn btn-default btn-xs" id="btn_get_all_history" data-card-id="0">
+                            <span class="glyphicon glyphicon-tasks"></span> ისტორია
+                        </button>
+                    }
+                    @if (ViewBag.BalanceMoveShow)
+                    {
+                        <button type="button" class="btn btn-default btn-xs pull-right" id="btn_restore_money">
+                            <span class="glyphicon glyphicon-retweet"></span> თანხის გადანაწილება
+                        </button>
+                    }
+                </div>
+            </div>
+            @if (ViewBag.HasReadonly == 1)
+            {
+                <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#edit_modal" type="button">
+                    <span class="glyphicon glyphicon-edit"></span>
+                    რედაქტირება
+                </button>
+            }
+            <div class="row">
+                <div class="col-sm-2">
+                    <a class="btn btn-xs btn-primary" id="new_attachment" href="javascript:void(0)" style="height: 30px; line-height: 25px;">ახალი აქსესუარი</a>
+                </div>
+                @if (Utils.GetPermission("REREGISTERING_SHOW"))
+                {
+                    <label class="control-label col-md-3" for="Customer_Desc">გადაფორმება</label>
+                    <div class="col-md-2">
+                        <input type="checkbox" name="" id="new_register" value="1">
+                    </div>
+                    @*<div class="col-md-3">
+                    <button type="button" class="btn btn-success btn-sm" id="registering">ისტორია</button>
+                </div>*@
+                }
+            </div>
+            @*<br />
+            <br />
+            <div>
+                <label>გაგზავნეთ აბობნენტის ნომერი </label>
+                <button onclick="sendSMSAbonentNum(@Model.Cards.Select(s=>s.AbonentNum).FirstOrDefault(),@Model.Customer.Phone1)" id="sent_sms_abonent" class="btn btn-success btn-sm" style="font-size: 18px;">@Model.Cards.Select(s=>s.AbonentNum).FirstOrDefault()</button>
+            </div>*@
+            <br />
+            @if (ViewBag.ChatShow)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ჩატი</h3>
+                    </div>
+                    <div class="panel-body chat-panel" style="padding-left: 5px;">
+                        <ul class="chat">
+                            @foreach (Chat chat in Model.AbonentDetailInfo.Chats)
+                            {
+                                <li class="left clearfix">
+                                    @if (ViewBag.RemoveChat)
+                                    {
+                                        <button type="button" class="close" data-dismiss="alert" onclick="RemoveChat(@chat.Id)" aria-hidden="true">&times;</button>
+                                    }
+                                    <div class="chat-body clearfix">
+                                        <div class="header">
+                                            <strong class="primary-font">@chat.UserName</strong> <small class="pull-right text-muted">
+                                                <span class="glyphicon glyphicon-time"></span>@chat.Tdate.ToString("dd/MM/yyyy HH:mm", System.Globalization.CultureInfo.InvariantCulture)
+                                            </small>
+                                        </div>
+                                        <p>
+                                            @chat.Message
+                                        </p>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="input-group input-group-sm">
+                            <input id="btn-input" type="text" class="form-control input-sm" placeholder="თქვენი შეტყობინება...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-success btn-sm" id="btn_chat">
+                                    გაგზავნა
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">ხელშეკრულება</h3>
+                </div>
+                <div class="panel-body" style="padding-left: 5px;">
+                    @foreach (var item in Model.Cards)
+                    {
+                        @Html.ActionLink("ხელშეკრულება №: " + item.DocNum + " (" + item.CardNum + ")", "GenerateDoc", "Abonent", new { DocName = "", card_id = item.Id }, null);<br />
+                    }
+
+
+
+                    @*<button type="button" class="btn btn-default btn-xs" id="">
+                    <span class="glyphicon glyphicon-paperclip"></span> თანხის გადანაწილება
+                </button>*@
+                    @*<div class="form-group">
+                    <label class="control-label col-md-4">თავისუფალი თანხა</label>
+                    <div class="col-md-8">
+                        <h3 class="label label-default">@Model.AbonentDetailInfo.CanceledCardAmount ლარი</h3>
+                    </div>
+                </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (ViewBag.CardShow)
+        {
+            <div class="col-md-7">
+                <div class="panel panel-default" id="cards_panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">ბარათები</h3>
+                        @if (Utils.GetPermission("GPS_SHOW"))
+                        {
+                            if (Model.Cards.Select(s => s.Latitude).FirstOrDefault() != null && Model.Cards.Select(s => s.Longitude).FirstOrDefault() != null)
+                            {
+                                <span class="glyphicon glyphicon-map-marker" style="margin-left:95%; font-size:30px; color:#4cff00; margin-top:-20px;" id="location" onclick="return GPS_Location(@Model.Cards.Select(s => s.Latitude).FirstOrDefault(),@Model.Cards.Select(s => s.Longitude).FirstOrDefault(),@Model.Cards.Select(s => s.TowerId).FirstOrDefault())"></span>
+                            }
+                            else
+                            {
+                                <span class="glyphicon glyphicon-map-marker" style="margin-left:95%; font-size:30px; color:#ff0000; margin-top:-20px;" id="location" onclick="return GPS_Location(@Model.Cards.Select(s => s.Latitude).FirstOrDefault(),@Model.Cards.Select(s => s.Longitude).FirstOrDefault(),@Model.Cards.Select(s => s.TowerId).FirstOrDefault())"></span>
+                            }
+                        }
+                    </div>
+
+                    <div class="panel-body" style="padding-left: 5px;">
+                        <div id="cards">
+                            @{ Html.RenderPartial("~/Views/Abonent/_Card.cshtml", Model); }
+                            @if (ViewBag.AddCard)
+                            {
+                                <span style="float: right; margin-right: 4px; cursor: pointer;" id="card_add">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    <span>ახალი ბარათი</span>
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="col-md-5">
+            <div class="form-group">
+                <label class="control-label col-md-4">დილერი:</label>
+                <div class="col-md-7">
+                    <input id="isFromDiler" type="checkbox">
+                    <input id="isFromDiler_" name="isFromDiler" type="hidden" value="false">
+                </div>
+            </div>
+
+            <div class="form-group diler_filter" style="display: none;">
+                <label class="control-label col-md-4" for="code_word">კოდური სიტყვა:</label>
+                <div class="col-md-7">
+                    <input type="text" class="form-control is-invalid" id="diler_code_word_edit">
+                </div>
+            </div>
+            <div class="form-group diler_filter">
+                <div id="dilersWrapper_edit" class="" style="overflow: auto; ">
+                    <div id="loader"></div>
+                    @*<h2>Striped Rows</h2>
+                        <p>The .table-striped class adds zebra-stripes to a table:</p>*@
+                    @*<table class="table ">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Firstname</th>
+                                    <th>Lastname</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input name="diler" type="radio" /></td>
+                                    <td>John</td>
+                                    <td>Doe</td>
+                                    <td>john@example.com</td>
+                                </tr>
+                                <tr>
+                                    <td><input name="diler" type="radio" /></td>
+                                    <td>Mary</td>
+                                    <td>Moe</td>
+                                    <td>mary@example.com</td>
+                                </tr>
+                                <tr>
+                                    <td><input name="diler" type="radio" /></td>
+                                    <td>July</td>
+                                    <td>Dooley</td>
+                                    <td>july@example.com</td>
+                                </tr>
+                            </tbody>
+                        </table>*@
+                </div>
+            </div>
+            @*<div class="form-group diler_filter">
+                    <div id="attachmentsWrapper" class="" style="overflow: auto; overflow-y: hidden; ">
+                        <table class="table table-bordered table-hover" style="text-align:center;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="text-align:center;">აქსესუარი</th>
+                                    <th style="text-align:center;">რაოდენობა</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.attachments.Count(); i++)
+                                {
+
+                                    <tr>
+                                        <td><img src="@Model.attachments[i].ImagePath" alt="" style="width:100px;height:50px;"></td>
+                                        <td>@Model.attachments[i].Name</td>
+                                        <td>
+                                            <input type="number" min="0" name="attachments[@i].Value" value="0"  class="form-control input-sm" autocomplete = "off"/>
+                                            <input type="hidden" name="attachments[@i].Id" value="@Model.attachments[i].Id" />
+                                            @Html.TextBoxFor(model => model.attachments[i].Value, new { @class = "form-control input-sm", autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.attachments[i].Value)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+    <div class="row" id="save_area">
+        @if (ViewBag.HasReadonly == 0)
+        {
+            <div class="col-md-1 col-md-offset-9">
+                <input type="submit" value="შენახვა" name="save" class="btn btn-default btn-sm pull-right" />
+
+            </div>
+            <div class="col-md-1 pull-right">
+                <input type="submit" value="შენახვა და დარჩენა" name="save_and_continue" class="btn btn-primary btn-sm pull-right" />
+            </div>
+        }
+    </div>
+}
+
+<div class="modal fade" id="edit_modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="" class="control-label col-md-3">კოდური სიტყვა:</label>
+                    <div class="col-md-7">
+                        <input type="password" class="form-control input-sm" id="txt_enter_code" autofocus />
+                    </div>
+                </div>
+                <div id="edit_modal_error" style="margin-top: 40px;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="btn_open_block" class="btn btn-primary btn-xs">მოხსნა</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="card_pause_modal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ბარათის დაპაუზება</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="card_pause_modal_error" style="margin-bottom: 10px;">
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label col-md-3">დღე:</label>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control input-sm" id="txt_enter_pause_day" value="@ViewBag.CardPauseDay" autofocus />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    <button type="button" id="btn_card_pause" class="btn btn-primary btn-xs">დაპაუზება</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+<div class="modal fade" id="card_block_modal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">ბარათის დაბლოკვა</h4>
+            </div>
+            <div class="modal-body">
+                ნამდვილად გსურთ ბარათის დაბლოკვა?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="btn_card_block" class="btn btn-primary btn-xs">დაბლოკვა</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="serv_res_modal">
+    <div class="modal-dialog modal-dialog-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">არჩეული მომსახურებები</h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-primary btn-xs" data-dismiss="modal" id="services_save">შენახვა</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="damageModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">დაზიანების დაფიქსირება</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="user_group">მიზეზი:</label>
+                            <div class="col-md-5">
+                                @Html.DropDownList("DamageReason", new SelectList((List<IdName>)ViewBag.Reasons, "Id", "Name"), "----", new { @class = "form-control input-sm", id = "damage_reason" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <textarea class="form-control input-sm" id="damage_text" rows="3" autofocus></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-primary btn-xs" id="damage_create">დაფიქსირება</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="card_cancel_modal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height:500px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ბარათის გაუქმება</h4>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="Customer_Desc">მიზეზი:</label>
+                    <div class="col-md-9">
+                        <select class="form-control input-sm" id="card_cancel_mode">
+                            <option value="1">სხვა ოპერატორით შეცვლა</option>
+                            <option value="2"> შეიცვალა საც.ადგილი/ჰქონდა აგარაკისთვის</option>
+                            <option value="3">ჰქონდა ტეკნიკური პრობლემა/არ იჭერდა კარგად</option>
+                            <option value="4">არ აკმაყოფილებლა არხების ჩამონათვალი</option>
+                            <option value="5"> უკმაყოფილო იყო მომსახურებით</option>
+                            <option value="6">სხვა მიზეზი</option>
+                            <option value="7"> არ/ვერ გაგვცა პასუხი</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="display:none; margin-top:50px" id="return_">
+                    <label class="control-label col-md-3" for="Customer_Desc">კომენტარი:</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control input-sm" cols="50" data-tag="" id="Customer_Desc" name="Customer.Desc" rows="2"></textarea>
+                        <span class="field-validation-valid" data-valmsg-for="Customer.Desc" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group" style="margin-top:5%;" id="modal_bort">
+                    <label class="control-label col-md-3" for="Customer_Desc">ბორტი:</label>
+                    <div class="col-md-9">
+                        <select class="form-control input-sm" id="card_cancel_mode">
+
+                        </select>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group" style="margin-top:5%">
+                    <label class="control-label col-md-3" for="Customer_Desc">საკომისიო:</label>
+                    <div class="col-md-8">
+                        <input type="checkbox" name="checkbox" id="checkbox_id1" value="1">
+                        <input type="text" name="1" value="ნაღდი" disabled="disabled" id="disabled_1"><br><br />
+                        <input type="checkbox" name="checkbox" id="checkbox_id2" value="2">
+                        <input type="text" name="2" value="ბალანსი" disabled="disabled" id="disabled_2"><br /><br />
+                        <input type="checkbox" name="checkbox" id="checkbox_id3" value="3">
+                        <input type="text" name="3" value="ნაღდი/უნაღდო" disabled="disabled" id="disabled_3">
+                    </div>
+                </div>
+                <br />
+                <br />
+                <div class="form-group" style="margin-top:20%">
+                    <label class="control-label col-md-3" for="Customer_Desc">დას.თანხა:</label>
+                    <div class="col-md-7">
+                        <input type="text" name="3" value="0"  id="return_amount">
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer" style="margin-top:5%">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    <button type="button" id="card_cancel" class="btn btn-primary btn-xs">შენახვა</button>
+                </div>
+            </div>
+        </div>
+    </div>*@

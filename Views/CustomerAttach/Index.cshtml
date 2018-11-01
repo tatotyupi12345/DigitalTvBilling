@@ -1,0 +1,281 @@
+﻿@model IPagedList<CustomerSellAttachments>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.attachs = "active";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SellAttachment> attachments = (List<SellAttachment>)ViewBag.attachments;
+
+    var customerSellAttachs = from custAttachs in Model
+                              group custAttachs by custAttachs.CustomerID into cGroup
+                              select new
+                              {
+                                  Key = cGroup.Key,
+                                  customerAttachs = cGroup
+                              };
+    List<User> users = ViewBag.Users;
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Static/Scripts/View/sell_attachs_index.js"></script>
+    <script src="~/Static/Scripts/spinner/dist/js/g-spinner.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <link rel="stylesheet" href="~/Static/Scripts/spinner/dist/css/gspinner.min.css">
+
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+            //$(':checkbox').checkboxpicker();
+        });
+    </script>
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+
+        .approved {
+            background-color: #a4ff7e;
+        }
+
+        .temporary_use_promo {
+            background-color: #ff6a00;
+        }
+
+        .temporary_use {
+            background-color: #0094ff;
+        }
+
+        .approved_edited {
+            background-color: #e5fd00;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-2">
+        <a class="btn btn-xs btn-primary" id="new_attachment" href="javascript:void(0)" style="height: 30px; line-height: 25px;">ახალი აქსესუარი</a>
+    </div>
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="userFilter" class="form-control" id="user_filter">
+                <option value="0"></option>
+                @foreach (var item in users.Where(u => u.Type == 4 || u.Type == 44).ToList())
+                {
+                    if (ViewBag.selectedUserFilter != null && (int)ViewBag.selectedUserFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-1 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="attachFilter" class="form-control" id="drp_filter">
+                <option value="0"></option>
+                @foreach (var item in attachments)
+                {
+                    if (ViewBag.selectedFilter != null && (int)ViewBag.selectedFilter == item.Id)
+                    {
+                        <option selected value="@item.Id">@item.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <h4><span class="label label-default" id="sumPrice">რაოდენობა ჯამში: @ViewBag.CountSum</span></h4>
+    </div>
+    @*<div class="col-sm-1">
+            <h4><span class="label label-default" id="sum12Price">პაკეტი 12: @ViewBag.pack12price</span></h4>
+        </div>
+        <div class="col-sm-1">
+            <h4><span class="label label-default" id="sum15Price">პაკეტი 15: @ViewBag.pack15price</span></h4>
+        </div>*@
+</div>
+
+<div class="row" style="margin-top: 8px; overflow: auto;">
+    <table class="table table-bordered" style="text-align: center;">
+        <thead style="text-align: center;">
+            <tr>
+                <th style="width:200px;">
+                    თარიღი
+                </th>
+                <th style="">
+                    აბონენტი
+                </th>
+                <th style="">
+                    ტიპი
+                </th>
+                <th style="">
+                    ქალაქი
+                </th>
+                <th style="">
+                    ტელეფონი
+                </th>
+                <th style="">
+                    პირადი №
+                </th>
+                <th style="">
+                    მომხმარებელი
+                </th>
+                <th> სტატუსი</th>
+                @foreach (var item in attachments)
+                {
+                    <th style="">
+                        @item.Name
+                    </th>
+                }
+                <th style="width: 2%;">
+
+                </th>
+                @*<th style="">
+                        აქსესუარი
+                    </th>
+                    <th style="">
+                        რაოდენობა
+                    </th>*@
+                @*<th style="width: 2%;">
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (var group in customerSellAttachs)
+            {
+                var _grp = group;
+                var subgroupbydiler = from dillerAttachs in _grp.customerAttachs
+                                      group dillerAttachs by dillerAttachs.Diler_Id into dGroup
+                                      select new
+                                      {
+                                          Key = dGroup.Key,
+                                          customerAttachs = dGroup
+                                      };
+
+                foreach (var itembydiler in subgroupbydiler)
+                {
+                    string classname = "";
+                    switch (itembydiler.customerAttachs.First().VerifyStatus)
+                    {
+                        case 2:
+                            {
+                                classname = "approved";
+                            }
+                            break;
+
+                        case 1:
+                            {
+                                classname = "approved_edited";
+                            }
+                            break;
+
+                        case 4:
+                            {
+                                classname = "edit";
+                            }
+                            break;
+                        case 5:
+                            {
+                                classname = "temporary_use_promo";
+                            }
+                            break;
+                        case 6:
+                            {
+                                classname = "temporary_use";
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+
+                    <tr data-val="" data-id="@itembydiler.customerAttachs.First().Diler_Id" data-customerid="@itembydiler.customerAttachs.First().CustomerID" class="@classname">
+                        <td>@itembydiler.customerAttachs.First().Tdate</td>
+                        <td>
+                            @itembydiler.customerAttachs.First().Customer.Name @itembydiler.customerAttachs.First().Customer.LastName
+                        </td>
+                        <td>@Html.GetCustomerTypeDesc(@itembydiler.customerAttachs.First().Customer.Type)</td>
+                        <td>@itembydiler.customerAttachs.First().Customer.City</td>
+                        <td>@itembydiler.customerAttachs.First().Customer.Phone1</td>
+                        <td>@itembydiler.customerAttachs.First().Customer.Code</td>
+                        <td>@users.Where(u => u.Id == itembydiler.customerAttachs.First().Diler_Id).FirstOrDefault().Name</td>
+                        <td>
+                            @if (itembydiler.customerAttachs.First().status == SellAttachmentStatus.temporary_use)
+                            {
+                                <smal>@Utils.GetEnumDescription(itembydiler.customerAttachs.First().status)</smal>
+                            }
+                            else
+                            {
+                                <smal>@Utils.GetEnumDescription(itembydiler.customerAttachs.First().status)</smal>
+                            }
+                        </td>
+                        @foreach (var item in attachments)
+                        {
+                            //var gss = itembydiler.customerAttachs.Where(cc => cc.AttachmentID == item.Id).ToList();
+                            var gs = itembydiler.customerAttachs.Where(cc => cc.AttachmentID == item.Id).ToList();
+                            if (gs != null && gs.Count > 0)
+                            {
+                                <td>@gs.Select(g => g.Count).Sum()</td>
+                            }
+                            else
+                            {
+                                <td>0</td>
+                            }
+                        }
+                        <td data-id="@itembydiler.customerAttachs.First().Diler_Id" data-approve="@itembydiler.customerAttachs.First().CustomerID" id="data-approve-@itembydiler.customerAttachs.First().Id">
+                            @if (@itembydiler.customerAttachs.Any(a => a.VerifyStatus == 2))
+                            {
+                                <span class="bg-success">OK</span>
+                            }
+                            else
+                            {
+                                <button class="btn btn-default btn-xs" type="button" onclick="recordApprove(@itembydiler.customerAttachs.FirstOrDefault().CustomerID , @itembydiler.customerAttachs.FirstOrDefault().Diler_Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                            }
+                        </td>
+                    </tr>
+                }
+
+
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, abonent = Request.QueryString["abonent"], attach_filter_id = Request.QueryString["attach_filter_id"], dt_from = Request.QueryString["dt_from"], dt_to = Request.QueryString["dt_to"], user_id = Request.QueryString["user_id"] }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+</div>

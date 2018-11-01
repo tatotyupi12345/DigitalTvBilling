@@ -1,0 +1,68 @@
+﻿@model Reason
+@{
+    ViewBag.EditRec = Utils.GetPermission("REC_EDIT");
+    ViewBag.AddRec = Utils.GetPermission("REC_ADD");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+                                         {
+                                             Url = Url.Action("NewReason"),
+                                             OnSuccess = "onSuccessNewService",
+                                             HttpMethod = "POST"
+                                         }, new { @class = "form-horizontal", role = "form", id = "reason_form", name = "ReasonForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი მიზეზი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.HiddenFor(model => model.Logging)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReasonType, new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.DropDownListFor(model => model.ReasonType, @Model.GetReasonTypes, new { @class = "form-control input-sm" })
+                                    }
+                                    else
+                                    {
+                                        @Html.DropDownListFor(model => model.ReasonType, @Model.GetReasonTypes, new { @class = "form-control input-sm", data_tag = Model.ReasonType })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.ReasonType)
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditRec) || (Model.Id == 0 && ViewBag.AddRec))
+                    {
+                        <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

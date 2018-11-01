@@ -1,0 +1,81 @@
+﻿@model List<CardCharge>
+@using DigitalTVBilling.Helpers
+
+@if (ViewBag.CardId != 0)
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 30%;">
+                    თარიღი
+                    @*<div>თარიღი</div>*@
+                </th>
+                <th style="width: 15%;">
+                    თანხა
+                    @*<div>თანხა</div>*@
+                </th>
+                @if (Utils.GetPermission("RENT_ACCRUALS"))
+                {
+                    <th style="width: 15%;">
+                        იჯარა
+
+                    </th>
+                }
+                <th style="width: 40%;">
+                    დანიშნულება
+                    @*<div>დანიშნულება</div>*@
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.CardCharge list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.Amount</td>
+                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                    {
+                        <td>@list.RentAmount</td>
+                    }
+                    <td>@Html.GetCardChargeStatus(list.Status)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 25%;">
+                    თარიღი
+                    <div>თარიღი</div>
+                </th>
+                <th style="width: 25%;">
+                    ბარათი
+                    <div>ბარათი</div>
+                </th>
+                <th style="width: 20%;">
+                    თანხა
+                    <div>თანხა</div>
+                </th>
+                <th style="width: 30%;">
+                    დანიშნულება
+                    <div>დანიშნულება</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.CardCharge list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.Card.CardNum</td>
+                    <td>@list.Amount</td>
+                    <td>@Html.GetCardChargeStatus(list.Status)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

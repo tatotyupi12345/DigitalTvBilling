@@ -1,0 +1,24 @@
+﻿body {
+
+
+}
+.element {
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: #313131;
+    }
+
+    100% {
+        background-color: #023302;
+    }
+}
+.paused {
+    -ms-animation-play-state: paused;
+    -o-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    -webkit-animation-play-state: paused;
+    animation-play-state: paused;
+}

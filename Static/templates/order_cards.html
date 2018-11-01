@@ -1,0 +1,84 @@
+﻿<div class="modal fade">
+        <div class="modal-dialog">
+            <form class="form-horizontal" data-ajax="true" data-ajax-method="POST" data-ajax-success="onSuccessAddCards" data-ajax-url="/Order/CardsAdd" id="order_form" method="post" name="CardsAddForm" role="form">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">ბარათის დამატება</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12" id="area">
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span style="float: right; margin-right: 4px; cursor: pointer;" id="card_add">
+                                    <span class="glyphicon glyphicon-plus"></span> ახალი ბარათი
+                                </span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="customer_type" />
+                        <script type="text/javascript">
+                            function onAddCardService(index) {
+                                $.post("/Abonent/GetServicesList", {}, function (services) {
+                                    var services_content = showModal(services);
+                                    services_content.find("#services_add").on("click", function (e) {
+                                        e.preventDefault();
+                                        var services_data = $("#services_data_" + index);
+                                        var str = '';
+                                        var ind = 0;
+                                        var res_str = '';
+                                        services_content.find("#services_body tr").each(function (i, item) {
+                                            if ($(item).find("input[type='checkbox']").prop("checked")) {
+                                                str += '<input type="hidden" name="Cards[' + index + '].CardServices[' + ind + '].ServiceId" value="' + $(item).data("id") + '" />' +
+                                                    '<input type="hidden" name="Cards[' + index + '].CardServices[' + ind + '].Amount" value="' + $(item).find("input[type='text']").eq(0).val() + '" />' +
+                                                    '<input type="hidden" name="Cards[' + index + '].CardServices[' + ind + '].PayType" value="' + $(item).find("select option:selected").val() + '" />';
+
+                                                res_str += '<li class="list-group-item">' + $.trim($(item).find("td:nth-child(2)").html()) + '</li>';
+                                                ind++;
+                                            }
+                                        });
+
+                                        $.get("/Static/templates/services_res_modal.html", function (cards) {
+                                            var m = showModal(cards);
+                                            m.find("ul").html(res_str);
+                                            m.modal("show");
+                                            m.find("#services_save").on("click", function (ev) {
+                                                services_data.html(str);
+                                                services_content.modal("hide");
+                                            });
+                                        });
+
+                                    });
+
+                                }, "html");
+                            }
+
+                            function onAddOrderSubscription(index) {
+                                $.post("/Abonent/AddSubscription", { id: 0, type: $("#order_form #customer_type").val() }, function (subscribs) {
+                                    var subscribs_content = showModal(subscribs);
+                                    subscribs_content.find("#add_new_subscrb").on("click", function (e) {
+                                        var area = $("#packets_data_" + index);
+                                        e.preventDefault();
+                                        var str = '';
+                                        $.each(subscribs_content.find("input:hidden[id^='id_']"), function (i, val) {
+                                            str += '<input type="hidden" name="Cards[' + index + '].Subscribtions[0].SubscriptionPackages[' + i + '].PackageId" value="' + $(val).val() + '" />';
+                                        });
+                                        area.html(str);
+                                        subscribs_content.modal("hide");
+                                    });
+                                });
+                            }
+                        </script>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-xs btn-default" data-dismiss="modal">დახურვა</button>
+                        <button type="submit" class="btn btn-xs btn-primary">შენახვა</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+

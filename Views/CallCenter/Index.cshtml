@@ -1,0 +1,758 @@
+﻿@model IEnumerable<CallUser>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.CallCenter
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+
+@using Dapper;
+@using Microsoft.AspNet.SignalR;
+@using DigitalTVBilling.CallCenter;
+@using System.Xml.Linq;
+@using DigitalTVBilling.CallCenter.Infrastructure;
+@using System.Data.SqlClient;
+@using System.Configuration;
+@{
+    /**/
+
+    ViewBag.CallCenterShow = "active";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<ReRegistering>
+    registerings = ViewBag.Replaments;
+    var image = "";
+    var context = GlobalHost.ConnectionManager.GetHubContext<HubMessage>(); //
+}
+<head>
+    <link href="~/Static/css/bpg-nino-mtavruli.mini.css" rel="stylesheet" />
+    <link href="~/Static/css/bpg-nino-mtavruli.css" rel="stylesheet" />
+</head>
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/stoppedcards_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script src="~/Static/Scripts/View/call_static_order.js"></script>
+    <script src="~/Static/Scripts/View/call_static_damage.js"></script>
+    <script src="~/Static/Scripts/View/call_static_cancellation.js"></script>
+    <script src="~/Static/Scripts/View/call_static_index.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <link href="~/Static/Styles/JuridicalStyle.css" rel="stylesheet" />
+    <link href="~/Static/Styles/test.css" rel="stylesheet" />
+
+    @*<link href="~/Static/Styles/bpg-nino-mtavruli.css" rel="stylesheet" />
+        <link href="~/Static/Styles/bpg-nino-mtavruli.min.css" rel="stylesheet" />*@
+    <script src="~/signalr/hubs"></script>
+    @*<link rel="stylesheet" href="/bower_components/bpg-nino-mtavruli/css/bpg-nino-mtavruli.css">*@
+    <script type="text/javascript">
+
+        var con = $.hubConnection(); // chart live
+        var hub = con.createHubProxy('hubMessage');
+        var ChartLine = 1;
+        var colors = ["#313131", "#023302"];
+        var intervalOrder, intervalDamage, intervalCancellation;
+        var i_o = 0, i_d = 0, i_c = 0;
+        var user_ids;
+        hub.on('onHitRecorded', function (data, user_id, id) {
+            user_ids = user_id;
+            switch (data) {
+                case "OrderClosed":
+                    $("#static_order_remainder_" + user_id).text($("#static_order_remainder_" + user_id).text() - 1);
+                    $("#static_order_yielding_" + user_id).text(parseInt($("#static_order_yielding_" + user_id).text()) + 1);
+                    ClearColor();
+                    break;
+                case "OrderCanceled":
+                    $("#static_order_remainder_" + user_id).text($("#static_order_remainder_" + user_id).text() - 1);
+                    $("#static_order_cancled_" + user_id).text(parseInt($("#static_order_cancled_" + user_id).text()) + 1);
+                    ClearColor();
+                    break;
+                case "Damage":
+                    $("#static_damage_remainder_" + user_id).text($("#static_damage_remainder_" + user_id).text() - 1);
+                    $("#static_damage_yielding_" + user_id).text(parseInt($("#static_damage_yielding_" + user_id).text()) + 1);
+                    ClearColor();
+                    break;
+                case "DamageStatusClosed":
+                    $("#static_damage_count_" + user_id).text($("#static_damage_count_" + user_id).text() - 1);
+                    ClearColor();
+                    break;
+                case "Cancellation":
+                    $("#static_cancel_remainder_" + user_id).text($("#static_cancel_remainder_" + user_id).text() - 1);
+                    $("#static_cancel_yielding_" + user_id).text(parseInt($("#static_cancel_yielding_" + user_id).text()) + 1);
+                    ClearColor();
+                    break;
+                case "Cancellation_Not":
+                    $("#static_cancel_remainder_" + user_id).text($("#static_cancel_remainder_" + user_id).text() - 1);
+                    $("#static_cancel_cancled_" + user_id).text(parseInt($("#static_cancel_cancled_" + user_id).text()) + 1);
+                    ClearColor();
+                    break;
+                case "UserEnd":
+                    $("#work_id_" + user_id).attr("src", "/tStyles/dist/img/work_slip.gif");
+                    break;
+                case "UserStart":
+                    $("#work_id_" + user_id).attr("src", "/tStyles/dist/img/starrt_work.gif");
+                    break;
+                case "OrderToGo":
+                    var i = 0;
+                    $("#order_id_" + user_id).css("backgroundColor", colors[1]);
+                    clearInterval(intervalDamage);
+                    clearInterval(intervalOrder);
+                    intervalOrder = window.setInterval(OrderInterval, 2000);
+                    break;
+                case "DamageToGo":
+                    j = 0;
+                    $("#damage_id_" + user_id).css("backgroundColor", colors[1]);
+                    clearInterval(intervalOrder);
+                    clearInterval(intervalCancellation);
+                    intervalDamage = window.setInterval(DamageInterval, 2000);
+
+                    break;
+                case "CancellationToGo":
+                    var i = 0;
+                    $("#cancel_id_" + user_id).css("backgroundColor", colors[1]);
+                    clearInterval(intervalDamage);
+                    clearInterval(intervalOrder);
+                    intervalCancellation = window.setInterval(CancellationInterval, 2000);
+
+                    break;
+                case "Region":
+                    $("#region_" + user_id).css("backgroundColor", colors[1]);
+                    intervalCancellation = window.setInterval(CancellationInterval, 2000);
+                    break;
+                case "RegionClosed":
+                    $("#static_order_count_" + user_id).text($("#static_order_count_" + id + user_id).text() - 1);
+                    intervalCancellation = window.setInterval(CancellationInterval, 2000);
+                    $("#region_" + id + user_id).css("backgroundColor", colors[0]);
+                    break;
+                case "OrderNew":
+                    $("#static_order_count").text(parseInt($("#static_order_count").text()) + 1);
+                    break;
+                case "DamageNew":
+                    $("#static_order_count").text(parseInt($("#static_damage_count").text()) + 1);
+                    break;
+                case "CancellationNew":
+                    $("#static_order_count").text(parseInt($("#static_cancellation_count").text()) + 1);
+                    break;
+            }
+
+        });
+        con.start();
+
+        $(".datepickers").datePickers({ prefix: "picker" });
+        function OrderInterval() {
+            i_o = i_o == colors.length ? 0 : i_o;
+            //stopAnimation($(".element"));
+            $("#order_id_" + user_ids).css("background-color", colors[i_o]);
+            $("#damage_id_" + user_ids).css("background-color", colors[0]);
+            $("#cancel_id_" + user_ids).css("background-color", colors[0]);
+            i_o++;
+        }
+        function DamageInterval() {
+            i_d = i_d == colors.length ? 0 : i_d;
+            //stopAnimation($(".element"));
+            $("#damage_id_" + user_ids).css("background-color", colors[i_d]);
+            $("#order_id_" + user_ids).css("background-color", colors[0]);
+            $("#cancel_id_" + user_ids).css("backgroundColor", colors[0]);
+            i_d++;
+        }
+        function CancellationInterval() {
+            i_c = i_c == colors.length ? 0 : i_c;
+            //stopAnimation($(".element"));
+            $("#cancel_id_" + user_ids).css("background-color", colors[i_c]);
+            $("#damage_id_" + user_ids).css("background-color", colors[0]);
+            $("#order_id_" + user_ids).css("background-color", colors[0]);
+            i_c++;
+        }
+        function ClearColor() {
+            clearInterval(intervalOrder);
+            clearInterval(intervalDamage);
+            clearInterval(intervalCancellation);
+            $("#order_id_" + user_ids).css("background-color", colors[0]);
+            $("#damage_id_" + user_ids).css("background-color", colors[0]);
+            $("#cancel_id_" + user_ids).css("background-color", colors[0]);
+            //stopAnimation($(".element"));
+
+        }
+        //function stopAnimation(element) {
+        //    $(element).css("animation", "none");
+        //}
+    </script>
+    <style type="text/css">
+        body {
+            font-family: 'BPG Nino Mtavruli', sans-serif;
+        }
+
+        li {
+            cursor: pointer;
+        }
+
+        .goingToPay {
+            background-color: #4dff4d;
+        }
+
+        .goingToCancel {
+            background-color: #ff3333;
+        }
+
+        .technicalProblem {
+            background-color: #ffff4d;
+        }
+
+        .unConnected {
+            background-color: #66b3ff;
+        }
+
+        .closed {
+            background: linear-gradient(to top, #112d00 0%, #0e5200 100%) !important;
+        }
+
+        .write {
+            background-color: #fff;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+
+        .shadow {
+            -moz-box-shadow: inset 0 0 10px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 10px #fff;
+            text-align: center;
+            padding: 0 !important;
+        }
+
+        .vamp {
+            text-shadow: 1px 4px 14px rgba(47,47,47,0.47);
+            color: white;
+            font-size: 14px;
+            font-family: 'BPG Nino Mtavruli';
+        }
+
+        .headerVamp {
+            margin: auto;
+            margin-left: 25px;
+        }
+
+        .borders {
+            border-right: 1px solid #767676;
+            border-top: 1px solid #767676;
+            border-left: 1px solid #767676;
+            border-bottom: 1px solid #767676;
+        }
+
+        .pictures {
+            padding: 0 !important;
+            min-width: 264px;
+            position: relative;
+            vertical-align: top !important;
+            border-bottom: 1px solid #767676 !important;
+            border-right: 1px solid #767676 !important;
+            border-left: 1px solid #767676 !important;
+            border-top: 1px solid #767676 !important;
+        }
+
+        .picturesimg {
+            display: inline-block;
+            width: 90px;
+            height: 110px;
+        }
+
+        .pictures_work {
+            display: inline-block;
+            width: 155px;
+            height: 110px;
+        }
+
+        .pictures img:first-child {
+            float: left;
+        }
+
+        .pictures img:nth-child(2) {
+            float: right;
+        }
+
+        .tableCell {
+            padding: 0 !important;
+            border-bottom: 1px solid #313131 !important;
+            border-right: 1px solid #767676 !important;
+            border-left: 1px solid #313131 !important;
+            border-top: 1px solid #313131 !important;
+        }
+
+        .table {
+            max-height: 100%;
+            height: 137px !important;
+            margin-bottom: 0px !important;
+        }
+
+        .statusBar {
+            -moz-box-shadow: inset 0 0 15px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 15px #fff;
+            position: absolute;
+            transform: rotate(-90deg);
+            font-size: 19px;
+            margin-left: 47px;
+            margin-top: 42px;
+            text-align: center;
+            width: 110px;
+            height: 25px;
+            font-family: 'BPG Nino Mtavruli';
+            font-size: 15px;
+            color: white;
+        }
+
+        .count {
+            display: inline-block;
+            width: 50px;
+            float: right;
+            color: white;
+            background-color: #787878;
+            -moz-box-shadow: inset 0 0 10px #000000;
+            -webkit-box-shadow: inset 0 0 15px #000000;
+            box-shadow: inset 0 0 10px #fff;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        td {
+            display: table-cell !important;
+            vertical-align: middle !important;
+            font-size: 15px;
+            text-align: center;
+            /*background-color: #313131;*/
+            background: linear-gradient(to top, #313131 0%, #8e8e8e 100%) !important;
+        }
+
+        .header {
+            height: 5px;
+            border-bottom: 1px solid #767676 !important;
+            border-right: 1px solid #767676 !important;
+            border-left: 1px solid #767676 !important;
+            border-top: 1px solid #767676 !important;
+        }
+
+        .filterColor {
+            background-color: #313131;
+        }
+
+        select {
+            width: 400px;
+            text-align-last: center;
+            font-size: 19px !important;
+            box-shadow: inset 0 0 10px #060606 !important;
+            background-color: #313131 !important;
+            color: white !important;
+        }
+
+        input {
+            background-color: #313131 !important;
+            color: #b1b1b1 !important;
+            font-size: 19px !important;
+            text-align: center;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-sm-3">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-2">
+        <div class="input-group input-group-sm pull-left">
+            <select class="form-control" id="drp_filter_call" style="font-size:15px !important; height:30px!important">
+                <option value="0"></option>
+                <option value="1">შეკვეთები</option>
+                <option value="2">დაზიანება</option>
+                <option value="3">გაუქმება </option>
+            </select>
+        </div>
+    </div>
+
+</div>
+<div class="form-group" id="_filter" style="display:none; overflow: auto;   height: 375px;">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="shadow filterColor">
+                <th class="shadow" style="width:2%; vertical-align: inherit;">
+                    <b class="vamp"> ინსტალატორი</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp">  თარიღი</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp"> აბონენტი</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp">  ქალაქი</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp">  საკონტაქტო</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp"> რესივ. რაოდ.</b>
+                </th>
+                <th class="shadow" style="width:5%; vertical-align: inherit;">
+                    <b class="vamp">  სტატუსი</b>
+                </th>
+                <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                    <b class="vamp"> მენეჯერი</b>
+                </th>
+                <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                    <b class="vamp">  შენიშვნა</b>
+                </th>
+                <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                    <b class="vamp">  კომენტარი</b>
+                </th>
+                <th class="shadow" style="width: 10%; vertical-align: inherit;">
+                    <b class="vamp">დარ:პასუხები</b>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="filter_abonent"></tbody>
+    </table>
+</div>
+<div>
+
+    <table class="table table-bordered ">
+        <thead style="background-color: #313131;">
+            <tr class="header"></tr>
+            <tr>
+                <th style="width: 15%; background-color: #ecf0f5; border: 1px solid #ecf0f5;"></th>
+                <th class="shadow" value="" style="width: 30%;     font-size: 24px;cursor:pointer" id="order_id" onclick="buttonClickCategorized()" data-id="">
+                    <span class="vamp">დაუხ: შეკვეთები </span>
+                    <span class="count" id="static_order_count">@Model.Select(s => s.StaticCounts.OrderCount).FirstOrDefault()</span>
+                </th>
+                <th class="shadow" value="" style="width:30%;    font-size: 24px; cursor:pointer" id="order_id" onclick="ButtonClickCancellationCategorized()" data-id="">
+                    <span class="vamp">დაუხ: გაუქმება </span>
+                    <span class="count" id="static_damage_count">@Model.Select(s => s.StaticCounts.CancellationCount).FirstOrDefault()</span>
+                </th>
+                <th class="shadow" value="" style="width: 20%;     font-size: 24px; cursor:pointer" id="order_id" onclick="ButtonClickDamageCategorized()" data-id="">
+                    <span class="vamp">დაუხ: დაზიანება </span>
+                    <span class="count" id="static_cancellation_count">@Model.Select(s => s.StaticCounts.DamageCount).FirstOrDefault()</span>
+                </th>
+            </tr>
+
+        </thead>
+    </table>
+</div>
+<div class="row" style="margin-top: 8px; background-color: #313131; overflow: auto; height: 1300px;">
+    <table class="table table-bordered ">
+
+        @foreach (var item in Model.OrderByDescending(u => u.start_end))
+        {
+            <thead>
+
+                <tr>
+                    @*<th style="width: 2%;">
+                        </th>*@
+                    <th style="width: 10%; text-align:center;" class="shadow">
+                        <b class="vamp"> @item.Name </b>
+                    </th>
+                    @if (Utils.GetPermission("INSTALLATION_INFO_SHOW"))
+                    {
+                        <th class="shadow" value="" style="width: 10%;" @*id="order_id_@item.Id"*@ @*onclick="ButtonClick(@item.Id)"*@ @*data-id="@item.Id"*@>
+                            <span class="vamp"> მიმართულება </span>
+                            @*<span class="count" id="static_order_count_@item.Id">@item.StaticCounts.order_count</span>*@
+                        </th>
+                        if (item.OrderToGo != null && item.OrderToGo.to_go == 1)
+                        {
+
+                            <th class="shadow" value="" style="width: 30%;background-color:#023302;  cursor:pointer" id="order_id_@item.Id" onclick="ButtonClick(@item.Id)" data-id="@item.Id">
+                                <span class="vamp"> შეკვეთები </span>
+                                <span class="count" id="static_order_count_@item.Id">@item.StaticCounts.order_count</span>
+                            </th>
+                        }
+                        else
+                        {
+
+
+                            <th class="shadow" value="" style="width: 30%; cursor:pointer" id="order_id_@item.Id" onclick="ButtonClick(@item.Id)" data-id="@item.Id">
+                                <span class="vamp"> შეკვეთები </span>
+                                <span class="count" id="static_order_count_@item.Id">@item.StaticCounts.order_count</span>
+                            </th>
+                        }
+                    }
+                    else
+                    {
+                        if (item.OrderToGo != null && item.OrderToGo.to_go == 1)
+                        {
+
+                            <th class="shadow" style="width: 30%; background-color:#023302;" id="order_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> შეკვეთები </span>
+                                <span class="count" id="static_order_count_@item.Id">@item.StaticCounts.order_count</span>
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="shadow" style="width: 30%; " id="order_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> შეკვეთები </span>
+                                <span class="count" id="static_order_count_@item.Id">@item.StaticCounts.order_count</span>
+                            </th>
+                        }
+                    }
+                    @if (Utils.GetPermission("INSTALLATION_INFO_SHOW"))
+                    {
+                        if (item.CancellationToGo != null && item.CancellationToGo.to_go == 1)
+                        {
+
+                            <th class="shadow" style="width: 30%;  background-color:#023302; cursor:pointer" id="cancel_id_@item.Id" onclick="ButtonClickCancel(@item.Id)" data-id="@item.Id">
+                                <span class="vamp headerVamp"> გაუქმება </span>
+                                <span class="count " id="static_cancel_count_@item.Id">@item.StaticCounts.cancel_count</span>
+
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="shadow" style="width: 30%; cursor:pointer" id="cancel_id_@item.Id" onclick="ButtonClickCancel(@item.Id)" data-id="@item.Id">
+                                <span class="vamp headerVamp"> გაუქმება </span>
+                                <span class="count " id="static_cancel_count_@item.Id">@item.StaticCounts.cancel_count</span>
+
+                            </th>
+                        }
+                    }
+                    else
+                    {
+                        if (item.CancellationToGo != null && item.CancellationToGo.to_go == 1)
+                        {
+
+                            <th class="shadow" style="width: 30%;  background-color:#023302;" id="cancel_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> გაუქმება </span>
+                                <span class="count " id="static_cancel_count_@item.Id">@item.StaticCounts.cancel_count</span>
+
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="shadow" style="width: 30%;" id="cancel_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> გაუქმება </span>
+                                <span class="count " id="static_cancel_count_@item.Id">@item.StaticCounts.cancel_count</span>
+
+                            </th>
+                        }
+                    }
+                    @if (Utils.GetPermission("INSTALLATION_INFO_SHOW"))
+                    {
+                        if (item.DamageGoTo != null && item.DamageGoTo.to_go == 1)
+                        {
+
+                            <th class="shadow" style="width: 20%;  background-color:#023302; cursor:pointer" id="damage_id_@item.Id" onclick="ButtonClickDamage(@item.Id)" data-id="@item.Id">
+                                <span class="vamp headerVamp"> დაზიანება </span>
+                                <span class="count" id="static_damage_count_@item.Id">@item.StaticCounts.damage_count</span>
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="shadow" style="width: 20%; cursor:pointer" id="damage_id_@item.Id" onclick="ButtonClickDamage(@item.Id)" data-id="@item.Id">
+                                <span class="vamp headerVamp"> დაზიანება </span>
+                                <span class="count" id="static_damage_count_@item.Id">@item.StaticCounts.damage_count</span>
+                            </th>
+                        }
+                    }
+                    else
+                    {
+                        if (item.DamageGoTo != null && item.DamageGoTo.to_go == 1)
+                        {
+
+                            <th class="shadow" style=" width: 20%; background-color:#023302;" id="damage_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> დაზიანება </span>
+                                <span class="count " id="static_damage_count_@item.Id">@item.StaticCounts.damage_count</span>
+                            </th>
+                        }
+                        else
+                        {
+                            <th class="shadow" style=" width: 20%;" id="damage_id_@item.Id" data-id="@item.Id">
+                                <span class="vamp headerVamp"> დაზიანება </span>
+                                <span class="count " id="static_damage_count_@item.Id">@item.StaticCounts.damage_count</span>
+                            </th>
+                        }
+                    }
+
+                    @*<th style="width: 2%;">
+                        </th>*@
+                </tr>
+            </thead>
+            <tbody id="abonents_body">
+
+                <tr>
+                    @*<td></td>*@
+                    @if (item.image == null)
+                    {
+                        <td class="pictures">
+                            <img src="~/tStyles/dist/img/user9-128x128.png" class="user-image picturesimg" alt="User Image">
+
+                            @if (item.start_end == 0)
+                            {
+                                <img id="work_id_@item.Id" class="pictures_work" src="~/tStyles/dist/img/work_slip.gif" />
+                            }
+                            else
+                            {
+                                <img id="work_id_@item.Id" class="pictures_work" src="~/tStyles/dist/img/starrt_work.gif" />
+                            }
+
+
+                            <p class="statusBar">სტატუსი</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="pictures">
+                            <img src="@item.image" class="user-image picturesimg" alt="User Image">
+
+                            @if (item.start_end == 0)
+                            {
+                                <img id="work_id_@item.Id" class="pictures_work" src="~/tStyles/dist/img/work_slip.gif" />
+                            }
+                            else
+                            {
+                                <img id="work_id_@item.Id" class="pictures_work" src="~/tStyles/dist/img/starrt_work.gif" />
+                            }
+
+                            <p class="statusBar">სტატუსი</p>
+
+                        </td>
+                    }
+                    <td>
+                        <div style="overflow:auto;height:108px">
+                            @foreach (var region in item.CityRegion.ToList())
+                            {
+                                if ((item.OrderToGo != null && item.OrderToGo.to_go == 1 &&
+                                        new RegionGoName(
+                                        new SqlConnection(
+                                        ConfigurationManager.ConnectionStrings["DataConnect"].ConnectionString),
+                                        item.OrderToGo.id,
+                                        "doc.Orders",
+                                         item.Id
+                                        ).Result() == region.name.Replace(" ", "_")) || (item.DamageGoTo != null && item.DamageGoTo.to_go == 1 &&
+                                      new RegionGoName(
+                                      new SqlConnection(
+                                      ConfigurationManager.ConnectionStrings["DataConnect"].ConnectionString),
+                                      item.DamageGoTo.id,
+                                      "dbo.Damage",
+                                       item.Id
+                                      ).Result() == region.name.Replace(" ", "_")) || (item.CancellationToGo != null && item.CancellationToGo.to_go == 1 &&
+                                      new RegionGoName(
+                                      new SqlConnection(
+                                      ConfigurationManager.ConnectionStrings["DataConnect"].ConnectionString),
+                                      item.CancellationToGo.id,
+                                      "dbo.Cancellation",
+                                      item.Id
+                                      ).Result() == region.name.Replace(" ", "_")))
+                                {
+                                    <span style="width:30px !important;" class="count" id="static_order_count_@region.name.Replace(" ", "_")">@region.count</span>
+                                    <p class="shadow" id="region_@region.name.Replace(" ", "_")" style="  background-color:#023302; margin: 0 0 2px !important; color:white; font-family: 'BPG Nino Mtavruli', sans-serif;">
+                                        @region.name.Replace(item.Id.ToString(), string.Empty)
+
+                                    </p>
+
+                                }
+                                else
+
+
+
+                                {
+                                    <span style="width:30px !important;" class="count" id="static_order_count_@region.name.Replace(" ", "_")">@region.count</span>
+                                    <p class="shadow" id="region_@region.name.Replace(" ", "_")" style="  color:white; margin: 0 0 2px !important; font-family: 'BPG Nino Mtavruli', sans-serif;">
+                                        @region.name.Replace(item.Id.ToString(), string.Empty)
+                                    </p>
+
+                                }
+
+                            }
+
+
+                        </div>
+
+                    </td>
+                    <td class="tableCell">
+                        <table class="table table-bordered " style="background-color: #585858;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width:33.3%" class="shadow">
+                                        <b class="vamp"> ჩაბარება </b>
+                                    </th>
+                                    <th style="text-align:center;  width:33.3%" class="shadow">
+                                        <b class="vamp"> ნაშთი </b>
+                                    </th>
+                                    <th style="text-align:center;  width:33.3%" class="shadow">
+                                        <b class="vamp"> გადაიფიქრა </b>
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr @*style="height: 90px;"*@ class="rows tableCell">
+                                    <td><b id="static_order_yielding_@item.Id" class="vamp" style="font-size:40px;">@item.StaticCounts.order_yielding</b></td>
+                                    <td><b id="static_order_remainder_@item.Id" class="vamp" style="font-size:40px; ">@item.StaticCounts.order_remainder</b></td>
+                                    <td><b id="static_order_cancled_@item.Id" class="vamp" style="font-size:40px;">@item.StaticCounts.order_cancled</b></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+
+                    </td>
+
+                    <td class="tableCell">
+                        <table class="table table-bordered " style="background-color: #585858;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;  width:33.3%" class="shadow">
+                                        <b class="vamp"> ჩაბარება </b>
+                                    </th>
+                                    <th style="text-align:center; width:33.3%" class="shadow">
+                                        <b class="vamp"> ნაშთი </b>
+                                    </th>
+                                    <th style="text-align:center; width:33.3%" class="shadow">
+                                        <b class="vamp"> გადაიფიქრა </b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr @*style="height: 90px;"*@ class="tableCell">
+                                    <td><b id="static_cancel_yielding_@item.Id" class="vamp" style="font-size:40px;">@item.StaticCounts.cancel_yielding</b></td>
+                                    <td><b id="static_cancel_remainder_@item.Id" class="vamp" style=" font-size:40px; ">@item.StaticCounts.cancel_remainder</b></td>
+                                    <td><b id="static_cancel_cancled_@item.Id" class="vamp" style="font-size:40px;">@item.StaticCounts.cancel_cancled</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="tableCell">
+                        <table class="table table-bordered " style="background-color: #585858;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width:50%" class="shadow">
+                                        <b class="vamp"> ჩაბარება </b>
+                                    </th>
+                                    <th style="text-align:center; width:50%" class="shadow">
+                                        <b class="vamp"> ნაშთი </b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr @*style="height: 90px;"*@>
+                                    <td><b id="static_damage_yielding_@item.Id" class="vamp" style="font-size:40px;">@item.StaticCounts.damage_yielding</b></td>
+                                    <td><b id="static_damage_remainder_@item.Id" class="vamp" style=" font-size:40px;">@item.StaticCounts.damage_remainder</b></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                </tr>
+                <tr class="header">0</tr>
+            </tbody>
+
+        }
+    </table>
+</div>

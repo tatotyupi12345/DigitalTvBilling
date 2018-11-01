@@ -1,0 +1,257 @@
+﻿@model IPagedList<PackagesChargesList>
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "პაკეტის ცვლილება";
+}
+
+@{
+    //List<ReceiverAttachment> attachments = (List<ReceiverAttachment>)ViewBag.attachments;
+    //var customerSellAttachs = from custAttachs in Model
+    //                          group custAttachs by custAttachs.ReturnedCard.card_id into cGroup
+    //                          select new
+    //                          {
+    //                              Key = cGroup.Key,
+    //                              customerAttachs = cGroup
+    //                          };
+
+    //List<User> users = ViewBag.Users;
+    List<PackagesChargesList> Pack_Charges = ViewBag._Packages;
+    List<User> user_name = ViewBag.User;
+}
+<head>
+    <script src="~/Static/Scripts/View/package_charges_index.js"></script>
+</head>
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    @* <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+    @*<script src="~/Static/Scripts/View/sell_attachs_index.js"></script>*@
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+
+        small {
+            font-weight: bold;
+        }
+
+        .verify_status {
+            background-color: #a4ff7e;
+        }
+
+        .changes_pacages {
+            background-color: #ff6a00;
+        }
+
+        .approved_edited {
+            background-color: #e5fd00;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+
+}
+<div class="row">
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1">
+        <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+            <span class="fa-stack">
+                <i class="fa fa-filter fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+            </span>
+        </button>
+    </div>
+    <div class="col-sm-2" style="padding-right: 0px;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="input-group input-group-sm pull-left">
+            <select class="form-control" id="drp_filter">
+                <option selected="selected" value="0"> </option>
+                <option value="1">აბონენტი</option>
+                <option value="2">პ/ნ</option>
+                <option value="3">ტელეფონის №</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="col-sm-2 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select class="form-control" id="_filter">
+                <option selected value="0"></option>
+                @if (ViewBag.Selected == 1)
+                {
+                    <option selected value="1">პაკეტის ცვლილება 8-დან 15-ზე</option>
+                }
+                else
+                {
+                    <option value="1">პაკეტის ცვლილება 8-დან 15-ზე</option>
+                }
+                @if (ViewBag.Selected == 2)
+                {
+                    <option selected value="2">ბარათი დაპაუზებული</option>
+                }
+                else
+                {
+                    <option value="2">ბარათი დაპაუზებული</option>
+                }
+                @if (ViewBag.Selected == 3)
+                {
+                    <option selected value="3">აუტვირთავი</option>
+                }
+                else
+                {
+                    <option value="3">აუტვირთავი</option>
+                }
+                @if (ViewBag.Selected == 4)
+                {
+                    <option selected value="4">პაკეტის ცვლილება პრომო-დან 8-ზე</option>
+                }
+                else
+                {
+                    <option value="4">პაკეტის ცვლილება პრომო-დან 8-ზე</option>
+                }
+            </select>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top: 8px; overflow: auto;">
+    <table class="table table-bordered" style="text-align: center;">
+        <thead style="text-align: center;">
+            <tr>
+                <th style="">
+                    თარიღი
+                </th>
+                <th style="text-align:center">
+                    აბონენტი
+                </th>
+                <th style="text-align:center">
+                    ქალაქი
+                </th>
+                <th style="text-align:center">
+                    ტელეფონი
+                </th>
+                <th style="text-align:center">
+                    პირადი №
+                </th>
+                <th style="text-align:center">
+                    მომხმარებელი
+                </th>
+                <th style="text-align:center">
+                    აღწერა
+                </th>
+                <th style="text-align:center">
+                    მიმდინარე პაკეტი
+                </th>
+                <th style="text-align:center">
+                    სტატუსი
+                </th>
+                <th style="text-align:center">
+                    პაკეტის ცვლილების თარიღი
+                </th>
+                <th style="width: 2%;">
+
+                </th>
+
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (var item in Model)
+            {
+                string classname = "";
+                string classCahnges = "";
+                switch (item.verify_status)
+                {
+                    case 1:
+                        {
+                            classname = "verify_status";
+                        }
+                        break;
+
+
+                    default:
+                        break;
+                }
+                if (item.ChargesType == PackagesChargesType.PackAgesCharges6 || item.ChargesType == PackagesChargesType.PackAgesCharges12)
+                {
+                    classCahnges = "changes_pacages";
+                }
+                <tr data-id="@item.Card_Id" data-card="@item.Card_Id" class="@classname @classCahnges">
+                    <td>@item.Tdate</td>
+                    <td>@item.Name  @item.LastName</td>
+                    <td>@item.City</td>
+                    <td>@item.Phone</td>
+                    <td>@item.Code</td>
+                    <td>@user_name.Where(c => c.Id == item.user_id).FirstOrDefault().Name</td>
+                    <td>@Utils.GetEnumDescription((PackagesChargesType)item.ChargesType)</td>
+                    <td>@item.Packages</td>
+                    @if (item.ChargesType == PackagesChargesType.CardPackageCharges || item.ChargesType == PackagesChargesType.PackAgesCharges12 || item.ChargesType == PackagesChargesType.PackAgesCharges6)
+                    {
+
+                        <td> <i class="fa fa-arrow-up" style="font-size:20px; color:green" data-id="0" id="pack_@item.Card_Id"></i></td>
+                    }
+                    else
+                    {
+                        if (item.ChargesType == PackagesChargesType.CardPackageChargesPromo8)
+                        {
+
+                            <td> <i class="fa fa-arrow-down" style="font-size:20px; color:#0026ff" data-id="0" id="pack_@item.Card_Id"></i></td>
+                        }
+                        else
+                        {
+                            <td> <i class="fa fa-pause" style="font-size:20px; color:red" data-id="1" id="pause_@item.Card_Id"></i> </td>
+                        }
+                    }
+                    <td> @item.ChangeDate </td>
+                    <td data-approve="@item.Card_Id" id="data-verify-@item.Card_Id">
+                        @if (item.verify_status == 1)
+                        {
+                            @*<span class="bg-success">OK</span>*@
+                            <button class="btn btn-default btn-xs" id="change_date_@item.Card_Id" value="@item.ChangeDate" type="button" onclick="record(@item.Card_Id,@item.user_id)"><i class="material-icons">volume_up</i>@*<i class="material-icons">volume_up</i>*@@*<span class="glyphicon glyphicon-ok"  aria-hidden="true"></span>*@</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-xs" id="change_date_@item.Card_Id" value="@item.ChangeDate" type="button" onclick="record(@item.Card_Id,@item.user_id)"><i class="material-icons">volume_off</i>@*<i class="material-icons">volume_up</i>*@@*<span class="glyphicon glyphicon-ok"  aria-hidden="true"></span>*@</button>
+                        }
+                    </td>
+
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new
+        {
+            page,
+            name = Request.QueryString["name"],
+            dt_from = Request.QueryString["dt_from"],
+            dt_to = Request.QueryString["dt_to"],
+            drp_filter = Request.QueryString["drp_filter"],
+            _filter = Request.QueryString["_filter"]
+        }), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>

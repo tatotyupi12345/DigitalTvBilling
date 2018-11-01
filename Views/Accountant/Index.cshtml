@@ -1,0 +1,285 @@
+﻿@model IPagedList<DigitalTVBilling.Models.Card>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "FINA";
+
+    var perms = ((Dictionary<string, bool>)Session["UserPermissions"]);
+    var Packages = (Dictionary<int, string>)ViewBag.PackageDictionary;
+    var prices = (Dictionary<int, double>)ViewBag.PriceDictionary;
+    var sellerobjs = (List<SellerObject>)ViewBag.SellerObjects;
+    var packageList = (List<Package>)ViewBag.Pckages;
+    double sumPrice = 0;
+    foreach (var item in prices.ToList())
+    {
+        sumPrice += item.Value;
+    }
+    int rownum = Model.Count;
+
+    int totalcount = ViewBag.totalItemsCount;
+    int _page = ViewBag.page;
+    int pagesize = ViewBag.pageSize;
+    int pos = totalcount - ((_page -1) * pagesize);
+}
+
+@section head {
+    <script src="~/Static/Scripts/View/accountant_all.js"></script>
+
+<script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+<script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/View/payment_index.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/md5.min.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+        .approved{
+            background-color: #a4ff7e;
+        }
+        .cancled {
+            background-color: #ff6a00;
+        }
+        .approved_edited{
+            background-color: #e5fd00;
+        }
+
+        table tr:hover{
+           background-color: #c4ffab;
+        }
+    </style>
+}
+<div class="row">
+
+    
+    @*<div class="col-sm-3" style="padding-right: 0px;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="input-group input-group-sm pull-left">
+            <select class="form-control" id="drp_filter">
+                <option value="cr.doc_num">№</option>
+                <option value="c.lastname+c.name">აბონენტი</option>
+                <option value="c.code">პ/ნ</option>
+                <option value="c.city">სოფელი/ქალაქი</option>
+                <option value="c.district">უბანი</option>
+                <option value="cr.abonent_num">აბონენტის №</option>
+                <option value="cr.card_num">ბარათის №</option>
+                <option value="cr.status">სტატუსი</option>
+                <option value="c.phone1">ტელეფონი</option>
+            </select>
+        </div>
+
+
+        <button type="button" class="btn btn-default btn-xs pull-right" id="detail_filter">
+            <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+        </button>
+    </div>*@
+    
+    
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm" style="width: 100%;">
+            <select name="column" class="form-control" id="drp_filter">
+                @*<option value=""> </option>*@
+                <option value="so.ID">ობიექტი</option>
+                @*<option value="">ჯგუფი</option>
+                <option value="">ობიექტის №</option>*@
+            </select>
+        </div>
+    </div>
+    <div class="col-sm-2 pull-right" style="padding-left: 0px;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+            <select class="form-control" id="filter_type">
+                <option value=""></option>
+                    @foreach (var item in sellerobjs)
+                    {
+                        if (ViewBag.selectedObject == item.ID)
+                        {
+                        <option selected value="@item.ID">@item.name</option>
+                        }
+                        else
+                        {
+                            <option value="@item.ID">@item.name</option>
+                        }
+                    }
+            </select>
+            @*<input type="search" class="form-control" id="txt_filter" />
+            <input type="search" class="form-control" id="sub_txt_filter" style="display:none" placeholder="" />*@
+        </div>
+    </div>
+    <div class="col-sm-1">
+        <h4><span class="label label-default" id="sumPrice">სულ ჯამი: @sumPrice, &nbsp;&nbsp; პაკეტი 12 GEL: @ViewBag.pack12price, &nbsp;&nbsp; პაკეტი 15 GEL: @ViewBag.pack15price</span></h4>
+    </div>
+    @*<div class="col-sm-1">
+        <h4><span class="label label-default" id="sum12Price">პაკეტი 12: @ViewBag.pack12price</span></h4>
+    </div>
+    <div class="col-sm-1">
+        <h4><span class="label label-default" id="sum15Price">პაკეტი 15: @ViewBag.pack15price</span></h4>
+    </div>*@
+</div>
+<div class="row" style="margin-top: 8px; overflow: auto;">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 1%;">
+                    №
+                </th>
+                <th style="width: 10%;">
+                    თარიღი
+                </th>
+                <th style="width: 5%;">
+                    სახელი
+                </th>
+                <th style="width: 8%;">
+                    გვარი
+                </th>
+                <th style="width: 8%;">
+                    პირ. ნომერი
+                </th>
+                <th style="width: 15%;">
+                    პაკეტი
+                </th>
+                <th style="width: 13%;">
+                    მისამართი
+                </th>
+                <th style="width: 8%;">
+                    ობიექტი
+                </th>
+                <th style="width: 8%;">
+                    ობიექტიs მის.
+                </th>
+                <th style="width: 5%;">
+                    ჯგუფი
+                </th>
+                <th style="width: 10%;">
+                    ობიექტის კოდი
+                </th>
+                
+                <th style="width: 12%;">
+                    ჯგუფის ტიპი
+                </th>
+                <th style="width: 2%;">
+                    
+                </th>
+                
+                
+                @*<th style="width: 2%;">
+                </th>*@
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (DigitalTVBilling.Models.Card card in Model)
+            {
+                string classname = "";
+                switch (card.ApproveStatus)
+                {
+                    case 2:
+                        {
+                            classname = "approved";
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            classname = "approved_edited";
+                        }
+                        break;
+
+                    case 4:
+                        {
+                            classname = "edit";
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+                if (card.CardStatus == CardStatus.Canceled)
+                {
+                    classname = "cancled";
+                }
+                <tr data-id="@card.Id" data-card="@card.Id" class="@classname ">
+                    <td>
+                        @pos
+                    </td>
+                    <td>
+                        @card.Tdate
+                    </td>
+                    <td>
+                        @card.Customer.Name
+                    </td>
+                
+                <td>@card.Customer.LastName</td>
+                <td>@card.Customer.Code</td>
+                <td id="">
+                    
+                    @{ 
+                        string packname;
+                        Packages.TryGetValue(card.Id, out packname);
+                        @Html.Raw(packname);
+                    }
+
+                </td>
+                <td>@card.Customer.Address</td>
+                <td>@card.User.SellerObj.name</td>
+                <td>@card.User.SellerObj.address</td>
+                <td>@card.User.UserType.Name</td>
+                <td>@card.User.SellerObj.ident_code</td>
+                
+                <td>
+                    @if(card.User.SellerObj.type != null)
+                    {
+                        @Html.Raw(Html.GetSellerTypeDesc((SellerType)card.User.SellerObj.type));
+                    }
+                </td>
+
+                <td data-approve="@card.Id" id="data-approve-@card.Id">
+                    @if (card.ApproveStatus == 2)
+                    {
+                        <span class="bg-success">OK</span>
+                    }
+                    else
+                    {
+                        <button class="btn btn-default btn-xs" type="button" onclick="recordApprove(@card.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                    }
+                </td>
+                @*<td id="edit_abonent"><a href=""><span class="glyphicon glyphicon-edit" id="edit_abonent"></span></a></td>*@
+            </tr>
+            { pos = pos - 1;}
+          }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="10" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+</div>
+
+
+

@@ -1,0 +1,84 @@
+﻿@model List<Param>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.EditSetting = Utils.GetPermission("SETTING_EDIT");
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btn_res").on("click", function (e) {
+                e.preventDefault();
+                $.post("/Setting/UpdateRs", {}, function (data) {
+                    if (data === true)
+                        alert("RS.ge-ის მონაცემები განახლდა");
+                }, "json");
+            });
+
+            $("form").submit(function (e) {
+                var arr = [];
+                $("input[data-tag],textarea[data-tag]").each(function (i, val) {
+                    var input = $(val);
+                    if (input.val() !== input.data("tag").toString()) {
+                        arr.push({ "field": $("label[for='" + input.attr("id") + "']").html(), "old_val": input.data("tag"), "new_val": input.val() });
+                    }
+                });
+                $("#Logging").val(JSON.stringify(arr));
+            });
+
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+}
+
+@using (Html.BeginForm("Index", "Setting", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.Hidden("Logging")
+    <div class="row">
+        <div class="col-md-7">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-group">
+                    <label class="control-label col-md-3" for="@Model[i].Name">@Model[i].Desc:</label>
+                    <div class="col-md-7">
+                        @if (@Model[i].Name != "Emails" && @Model[i].Name != "InvoiceText")
+                        { 
+                        @Html.TextBoxFor(p => @Model[i].Value, new { @class = "form-control input-sm", id=Model[i].Name, data_tag = Model[i].Value })
+                        }
+                        else
+                        {
+                            @Html.TextAreaFor(p => @Model[i].Value, new { @class = "form-control input-sm", rows=3, id = Model[i].Name, data_tag = Model[i].Value })
+                        }
+                        @Html.HiddenFor(p => @Model[i].Name)
+                        @Html.HiddenFor(p => @Model[i].Desc)
+                        @Html.ValidationMessageFor(p => @Model[i].Value)
+                    </div>
+                    <span class="glyphicon glyphicon-question-sign" data-toggle="popover" title="@Model[i].Desc" style="cursor:help;"
+                          data-content="@Model[i].Help" data-trigger="focus" tabindex="0"></span>
+                </div>
+            }
+            <div class="form-group">
+                <label class="control-label col-md-3">RS.ge განახლება:</label>
+                <div class="col-md-7">
+                    <button type="button" id="btn_res" class="btn btn-default btn-xs">
+                        <span class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+        </div>
+    </div>
+    <div class="row">
+        @if(ViewBag.EditSetting)
+        {
+        <input type="submit" value="შენახვა" class="btn btn-default btn-sm pull-right" />
+        }
+    </div>
+}
+

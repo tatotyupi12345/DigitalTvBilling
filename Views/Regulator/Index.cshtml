@@ -1,0 +1,170 @@
+﻿@model IPagedList<DigitalTVBilling.Models.Card>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "მარეგურირებელი";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    //List<Card> cards6 = ViewBag.cards6;
+    //List<Card> cards12 = ViewBag.cards12;
+    //List<Card> cards15 = ViewBag.cards15;
+    //List<Card> cards8 = ViewBag.cards8;
+
+
+    //DateTime dateFrom = ViewBag.dtFrom;
+    //DateTime dateTo = ViewBag.dtTo;
+
+    //decimal cards6ChargesSum = cards6.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+    //decimal cards8charges15Sum= cards8.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+    //decimal cards8ChargesSum = ViewBag.pack8charges;//cards8.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+    //decimal cards12ChargesSum = cards12.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+    //decimal cards15ChargesSum = cards15.Sum(c => c.CardCharges.Where(cc => cc.Tdate >= dateFrom && cc.Tdate <= dateTo).Select(cc => cc.Amount).DefaultIfEmpty().Sum());
+    //cards15ChargesSum = cards15ChargesSum + (cards8charges15Sum- cards8ChargesSum);
+    //decimal cards12FirstMonthCharge = cards12.Sum(c => c.CardCharges.Select(cc => cc.Amount).Take(30).DefaultIfEmpty().Sum());
+
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+}
+
+<div class="row" >
+
+    <div class="col-sm-5 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <br />
+    <br />
+    <div class="row" style="margin-top: 8px; overflow: scroll;margin-left:5px;" @*style="font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif"*@>
+        <table class="table" style="border-collapse: collapse;">
+
+            <thead style="text-align:center;">
+                <tr>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">თარიღი</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">დასახელება პუნქტი</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">ტექნოლოგია</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">ხელშეკრულების ტიპი</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">კოდირებული</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">პაკეტების დასახელება</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">პაკეტის ღირებულება</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">კომბინირებული შეთავაზება</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">აბონენტები</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">დეკოდირების რაოდენობა</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1"> ახალი აბონენტების რაოდენობა</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">სააბონენტო შემოსავალი </th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">დღგ </th>
+                </tr>
+            </thead>
+
+            <tbody style="text-align:center;">
+                <tr>
+                    <td>@ViewBag.dtTo</td>
+                    <td>მულტიპლექსი-PayTV</td>
+                    <td>ციფრული-DBTV</td>
+                    <td>ფიზიკური</td>
+                    <td>დიახ</td>
+                    <td>Standard</td>
+                    <td>12</td>
+                    <td>1</td>
+                    <td>@ViewBag.Standard</td>
+                    <td>0</td>
+                    <td>@ViewBag.StandardNewAbonent</td>
+                    <td>@ViewBag.StandardPacks_income</td>
+                    <td>@ViewBag.StandardPacks_incomeDagger</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.dtTo</td>
+                    <td>მულტიპლექსი-PayTV</td>
+                    <td>ციფრული-DBTV</td>
+                    <td>ფიზიკური</td>
+                    <td>დიახ</td>
+                    <td>Region</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>@ViewBag.Region</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.RegionPacks</td>
+                    <td>@ViewBag.RegionPacksDangger</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.dtTo</td>
+                    <td>მულტიპლექსი-PayTV</td>
+                    <td>ციფრული-DBTV</td>
+                    <td>იურდიული</td>
+                    <td>დიახ</td>
+                    <td>Standard</td>
+                    <td>12</td>
+                    <td>1</td>
+                    <td>@ViewBag.StandardJuridical</td>
+                    <td>0</td>
+                    <td>@ViewBag.StandardNewAbonentJuridical</td>
+                    <td>@ViewBag.StandardPacks_income_Jurdical</td>
+                    <td>@ViewBag.StandardPacks_income_JurdicalDagger</td>
+                </tr>
+                <tr>
+                    <td>@ViewBag.dtTo</td>
+                    <td>მულტიპლექსი-PayTV</td>
+                    <td>ციფრული-DBTV</td>
+                    <td>იურდიული</td>
+                    <td>დიახ</td>
+                    <td>Region</td>
+                    <td>5</td>
+                    <td>1</td>
+                    <td>@ViewBag.RegionJuridical</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>@ViewBag.RegionPacksJuridical</td>
+                    <td>@ViewBag.RegionPacksJuridicalDangger</td>
+                </tr>
+                <tr>
+                    <td style=" border: 0px solid white; color:white"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>ჯამი</td>
+                    <td>@(ViewBag.StandardPacks_income+ViewBag.RegionPacks+ ViewBag.StandardPacks_income_Jurdical+ ViewBag.RegionPacksJuridical)</td>
+                    <td>@(ViewBag.StandardPacks_incomeDagger+ ViewBag.RegionPacksDangger+ ViewBag.StandardPacks_income_JurdicalDagger+ ViewBag.RegionPacksJuridicalDangger)</td>
+
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <label style="background-color: #d2d6de;color: #444;font-size:18px;">აქტიური აბნონტების ჯამი: @(ViewBag.Standard+ ViewBag.Region+ ViewBag.StandardJuridical+ ViewBag.RegionJuridical) </label>
+ </div>
+<div class="row" @*style="margin-top: 8px; overflow: scroll;"*@>
+    <div id="paging">
+        @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page, abonent = Request.QueryString["abonent"], abonent_select = Request.QueryString["abonent_select"], abonentType = Request.QueryString["abonentType"], package = Request.QueryString["package"], saleType = Request.QueryString["saleType"], region = Request.QueryString["region"], abonentName = Request.QueryString["abonentName"], abonentStatus = Request.QueryString["abonentName"], date_from = Request.QueryString["date_from"], date_to = Request.QueryString["date_to"] }), PagedListRenderOptions.ClassicPlusFirstAndLast)*@
+    </div>
+</div>

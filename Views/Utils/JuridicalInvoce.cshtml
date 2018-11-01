@@ -1,0 +1,176 @@
+﻿@model  JuridicalInvoicesList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+@using DigitalTVBilling.ListModels;
+@{
+    Layout = null;
+    //List<Customer> _custumer = Model.;
+    var CustomerSellAttachment = Model._attachment;//_custumer.SelectMany(s => s.CustomerSellAttachments).ToList();
+    var sum = 0;
+
+    //string imagepath = @"C:\Users\tyupi\Source\Repos\DigitalTVBilling\DigitalTVBilling\Static\Images\Logowhite.png";
+    //FileStream fs = new FileStream(imagepath, FileMode.Open);
+    //byte[] byData = new byte[fs.Length];
+    //fs.Read(byData, 0, byData.Length);
+
+
+    //var base64 = Convert.ToBase64String(byData);
+    //var imgSrc = String.Format("data:image/jpg;base64,{0}", base64);
+    //var x = 0;
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="UTF-8" />
+    <title>Doc1</title>
+    <style>
+        #doc_wrapper[size="A4"] {
+            width: 21cm;
+            height: 29.7cm;
+        }
+
+        #doc_wrapper {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        /*table, th, td {
+            border: 1px solid black;
+        }*/
+        ul {
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .sign {
+            display: inline-block;
+        }
+
+        #left-sign {
+            float: left;
+        }
+
+        #right-sign {
+            float: right;
+        }
+
+        .clearfix:after {
+            content: '';
+            display: block;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+    <div id="doc_wrapper" size="A4" >
+        <div class="footer">
+            <br />
+            <br />
+            <div class="sign-wrapper clearfix">
+                <div class="sign" id="left"><img src="@Model.Image" style="width:370px; height:190px;" alt="description here" /></div>
+                <div class="sign" id="right">
+                    <span style="font-size:70px; color:dimgrey">ინვოისი</span>
+                    <ol>
+                        <li>
+                            თარიღი: &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp;@Model.dateTo.ToString("dd-MM-yyyy")
+                        </li>
+                        <li>
+                            ინვოისი: &nbsp;  &nbsp; &nbsp; &nbsp;  &nbsp;&nbsp;  &nbsp;   &nbsp;  &nbsp;  &nbsp;&nbsp; &nbsp;&nbsp;@Model.Ramdom_Generator
+                        </li>
+                        <li>
+                            გადახდის ვადა: &nbsp;<p> წარდგენიდან 5 სამუშაო დღეში </p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="title">გადამხდელი: &nbsp; @Model.Name </div>
+        <div class="" style="font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;">საიდენტიფიკაციო კოდი: &nbsp; @Model.Invoices_Code </div>
+        <br />
+        <br />
+        <table style="border-collapse: collapse; ">
+
+            <thead style="text-align:center; background-color:#c7c7c7">
+                <tr>
+                    <th style="border: 1px solid black; text-align:center; width:1%;" colspan="1" >&nbsp;&nbsp;№:&nbsp;&nbsp;</th>
+                    <th style="border: 1px solid black; text-align:center;width:2%"  colspan="1">&nbsp;&nbsp; დასახელება &nbsp;&nbsp;</th>
+                    <th style="border: 1px solid black; text-align:center;width:3%" colspan="1">&nbsp;&nbsp;საზომი ერთეული &nbsp;&nbsp;</th>
+                    @*<th style="border: 1px solid black; text-align:center;" colspan="1">&nbsp;&nbsp;რაოდენობა&nbsp;&nbsp;</th>
+                    <th style="border: 1px solid black; text-align:center;" colspan="1">&nbsp;&nbsp;ფასი&nbsp;&nbsp;</th>*@
+                    <th style="border: 1px solid black; text-align:center;width:1%" colspan="1">&nbsp;&nbsp;თანხა&nbsp;&nbsp;</th>
+
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                <tr>
+                    <td style=" border:1px solid black; width:5px;" valign="top">1</td>
+                    <td style=" border:1px solid black;" valign="top">&nbsp;&nbsp;სააბონენტო მომსახურება&nbsp;&nbsp;</td>
+                    <td style=" border:1px solid black;">&nbsp;&nbsp;სხვა&nbsp;&nbsp;</td>
+                    @*<td style=" border: 1px solid black;">@Model.Count</td>
+                    <td style=" border: 1px solid black;">@Model.PackagesPrice</td>*@
+                    <td style=" border: 1px solid black;">@Model.balance</td>
+                </tr>
+                @if (CustomerSellAttachment.Any(c => c.Tdate >= Model.dateFrom && c.Tdate <= Model.dateTo))
+                {
+                    foreach (var item in CustomerSellAttachment.Where(c => c.Tdate >= Model.dateFrom && c.Tdate <= Model.dateTo).ToList())
+                    {
+
+                        if (item.Attachment != null && item.Attachment.Price != 0)
+                        {
+                            sum += (item.Count * item.Attachment.Price);
+                        <tr>
+                            <td style=" border: 1px solid black;" valign="top">1</td>
+                            <td style=" border: 1px solid black;" valign="top">@item.Attachment.Name</td>
+                            <td style=" border: 1px solid black;">&nbsp;&nbsp;ცალ&nbsp;&nbsp;</td>
+                            @*<td style=" border: 1px solid black;">@item.Count</td>
+                            <td style=" border: 1px solid black;">@item.Attachment.Price</td>*@
+                            <td style=" border: 1px solid black;">@(item.Count * item.Attachment.Price)</td>
+
+                        </tr>
+                        }
+                    }
+                }
+                <tr>
+
+                    <td></td>
+                    <td></td>
+                    @*<td></td>
+                    <td></td>*@
+                    <td style=" border: 1px solid black;"><p style="font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;">&nbsp;&nbsp;საერთო ჯამი:&nbsp;&nbsp;</p></td>
+                    <td style=" border: 1px solid black;"><p style="font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;">@(Math.Round((sum+(double)Model.balance), 2))</p></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    @*<td></td>
+                    <td></td>*@
+                    <td style=" border: 1px solid black; "><p style="font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;">&nbsp;&nbsp;მათშორის დ.ღ.გ:&nbsp;&nbsp;</p></td>
+                    <td style=" border: 1px solid black;"><p style="font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;">@(Math.Round(((sum+(double)Model.balance) / 1.18) * 0.18, 2))</p></td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <div class="title">საბანკო რეკვიზიტები:</div>
+        <div class="content">
+            მიმღები: &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;  &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp;შპს "დი +" <br />
+            ბანკის დასახელება: &nbsp;  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  &nbsp;&nbsp;თიბისი ბანკი <br />
+            ბანკის კოდი: &nbsp;  &nbsp; &nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp;TBCBGE22 <br />
+            ანგარიშის ნომერი: &nbsp;  &nbsp; &nbsp;  &nbsp;&nbsp;  &nbsp;  &nbsp;&nbsp; &nbsp;  &nbsp;&nbsp; GE90TB7843736020100007 <br />
+        </div>
+    </div>
+
+</body>
+</html>

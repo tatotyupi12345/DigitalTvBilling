@@ -1,0 +1,274 @@
+﻿@model IPagedList<DigitalTVBilling.ListModels.CardStat>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    ViewBag.cardStattActive = "active";
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/stoppedcards_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .goingToPay {
+            background-color: #4dff4d;
+        }
+
+        .goingToCancel {
+            background-color: #ff3333;
+        }
+
+        .technicalProblem {
+            background-color: #ffff4d;
+        }
+
+        .unConnected {
+            background-color: #66b3ff;
+        }
+
+        .owner {
+            background-color: #ff80ff;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+    <div class="row">
+        <div class="col-sm-5 pull-right">
+            @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+        </div>
+        @*<div class="col-sm-1 pull-right" style="padding-right: 0px;">
+            <button type="button" class="btn btn-default btn-xs " id="detail_filter">
+                <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+            </button>
+        </div>*@
+        <div class="col-sm-2 pull-right">
+            <div class="input-group input-group-sm" style="width: 100%;">
+                <select name="statusFilter" class="form-control" id="status_filter">
+                    <option value="-1"></option>
+                    @foreach (StoppedCardStatus l_s in Enum.GetValues(typeof(StoppedCardStatus)))
+                {
+                    var val = (int)Enum.Parse(typeof(StoppedCardStatus), l_s.ToString());
+                    string selected = "";
+                    if (val == (int)ViewBag.status)
+                    {
+                        selected = "selected";
+                    }
+                    <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                selected = "";
+            }
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+                <span class="fa-stack">
+                    <i class="fa fa-filter fa-stack-1x"></i>
+                    <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+                </span>
+            </button>
+        </div>
+        <div class="col-sm-2">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+                <input type="search" class="form-control" id="txt_filter" />
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div class="input-group input-group-sm pull-left">
+                <select class="form-control" id="drp_filter">
+                    @*<option selected="selected" value="1"> </option>*@
+                    <option value="1">აბონენტი</option>
+                    <option value="2">ბარათის №</option>
+                    <option value="3">აბონენტის № </option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+<div class="row" style="margin-top: 8px; overflow: scroll;">
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: auto;">
+                    №
+                </th>
+                <th style="width: auto;">
+                    თარიღი
+                </th>
+                <th style="width: 15%;">
+                    აბონენტი
+                </th>
+                <th style="width: 10%;">
+                    ტიპი
+                </th>
+                <th style="width: 8%;">
+                    ქალაქი
+                </th>
+                <th style="width: 8%;">
+                    ტელეფონი
+                </th>
+                <th style="width: 8%;">
+                    აბონენტის №
+                </th>
+                <th style="width: 8%;">
+                    ბარათის №
+                </th>
+                <th style="width: 8%;">
+                    სტატუსი
+                </th>
+                <th style="width: 10%;">
+                    პაკეტი
+                </th>
+                <th style="width: 12%;">
+                    პირადი №
+                </th>
+                <th style="width: 10%;">
+                    ინფო
+                </th>
+                <th style="width: 2%;">
+                </th>
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @foreach (DigitalTVBilling.ListModels.CardStat crdstat in Model)
+            {
+
+                string classname = "";
+
+                switch (crdstat.card.StoppedCheckStatus)
+                {
+                    case StoppedCardStatus.Unchecked:
+                        classname = "";
+                        break;
+                    case StoppedCardStatus.GoingToPay:
+                        classname = "goingToPay";
+                        break;
+                    case StoppedCardStatus.GoingToCancel:
+                        classname = "goingToCancel";
+                        break;
+                    case StoppedCardStatus.TechnicalProblem:
+                        classname = "technicalProblem";
+                        break;
+                    case StoppedCardStatus.UnConnected:
+                        classname = "unConnected";
+                        break;
+                    case StoppedCardStatus.Owner:
+                        classname = "owner";
+                        break;
+                    default:
+                        break;
+                }
+
+                <tr class="@classname" data-id="@crdstat.card.Id" data-card="@crdstat.card.CardNum">
+                    <td>@crdstat.rowNumber</td>
+                    <td>
+                        @crdstat.card.FinishDate
+                        <br />
+                        @if (crdstat.card.StoppedCheckStatus== StoppedCardStatus.Delay)
+                        {
+                           
+                        <small>@crdstat.card.CallDate</small>
+                        }
+                        else
+                        {
+                            <small>00:00:00</small>
+                        }
+                    </td>
+                    <td>
+                        @crdstat.customer.Name @crdstat.customer.LastName
+                    </td>
+                    <td>@Html.GetCustomerTypeDesc(crdstat.customer.Type)</td>
+                    <td>@crdstat.customer.City</td>
+                    <td>@crdstat.customer.Phone1</td>
+                    <td id="abonent_num">@crdstat.card.AbonentNum</td>
+                    <td>@crdstat.card.CardNum</td>
+                    <td>@Utils.GetEnumDescription(@crdstat.card.StoppedCheckStatus)</td>
+                    <td>
+                        @foreach (var item in crdstat.packages)
+                        {
+                            <span>@item.Name, </span>
+                        }
+                    </td>
+                    <td>@crdstat.customer.Code</td>
+                    <td class="desc">@crdstat.card.Desc</td>
+                    <td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit change_card_status" id="change_card_status"></span></a></td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="11" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="paging">
+      
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+              new
+              {
+                  page,
+                  status = Request.QueryString["status"],
+                  dt_from = Request.QueryString["dt_from"],
+                  dt_to = Request.QueryString["dt_to"],
+                  
+              }),
+                  PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="stop_date_dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <ul class="list-group">
+                @*@if (ViewBag.AbonentAddFromOrder)
+                    {
+                        <li class="list-group-item" data-index="0">აბონენტის დამატება</li>
+                    }
+                    @if (ViewBag.AddOrder || ViewBag.OrderMontagesSeniors)
+                    {
+                        <li class="list-group-item" data-index="1">შეკვეთის რედაქტირება</li>
+                    }*@
+                <li class="list-group-item" data-index="2">მისვლის თარიღის შეცვლა</li>
+                @*<li class="list-group-item" data-index="4">ჯგუფის შეცვლა</li>*@
+                @*@if (ViewBag.OrderMontagesSeniors)
+                    {
+                        <li class="list-group-item" data-index="2">მისვლის თარიღის შეცვლა</li>
+                        <li class="list-group-item" data-index="4">ჯგუფის შეცვლა</li>
+                    }*@
+                @*@if (ViewBag.OrderMontagesSeniors || ViewBag.OrderStatusesAdd)
+                    {
+                        <li class="list-group-item" data-index="3">სტატუსის შეცვლა</li>
+                    }*@
+                @*<li class="list-group-item" data-index="5">დეტალური</li>*@
+            </ul>
+        </div>
+    </div>
+</div>

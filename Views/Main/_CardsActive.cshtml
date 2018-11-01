@@ -1,0 +1,37 @@
+﻿@using DigitalTVBilling.Helpers;
+<script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+<script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+@section head {
+    <script type="text/javascript">
+        var cards_active=@Html.Raw(ViewBag.CardsDataActive);
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+    <script type="text/javascript" src="~/Static/Scripts/highcharts.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/highcharts-3d.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/main.js"></script>
+
+}
+
+<div class="row" @*style="margin-top:5px;"*@>
+
+    <div class="col-sm-5 pull-right" style="margin-right:750px; display:inline-block">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickersStatic.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-md-6">
+
+        <div id="cards_active" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+    <div class="col-md-6">
+
+    </div>
+</div>

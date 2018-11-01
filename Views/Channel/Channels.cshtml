@@ -1,0 +1,73 @@
+﻿@model List<Channel>
+@{
+    Page.Title = "არხები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section head {
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        var package_id = @ViewBag.Package;
+    </script>
+    <script type="text/javascript" src="~/Static/Scripts/View/channels.js"></script>
+}
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group">
+            @RenderPage("/Views/Books/_RightMenu.cshtml")
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-sm-1">
+                    <button class="btn btn-xs btn-primary" onclick="getChannelModal(0)">ახალი არხი</button>
+                </div>
+                <div class="col-sm-4">
+                </div>
+                <div class="col-sm-7">
+                    <form action="/Channel/Upload/@ViewContext.RouteData.Values["id"]" method="post" enctype="multipart/form-data">
+                        <div class="col-sm-3 pull-right">
+                            <input type="submit" class="btn btn-xs btn-primary" value="ჩატვირთვა" />
+                        </div>
+                        <div class="col-sm-9 pull-right">
+                            <div class="input-group input-xs">
+                                <span class="input-group-addon">იმპორტი:</span>
+                                <input type="file" name="file" class="form-control input-sm">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 8px;">
+            <table class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th style="width:90%;">
+                            დასახელება
+                        </th>
+                        <th style="width:10%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="channels_body">
+                    @foreach (DigitalTVBilling.Models.Channel channel in Model)
+                    {
+                        <tr data-id="@channel.Id">
+                            <td onclick="getChannelModal(@channel.Id)">@channel.Name</td>
+                            <td style="text-align:center;"><span class="glyphicon glyphicon-remove" onclick="onDeleteChannel(@channel.Id)"></span></td>
+                        </tr>
+                    }
+                    @if (Model.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="2" style="text-align: center;">სია ცარიელია</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

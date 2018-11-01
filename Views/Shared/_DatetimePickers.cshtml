@@ -1,0 +1,44 @@
+﻿@using DigitalTVBilling.Helpers
+<div class="row datepickers">
+    <div class="col-md-12 pull-right">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon">პერიოდი:</span>
+            <input type="text" id="@ViewData["ID"]_picker_from" tabindex="-1" class="form-control" value="@if(ViewData.ContainsKey("date_from")) {@ViewData["date_from"]} else { @Html.GetFromDate(Convert.ToString(ViewData["YEAR"])) }" />
+            <span class="input-group-btn">
+                <button type="button" style="margin: 0 4px 0 4px;" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </button>
+                <ul class="dropdown-menu choices" role="menu">
+                    <li><a data-val="today">დღეს</a></li>
+                    <li><a data-val="year">მიმდინარე წელიწადი</a></li>
+                    <li class="divider"></li>
+                    <li><a data-val="kvartali1">I კვარტალი</a></li>
+                    <li><a data-val="kvartali2">II კვარტალი</a></li>
+                    <li><a data-val="kvartali3">III კვარტალი</a></li>
+                    <li><a data-val="kvartali4">IV კვარტალი</a></li>
+                    <li class="divider"></li>
+                    <li><a data-val="yan">იანვარი</a></li>
+                    <li><a data-val="feb">თებერვალი</a></li>
+                    <li><a data-val="mar">მარტი</a></li>
+                    <li><a data-val="apr">აპრილი</a></li>
+                    <li><a data-val="may">მაისი</a></li>
+                    <li><a data-val="jum">ივნისი</a></li>
+                    <li><a data-val="jul">ივლისი</a></li>
+                    <li><a data-val="aug">აგვისტო</a></li>
+                    <li><a data-val="sep">სექტემბერი</a></li>
+                    <li><a data-val="oct">ოქტომბერი</a></li>
+                    <li><a data-val="nov">ნოემბერი</a></li>
+                    <li><a data-val="dec">დეკემბერი</a></li>
+                </ul>
+            </span>
+            <input type="text" id="@ViewData["ID"]_picker_to" class="form-control" value="@if(ViewData.ContainsKey("date_to")) {@ViewData["date_to"]} else { @Html.GetToDate(Convert.ToString(ViewData["YEAR"])) }" />
+            <span class="input-group-btn">
+                <a class="btn btn-default" href="@Html.GetUrl()" data-href="@Html.GetLocalUrl()" id="@ViewData["ID"]_picker_nav">
+                    <span class="glyphicon glyphicon-search"></span>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
+
+

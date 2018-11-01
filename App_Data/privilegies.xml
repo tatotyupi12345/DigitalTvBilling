@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <privilegy>
+    <name>აბონენტის ნახვა</name>
+    <tag>ABONENT_SHOW</tag>
+  </privilegy>
+	<privilegy>
+		<name>აბონენტის დამატება</name>
+		<tag>ABONENT_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>აბონენტის რედაქტირება</name>
+		<tag>ABONENT_EDIT</tag>
+	</privilegy>
+	<privilegy>
+		<name>აბონენტის ძებნა</name>
+		<tag>ABONENT_FILTER</tag>
+	</privilegy>
+	<privilegy>
+		<name>ლოგის ექპორტი</name>
+		<tag>LOG_EXPORT</tag>
+	</privilegy>
+	<privilegy>
+		<name>ლოგის ნახვა</name>
+		<tag>LOG_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>რეპორტების ნახვა</name>
+		<tag>REPORT_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>რეპორტების ექსპორტი</name>
+		<tag>REPORT_EXPORT</tag>
+	</privilegy>
+	<privilegy>
+		<name>პარამეტრების რედაქტირება</name>
+		<tag>SETTING_EDIT</tag>
+	</privilegy>
+  <privilegy>
+    <name>პარამეტრების ნახვა</name>
+    <tag>SETTING_SHOW</tag>
+  </privilegy>
+	<privilegy>
+		<name>რესივერის ანძის გაწ. მომსახურების ნახვა</name>
+		<tag>REC_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>რესივერის ანძის გაწ. მომსახურების დამატება</name>
+		<tag>REC_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>რესივერის ანძის გაწ. მომსახურების რედაქტირება</name>
+		<tag>REC_EDIT</tag>
+	</privilegy>
+	<privilegy>
+		<name>გადახდის შესრულება</name>
+		<tag>PAYMENT_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>გადახდის კორექცია</name>
+		<tag>PAYMENT_EDIT</tag>
+	</privilegy>
+	<privilegy>
+		<name>გადახდების ნახვა</name>
+		<tag>PAYMENT_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>გადახდების გაუქმება</name>
+		<tag>PAYMENT_CANCEL</tag>
+	</privilegy>
+	<privilegy>
+		<name>ჯგუფების ნახვა</name>
+		<tag>GROUP_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>ჯგუფების დამატება</name>
+		<tag>GROUP_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>ჯგუფების რედაქტირება</name>
+		<tag>GROUP_EDIT</tag>
+	</privilegy>
+	<privilegy>
+		<name>პაკეტების ნახვა</name>
+		<tag>PACKAGE_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>პაკეტების დამატება</name>
+		<tag>PACKAGE_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>პაკეტის რედაქტირება</name>
+		<tag>PACKAGE_EDIT</tag>
+	</privilegy>
+  <privilegy>
+    <name>ბარათის პაკეტის რედაქტირება</name>
+    <tag>CARD_PACKAGE_CHANGE</tag>
+  </privilegy>
+  <privilegy>
+    <name>ბარათის მომსახურების დამატება</name>
+    <tag>CARD_SERVICE_ADD</tag>
+  </privilegy>
+  <privilegy>
+    <name>ბარათის გაუქმება</name>
+    <tag>CARD_CANCEL</tag>
+  </privilegy>
+  <privilegy>
+    <name>ბარათის დაპაუზება/კრედიტი/დაზიანება/დაბლოკვა</name>
+    <tag>CARD_DEAL</tag>
+  </privilegy>
+	<privilegy>
+		<name>შეტყობინების ნახვა</name>
+		<tag>MESSAGE_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>შეტყობინებების გაგზავნა</name>
+		<tag>MESSAGE_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>შეტყობინებების/შაბლონების გაკეთება</name>
+		<tag>TEMPLATE_CREATE</tag>
+	</privilegy>
+	<privilegy>
+		<name>მომხმარებლის ნახვა</name>
+		<tag>USER_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>მომხმარებლის დამატება</name>
+		<tag>USER_ADD</tag>
+	</privilegy>
+	<privilegy>
+		<name>მომხმარებლის რედაქტირება</name>
+		<tag>USER_EDIT</tag>
+	</privilegy>
+	<privilegy>
+		<name>ბარათის ისტორიის ნახვა</name>
+		<tag>CARD_HISTORY_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>აბონენტის ბალანსის ნახვა</name>
+		<tag>ABONENT_BALANCE_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>ბარათის ნახვა</name>
+		<tag>CARD_SHOW</tag>
+	</privilegy>
+	<privilegy>
+		<name>ბარათის დამატება</name>
+		<tag>CARD_ADD</tag>
+	</privilegy>
+  <privilegy>
+    <name>ბარათის რედაქტირება</name>
+    <tag>CARD_EDIT</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაზიანების ნახვა</name>
+    <tag>DAMAGE_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაზიანების დადასტურება</name>
+    <tag>DAMAGE_APPROVE</tag>
+  </privilegy>
+  <privilegy>
+    <name>ჩატის ნახვა</name>
+    <tag>CHAT_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>შეკვეთების ნახვა</name>
+    <tag>ORDER_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>შეკვეთების დამატება</name>
+    <tag>ORDER_ADD</tag>
+  </privilegy>
+  <privilegy>
+    <name>შეკვეთის სტატუსების შეცვლა</name>
+    <tag>ORDER_STATUSES_ADD</tag>
+  </privilegy>
+  <privilegy>
+    <name>შეკვეთის მემონტაჟეების უფროსი</name>
+    <tag>ORDER_MONTAGES_SENIORS</tag>
+  </privilegy>
+  <privilegy>
+    <name>შეკვეთის აბონენტად დამატება</name>
+    <tag>ABONENT_ADD_FROM_ORDER</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაზიანების სტატუსების შეცვლა</name>
+    <tag>DAMAGE_STATUSES_ADD</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაზიანების მოქმედებები</name>
+    <tag>DAMAGE_DEALS</tag>
+  </privilegy>
+  <privilegy>
+    <name>თანხის გაცემა</name>
+    <tag>BALANCEMOVE_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>ჩატის წაშლა</name>
+    <tag>REMOVE_CHAT</tag>
+  </privilegy>
+  <privilegy>
+    <name>მომხმარებლის პაროლის შეცვლა</name>
+    <tag>USER_PASSWORD_CHANGE</tag>
+  </privilegy>
+  <privilegy>
+    <name>ოფისის ბარათები</name>
+    <tag>OFFICE_CARDS</tag>
+  </privilegy>
+  <privilegy>
+    <name>პაკეტის ავტომატური მიბმა</name>
+    <tag>AUTO_CHANGE_SUBSCRIB</tag>
+  </privilegy>
+  <privilegy>
+    <name>ინვოისები</name>
+    <tag>INVOICES</tag>
+  </privilegy>
+  <privilegy>
+    <name>ინვოისების დამატება</name>
+    <tag>INVOICES_ADD</tag>
+  </privilegy>
+  <privilegy>
+    <name>Entitlement განახლება</name>
+    <tag>ENTITLEMENT_REFRESH</tag>
+  </privilegy>
+  <privilegy>
+    <name>FINA ნახვა</name>
+    <tag>FINA_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>FINA დადასტურება</name>
+    <tag>FINA_APPROVE</tag>
+  </privilegy>
+  <privilegy>
+    <name>ვერიფიკაციის ნახვა</name>
+    <tag>SHOW_VERIFIED_CARDS</tag>
+  </privilegy>
+  <privilegy>
+    <name>ვერიფიკაციის სტატუსის შეცვლა</name>
+    <tag>SET_VERIFYSTATUS_CARDS</tag>
+  </privilegy>
+  <privilegy>
+    <name>სტატისტიკის ნახვა</name>
+    <tag>SHOW_STAT</tag>
+  </privilegy>
+  <privilegy>
+    <name>აქცია 8 ნახვა</name>
+    <tag>SHARE_8_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>გააქტიურებული აქცია 8 პაკეტის ნახვა</name>
+    <tag>SHARE_8_ACTIVATED_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>ბარათები სტატუსის მიხედვით ნახვა</name>
+    <tag>CARDS_STATUS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>FINA გარე გაყიდვების ნახვა</name>
+    <tag>FINA_OUTSIDE_SALES_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>FINA გარე გაყიდვების დადასტურება</name>
+    <tag>FINA_OUTSIDE_SALES_APPROVE</tag>
+  </privilegy>
+  <privilegy>
+    <name>პაკეტები დარიცხვბის მიხედვით ნახვა</name>
+    <tag>SHOW_PACKAGES_BY_CHARGE</tag>
+  </privilegy>
+  <privilegy>
+    <name>აქსესუარების გაყიდვების ნახვა</name>
+    <tag>SHOW_SELL_ATTACHMENTS</tag>
+  </privilegy>
+  <privilegy>
+    <name>აქსესუარების დადასტურება</name>
+    <tag>APPROVE_SELL_ATTACHMENTS</tag>
+  </privilegy>
+  <privilegy>
+      <name>გათიშული პაკეტების ნახვა</name>
+      <tag>STOPPED_CARDS_SHOW</tag>
+    </privilegy>
+  <privilegy>
+      <name>გათიშული პაკეტების სტატუსის შეცვლა</name>
+      <tag>STOPPED_CARDS_CHANGE_STATUS</tag>
+  </privilegy>
+  <privilegy>
+        <name>იურიდიული ვერიფიკაციის ჩვენება</name>
+        <tag>JURIDICAL_SHOW</tag>
+  </privilegy>
+  <privilegy>
+        <name>იურიდიული ვერიფიკაციის სტატუსის შეცვლა</name>
+        <tag>JURIDICAL_STATUS_CHANGE</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაბლოკილი ბარათების ნახვა</name>
+    <tag>BLOCKED_CARDS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>გაუქმებული ბარათების ჩვენება</name>
+    <tag>RETURNED_CARDS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>დაუბრუნებელი აქსესუარის ჩვენება</name>
+    <tag>ASSESSOTY_RETURNED_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>გაუქმებული ბარათების ვერიფიკაცია</name>
+    <tag>RETURNED_CARDS_VERIFY</tag>
+  </privilegy>
+
+  <privilegy>
+    <name>დაბრუნებული აქსესუარის რედაქტირება</name>
+    <tag>RETURNED_ACCESSORY_CHANGE</tag>
+  </privilegy>
+  <privilegy>
+    <name>რეგულატორის ჩვენება</name>
+    <tag>REGULATOR_SHOW</tag>
+  </privilegy>
+    <privilegy>
+    <name>პაკეტების ცვლილებების ჩვენება</name>
+    <tag>PACKAGES_CHARGES_SHOW</tag>
+  </privilegy>
+     <privilegy>
+    <name>პაკეტების ცვლილებების იძულება</name>
+    <tag>PACKAGES_CHARGES_Coercion</tag>
+  </privilegy>
+     <privilegy>
+    <name>ბარათის დაპაუზება მინუსის შემთხვევაში</name>
+    <tag>CARD_PAUSED_CASE_DEBT</tag>
+  </privilegy>
+     <privilegy>
+    <name>ტექნიკურის გოგოები სტატუსი ჩვენება</name>
+    <tag>Technical_Girls_Status_Display</tag>
+  </privilegy>
+     <privilegy>
+    <name>გაუქმებები</name>
+    <tag>CANCELLATIONS_SHOW</tag>
+  </privilegy>
+     <privilegy>
+    <name>გაუქმების რედაქტირება</name>
+    <tag>CANCEL_EDITING</tag>
+  </privilegy>
+     <privilegy>
+    <name>გაუქმების წაშლა</name>
+    <tag>CANCEL_DELETE</tag>
+  </privilegy>
+     <privilegy>
+    <name>ჯპს ჩვენება</name>
+    <tag>GPS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>იჯარის დარიცხვების ჩვენება</name>
+    <tag>RENT_ACCRUALS</tag>
+  </privilegy>
+  <privilegy>
+    <name>იჯარის გადახდის ჩვენება</name>
+    <tag>RENT_ACCRUALS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>გადაფორმების ჩვენება</name>
+    <tag>REREGISTERING_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>გადაფორმების მოდელის ჩვენება</name>
+    <tag>REREGISTERING_MODEL_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>ქოლცენტრი-ინსტალატორების სტატისტიკის ჩვენება </name>
+    <tag>INSTALLATION_A_CALL_CENCTER_STATISTICS_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>ქოლცენტრი-ინფორმაცის-ჩვენება </name>
+    <tag>INSTALLATION_INFO_SHOW</tag>
+  </privilegy>
+  <privilegy>
+    <name>უფასო ინსტალაციის აქცია</name>
+    <tag>FREE_INSTALLATION_ACTION</tag>
+  </privilegy>
+  <privilegy>
+    <name>იურდიული ხელშეკრულებები</name>
+    <tag>JURIDICAL_CONTRACTS</tag>
+  </privilegy>
+</root>

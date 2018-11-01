@@ -1,0 +1,78 @@
+﻿@model IEnumerable<CallUser>
+@using DigitalTVBilling.CallCenter;
+@using System.Web.Optimization
+@{
+    Page.Title = "სტატისტიკა 2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Index";
+    @Scripts.Render("~/bundles/scripts");
+}
+<script src="~/Static/Scripts/View/main2.js"></script>
+@section head {
+    <script type="text/javascript">
+        var order_distinguished_answers =@Html.Raw(ViewBag.OrderDistinguishedAnswers);
+        var damage_distinguished_answers =@Html.Raw(ViewBag.DamageDistinguishedAnswers);
+        var card_status =@Html.Raw(ViewBag.CardStatus);
+        var x = 0;
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+}
+<h2>Index</h2>
+<div class="row" @*style="margin-top:5px;"*@>
+    <div class="col-sm-6 " style=" display:inline-block">
+        <div class="row">
+            <div class="col-sm-4">
+                <select class="form-control input-sm valid" data-tag="" data-val="true" id="order_status_filter" name="status">
+                    <option value="0" selected>ინსტალატორი</option>
+                    @foreach (var item in Model)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+
+                </select>
+            </div>
+            <div class="col-sm-8 " style=" display:inline-block">
+                @{Html.RenderPartial("~/Views/Shared/_DatetimePickersStatic.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+            </div>
+        </div>
+    </div>
+
+        <div class="col-sm-6 " style=" display:inline-block">
+            <div class="row">
+                <div class="col-sm-4">
+                    <select class="form-control input-sm valid" data-tag="" data-val="true" id="damage_status_filter" name="status">
+                        <option value="0" selected>ინსტალატორი</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+
+                    </select>
+                </div>
+                <div class="col-sm-8 " style=" display:inline-block">
+                    @{Html.RenderPartial("~/Views/Shared/_DatetimePickerPoll.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+                </div>
+            </div>
+        </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div id="order_distinguished_answers" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div id="damage_distinguished_answers" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:5px;">
+    <div class="col-md-12">
+        <div id="card_status" style="border:1px solid gray; overflow: hidden;">
+
+        </div>
+    </div>
+</div>

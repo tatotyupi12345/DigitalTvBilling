@@ -1,0 +1,75 @@
+﻿@model List<OrderFilter>
+@using DigitalTVBilling.Helpers
+@{
+    ViewBag.ApproveDamage = Utils.GetPermission("DAMAGE_APPROVE");
+}
+@foreach (OrderFilter order in Model)
+{
+    { ViewBag.Data = Newtonsoft.Json.JsonConvert.DeserializeObject<Abonent>(order.data); }
+    <tr data-code="@order.code" data-id="@order.id" class="@if (order.montage_status){@Html.Raw("success")} else {@Html.Raw("")}">
+        <td>@order.num</td>
+        <td>
+            @Html.SetDateDisplay(order.tdate)
+            <br />
+            <small>@Html.SetDateDisplay(order.get_date)</small>
+            <br />
+            <small>@Html.SetDateDisplay(order.change_date)</small>
+        </td>
+        <td>
+            @order.name.Split('/')[0]
+            <br />
+            <small>@order.code</small>
+        </td>
+        <td>
+            @ViewBag.Data.Customer.City
+            <br />
+            <small>@ViewBag.Data.Customer.Region</small>
+            <br />
+            <small>@ViewBag.Data.Customer.Village</small>
+        </td>
+        <td>
+            @ViewBag.Data.Customer.Phone1
+            <br />
+            <small>@ViewBag.Data.Customer.Phone2</small>
+        </td>
+        <td>@order.receivers_count</td>
+        <td>@Utils.GetEnumDescription(order.status)</td>
+        <td>
+            @order.create_user
+            <br />
+            <small>@order.changer_user</small>
+            <br />
+            <small>@order.approve_user</small>
+        </td>
+        <td>
+            @ViewBag.Data.Customer.Desc
+        </td>
+        <td>@order.group_name</td>
+        <td>
+            @if (order.is_approved)
+            {
+                <span class="bg-success">დად.</span>
+            }
+            else
+            {
+                if (!ViewBag.ApproveDamage)
+                {
+                    <span class="glyphicon glyphicon-minus"></span>
+                }
+                else
+                {
+                    <button class="btn btn-default btn-xs" type="button" onclick="orderApprove(@order.id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                }
+            }
+        </td>
+        <td style="text-align:center;">
+            <input type="checkbox" value="@order.id">
+        </td>
+    </tr>
+}
+@if (Model.Count == 0)
+{
+    <tr>
+        <td colspan="12" style="text-align: center;">სია ცარიელია</td>
+    </tr>
+}

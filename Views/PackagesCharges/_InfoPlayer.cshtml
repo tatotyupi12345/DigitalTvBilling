@@ -1,0 +1,123 @@
+﻿
+@using DigitalTVBilling.Helpers
+@{
+    var RecordAudio=  ViewBag.RecordAudio;
+    //List<BortHistory> bort_history = ViewBag.Bort_History;
+
+}
+
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 32px;
+            width: 275px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+        .forPass {
+            background-color: lightgray;
+        }
+
+        .passed {
+            background-color: #a4ff7e;
+        }
+
+        .passedWithError {
+            background-color: #fce14b;
+        }
+
+        .problem {
+            background-color: #e82966;
+        }
+
+        .called {
+            background-color: #1FF0FF;
+        }
+
+        /*table tr:hover {
+            background-color: #c4ffab;
+        }*/
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    @*<input type="hidden" value="@ViewBag.card_id" id="card_id" />*@
+    <div class="modal-dialog modal-lg" id="bort_body">
+        <div class="modal-content"style=" width:550px;margin-left: 175px;margin-top: -25px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+            </div>
+            <div class="form-group">
+                
+            <form action="" method="post" class="container" enctype="multipart/form-data" id="needs-validation" novalidate>
+                @*<div class="row">*@
+                <div class="row">
+                    <label class="col-md-2">შემოტვირთეთ</label>
+                    <input name="typess" type="file" id="typess" , accept="file/*" style="display: none">
+                    <label for="typess" class="btn btn-primary" style="margin-left: 25px;margin-top: 25px;">Browser</label>
+                    <button class="btn btn-success" id="type_ss" type="button" style="margin-top: 25px; margin-left:30px;">Upload</button>
+                </div>
+                @*</div>*@
+            </form>
+           </div>
+            <br />
+            <div class="form-group">
+                <label class="col-md-3">ჩანაწერი</label>
+                <div class="col-md-9">
+                  
+                    <audio controls="controls" id="mp3">
+                        @*<source src="horse.ogg" type="audio/ogg">*@
+                        @*<source src="" type="audio/wav" id="source">*@
+                        @if (ViewBag.RecordAudio != null)
+                        {
+                        <source src="@ViewBag.RecordAudio.audio_name" type="audio/mpeg" id="source">
+                        }
+                        else
+                        {
+                            <source src="" type="audio/mpeg" id="source">
+                        }
+                    </audio>
+                </div>
+            </div>
+            <br />
+            @*<div class="form-group">
+                <label class="col-md-3">გადმოწერეთ ჩანაწერი</label>
+                <div class="col-md-5">
+                    <span id="record_dowload" style="color:cornflowerblue;cursor:pointer;"></span>
+                 
+                </div>
+            </div>*@
+            <br />
+            <br />
+            <div class="form-group">
+                <label class="col-md-3">კომენტარი:</label>
+                @*<div class="col-md-3">*@
+                    <textarea class="form-control  textbox" cols="50" data-tag="" id="coment" name="Customer.Desc" rows="2" style="width:300px; height:50px; display:block;" placeholder='დაწერეთ კომენტარი'></textarea>
+                    @*<span class="field-validation-valid" data-valmsg-for="Customer.Desc" data-valmsg-replace="true"></span>*@
+                @*</div>*@
+            </div>
+            <div class="modal-footer" style="margin-top:5%">
+                <button type="button" class="btn btn-default btn-xs btn-warning" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="record_save" class="btn btn-default btn-xs btn-success" disabled>შენახვა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

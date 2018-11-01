@@ -1,0 +1,357 @@
+﻿@model IPagedList<DigitalTVBilling.Models.Card>
+@using DigitalTVBilling.ListModels
+@using DigitalTVBilling.Utils
+@using DigitalTVBilling.Helpers
+@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Page.Title = "დაბლოკილი ბარათები";
+
+    int totalcount = ViewBag.totalItemsCount;
+    int _page = ViewBag.page;
+    int pagesize = ViewBag.pageSize;
+    int pos = totalcount - ((_page - 1) * pagesize);
+}
+
+@section head {
+
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="/Static/Scripts/fina.datepickers.js"></script>
+
+    <script type="text/javascript" src="~/Static/Scripts/md5.min.js"></script>
+
+    <script src="~/Static/Scripts/View/blocked_index.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+
+    @*<style type="text/css">
+            small {
+                font-weight: bold;
+            }
+
+            .Delivered {
+                background-color: #ffd633;
+            }
+
+            .Passed {
+                background-color: #47d147;
+            }
+
+            .FixableProblematic {
+                background-color: #ffa64d;
+            }
+
+            .PassedProblematic {
+                background-color: #4d94ff;
+            }
+
+            .NotFixableProblem {
+                background-color: #ff3333;
+            }
+
+            .Stopped {
+                background-color: #adad85;
+            }
+
+            table tr:hover {
+                background-color: #c4ffab;
+            }
+        </style>*@
+    <style type="text/css">
+        li {
+            cursor: pointer;
+        }
+
+        .goingToPay {
+            background-color: #4dff4d;
+        }
+
+        .goingToCancel {
+            background-color: #ff3333;
+        }
+
+        .technicalProblem {
+            background-color: #ffff4d;
+        }
+
+        .unConnected {
+            background-color: #66b3ff;
+        }
+
+        .owner {
+            background-color: #ff80ff;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+}
+
+<body>
+    <div class="row">
+
+
+
+        <div class="col-sm-4 pull-right">
+            @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+        </div>
+
+        <div class="col-sm-2 pull-right" style="padding-left: 0px;">
+            @*<div class="input-group input-group-sm">
+                <span class="input-group-addon" id="filter_title" data-sign="text"><span>სტატუსი:</span></span>
+                <select class="form-control" id="filter_status">
+                    <option value="-1"></option>
+                    @foreach (CardJuridicalVerifyStatus l_s in Enum.GetValues(typeof(CardJuridicalVerifyStatus)))
+                    {
+
+                        var val = (int)Enum.Parse(typeof(CardJuridicalVerifyStatus), l_s.ToString());
+                        if (val == -1)
+                        {
+                            continue;
+                        }
+                        string selected = "";
+                        if (val == (int)ViewBag.selectedStatus)
+                        {
+                            selected = "selected";
+                        }
+                        <option @selected value="@val">@Utils.GetEnumDescription(l_s)</option>
+                        selected = "";
+                    }
+                    foreach (var item in sellerobjs)
+                        {
+                            if (ViewBag.selectedObject == item.ID)
+                            {
+                                <option selected value="@item.ID">@item.name</option>
+                            }
+                            else
+                            {
+                                <option value="@item.ID">@item.name</option>
+                            }
+                        }
+                </select>
+            </div>*@
+        </div>
+        @*<div class="col-sm-2 pull-right">
+            <div class="input-group input-group-sm pull-left">
+                <select class="form-control" id="Discontinued" value="@ViewBag.drpfiltet">
+                    <option value=""></option>
+                    <option value="1">შეწყვეტილი</option>
+                    @*<option value="cr.tower_id">ანძა</option>
+                </select>
+            </div>
+        </div>*@
+        <div class="col-sm-3 pull-right">
+            <div class="input-group input-group-sm pull-left">
+                <select class="form-control" id="drp_filter" value="@ViewBag.drpfiltet">
+                    <option @Html.Raw((ViewBag.drpfiltet == 1 ? "selected" : "")) value="1">ხელშ. №</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 2 ? "selected" : "")) value="2">აბონენტი</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 3 ? "selected" : "")) value="3">პ/ნ</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 4 ? "selected" : "")) value="4">აბონენტის №</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 5 ? "selected" : "")) value="5">ბარათის №</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 7 ? "selected" : "")) value="7">ტელეფონი</option>
+                    <option @Html.Raw((ViewBag.drpfiltet == 7 ? "selected" : "")) value="8">შეწყვეტილი</option>
+                    @*<option value="cr.tower_id">ანძა</option>*@
+                </select>
+            </div>
+        </div>
+
+        <div class="col-sm-2 pull-right">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" data-sign="text"><span>ძებნა:</span></span>
+                <input type="search" class="form-control" value="@ViewBag.filterText" id="txt_filter" />
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 8px; overflow: auto;" id="tableDiv">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="width: 1%;">
+                        №
+                    </th>
+                    <th style="width: 10%;">
+                        თარიღი
+                    </th>
+                    <th style="width: 5%;">
+                        სახელი
+                    </th>
+                    <th style="width: 8%;">
+                        გვარი
+                    </th>
+                    <th style="width: 8%;">
+                        პირ. ნომერი
+                    </th>
+                    <th style="width: 15%;">
+                        პაკეტი
+                    </th>
+                    <th style="width: 13%;">
+                        მისამართი
+                    </th>
+                    <th style="width: 8%;">
+                        ბარათის №
+                    </th>
+                    <th style="width: 8%;">
+                        ხელშეკრულების №
+                    </th>
+                    <th style="width: 5%;">
+                        აბონენტის №
+                    </th>
+                    <th style="width: 10%;">
+                        ვერიფიკაციის სტატუსი
+                    </th>
+
+                    <th style="width: 14%;">
+                        სტატუსი
+                    </th>
+                    <th style="width: 2%;">
+                        შენიშვნა
+                    </th>
+
+
+                    @*<th style="width: 2%;">
+                        </th>*@
+                </tr>
+            </thead>
+            <tbody id="abonents_body">
+                @foreach (DigitalTVBilling.Models.Card card in Model)
+                {
+                    string classname = "";
+
+                    //switch (card.BlockCardVerifyStatus)
+                    //{
+                    //    case CardBlockedCardsVerifictionStatus.Delivered:
+                    //        classname = "Delivered";
+                    //        break;
+                    //    case CardBlockedCardsVerifictionStatus.Passed:
+                    //        classname = "Passed";
+                    //        break;
+                    //    case CardBlockedCardsVerifictionStatus.FixableProblematic:
+                    //        classname = "FixableProblematic";
+                    //        break;
+                    //    case CardBlockedCardsVerifictionStatus.PassedProblematic:
+                    //        classname = "PassedProblematic";
+                    //        break;
+                    //    case CardBlockedCardsVerifictionStatus.NotFixableProblem:
+                    //        classname = "NotFixableProblem";
+                    //        break;
+                    //    case CardBlockedCardsVerifictionStatus.Stopped:
+                    //        classname = "Stopped";
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
+                    switch (card.BlockCardVerifyStatus)
+                    {
+                        case CardBlockedCardsStatus.Unchecked:
+                            classname = "";
+                            break;
+                        case CardBlockedCardsStatus.GoingToPay:
+                            classname = "goingToPay";
+                            break;
+                        case CardBlockedCardsStatus.GoingToCancel:
+                            classname = "goingToCancel";
+                            break;
+                        case CardBlockedCardsStatus.TechnicalProblem:
+                            classname = "technicalProblem";
+                            break;
+                        case CardBlockedCardsStatus.UnConnected:
+                            classname = "unConnected";
+                            break;
+                        case CardBlockedCardsStatus.Owner:
+                            classname = "owner";
+                            break;
+                        default:
+                            break;
+                    }
+                    <tr data-id="@card.Id" data-card="@card.Id" class="@classname " id="card_">
+                        <td>
+                            @pos
+                        </td>
+                        <td>
+                            @card.Tdate
+                        </td>
+                        <td>
+                            @card.Customer.Name
+                        </td>
+
+                        <td>@card.Customer.LastName</td>
+                        <td>@card.Customer.Code</td>
+                        <td id="">
+
+                            @{
+                                List<SubscriptionPackage> subs = card.Subscribtions.Where(s => s.Status == true).FirstOrDefault().SubscriptionPackages.ToList();
+                                foreach (SubscriptionPackage sub in subs)
+                                {
+                                    <span>
+                                        @sub.Package.Name
+                                    </span>
+
+                                }
+                            }
+                        </td>
+                        <td>@card.Customer.Address</td>
+                        <td>@card.CardNum</td>
+                        <td>@card.DocNum</td>
+                        <td>@card.AbonentNum</td>
+                        <td data-id="@card.Id" id="BlockStatus">@Utils.GetEnumDescription(card.BlockCardVerifyStatus)</td>
+
+                        <td>
+                            @Html.GetCardStatus(card.CardStatus)
+                            @*@if (card.User.SellerObj.type != null)
+                                {
+                                    @Html.Raw(Html.GetSellerTypeDesc((SellerType)card.User.SellerObj.type));
+                                }*@
+                        </td>
+                        <td class="desc">@card.Desc</td>
+                        <td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit change_card_status" id="change_card_statu"></span></a></td>
+                        @*<td id=""><a href="javascript:void(0)"><span class="glyphicon glyphicon-edit change_card_status" id="change_card_status"></span></a></td>*@
+                        @*<td id="edit_abonent"><a href=""><span class="glyphicon glyphicon-edit" id="edit_abonent"></span></a></td>*@
+                    </tr>
+                    pos--;
+                }
+                @if (Model.Count == 0)
+                {
+                    <tr>
+                        <td colspan="10" style="text-align: center;">სია ცარიელია</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div id="paging">
+            @Html.PagedListPager(Model, page => @Html.PagerUrl(page), PagedListRenderOptions.ClassicPlusFirstAndLast)
+        </div>
+
+        <script type="text/javascript">
+
+        </script>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $("#txt_filter").keyup(function () {
+        var value = $('#txt_filter').val();
+        var dtfrom = $('#picker_picker_from').val().replace(/\//gi, '');
+        var dtto = $('#picker_picker_to').val().replace(/\//gi, '');
+        //var status = $('#filter_status').val();
+        var drp_filter = $('#drp_filter').val();
+        $.ajax({
+            url: '@Url.Action("PartialIndex", "BlockedCards")',
+            data: { "search" : value, "dt_from" : dtfrom, "dt_to" : dtto, "drp_filter" : drp_filter},
+            type: "post",
+            cache: false,
+            success: function (data) {
+                if (data) {
+                    $('#tableDiv').html(data);
+                }
+            },
+            error: function () { }
+        });
+    });
+</script>

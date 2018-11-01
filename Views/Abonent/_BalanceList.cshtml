@@ -1,0 +1,138 @@
+﻿@model List<Balance>
+@using DigitalTVBilling.Helpers
+
+@if (ViewBag.CardId != 0)
+{
+    <table class="table table-striped table-bordered table-hover ">
+        <thead>
+            <tr>
+                <th style="width: 15%;">
+                    თარიღი
+                    @*<div>თარიღი</div>*@
+                </th>
+                <th style="width: 15%;">
+                    დარიცხვა
+                    @* <div>დარიცხვა</div>*@
+                </th>
+                @if (Utils.GetPermission("RENT_ACCRUALS"))
+                {
+                    <th style="width: 15%;">
+                        იჯარის დარიცხვა
+                        @* <div>დარიცხვა</div>*@
+                    </th>
+                }
+                <th style="width: 30%;">
+                    დარ. დანიშნულება
+                    @*<div>დარ. დანიშნულება</div>*@
+                </th>
+                <th style="width: 15%;">
+                    გადახდა
+                    @*<div>გადახდა</div>*@
+                </th>
+                @if (Utils.GetPermission("RENT_ACCRUALS"))
+                {
+                    <th style="width: 10%;">
+                        იჯარის გადახდა
+                        @*<div>ბალანსი</div>*@
+                    </th>
+                }
+                <th style="width: 15%;">
+                    ბალანსი
+                    @*<div>ბალანსი</div>*@
+                </th>
+                @if (Utils.GetPermission("RENT_ACCRUALS"))
+                {
+                    <th style="width: 15%;">
+                        იჯარა
+                        @*<div>ბალანსი</div>*@
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Balance list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.OutAmount</td>
+                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                    {
+                        <td>@list.RAmount</td>
+                    }
+                    <td>
+                        @if (list.OutAmount == 0 && list.RAmount == 0)
+                        {@Html.Raw("") }
+                    else
+                    { @Html.GetCardChargeStatus(list.OutAmountStatus)}
+                    </td>
+                    <td>@list.InAmount</td>
+                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                    {
+                        <td>@list.InRentAmount</td>
+                    }
+                    <td>@list.CurrentBalance</td>
+                    @if (Utils.GetPermission("RENT_ACCRUALS"))
+                    {
+                        <td>@list.RentAmount</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th style="width: 25%;">
+                    თარიღი
+                    @* <div>თარიღი</div>*@
+                </th>
+                <th style="width: 20%;">
+                    ბარათი
+                    @* <div>ბარათი</div>*@
+                </th>
+                <th style="width: 15%;">
+                    დარიცხვა
+                    @*<div>დარიცხვა</div>*@
+                </th>
+                <th style="width: 25%;">
+                    დარ. დანიშნულება
+                    <div>დარ. დანიშნულება</div>
+                </th>
+                <th style="width: 15%;">
+                    გადახდა
+                    @*<div>გადახდა</div>*@
+                </th>
+                <th style="width: 15%;">
+                    ბალანსი
+                    @*<div>ბალანსი</div>*@
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DigitalTVBilling.Models.Balance list in Model)
+            {
+                <tr>
+                    <td>@Html.SetDateDisplay(list.Tdate)</td>
+                    <td>@list.CardName</td>
+                    <td>@list.OutAmount</td>
+                    <td>
+                        @if (list.OutAmount == 0)
+                        {@Html.Raw("") }
+                    else
+                    { @Html.GetCardChargeStatus(list.OutAmountStatus)}
+                    </td>
+                    <td>@list.InAmount</td>
+                    <td>@list.CurrentBalance</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<h3 class="label label-primary" style="margin-left: 170px;">@Model.Sum(c => c.OutAmount)</h3>
+
+<h3 class="label label-primary" style="margin-left: 370px;">@Model.Sum(c => c.InAmount)</h3>
+
+

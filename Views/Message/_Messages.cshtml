@@ -1,0 +1,186 @@
+﻿@model List<Tower>
+@{
+    List<MessageTemplate> messages = ViewBag.MessageTemplates;
+}
+<div class="modal fade" id="subscr_list_modal" style="overflow:auto">
+    <style type="text/css">
+        /**{font-family: 'Roboto', sans-serif;}*/
+
+        .textbox {
+            border: 1px solid #c4c4c4;
+            height: 35px;
+            width: 370px;
+            font-size: 13px;
+            padding: 4px 4px 4px 4px;
+            border-radius: 4px;
+            -moz-border-radius: 4px;
+            -webkit-border-radius: 4px;
+            box-shadow: 0px 0px 8px #d9d9d9;
+            -moz-box-shadow: 0px 0px 8px #d9d9d9;
+            -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+        }
+
+            .textbox:focus {
+                outline: none;
+                border: 1px solid #7bc1f7;
+                box-shadow: 0px 0px 8px #7bc1f7;
+                -moz-box-shadow: 0px 0px 8px #7bc1f7;
+                -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+            }
+
+        .option-input {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            -ms-appearance: none;
+            -o-appearance: none;
+            appearance: none;
+            position: relative;
+            top: 5.33333px;
+            right: 0;
+            bottom: 0;
+            left: 5px;
+            height: 20px;
+            width: 20px;
+            transition: all 0.15s ease-out 0s;
+            background: #cbd1d8;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 0.5rem;
+            outline: none;
+            position: relative;
+            z-index: 1000;
+        }
+
+            .option-input:hover {
+                background: #313a39;
+            }
+
+            .option-input:checked {
+                background: #08043c;
+            }
+
+                .option-input:checked::before {
+                    /*height: 40px;*/
+                    width: 20px;
+                    position: absolute;
+                    content: '✔';
+                    display: inline-block;
+                    font-size: 14.66667px;
+                    text-align: center;
+                    line-height: 22px;
+                }
+
+                .option-input:checked::after {
+                    -webkit-animation: click-wave 0.65s;
+                    -moz-animation: click-wave 0.65s;
+                    animation: click-wave 0.65s;
+                    background: #40e0d0;
+                    content: '';
+                    display: block;
+                    position: relative;
+                    z-index: 100;
+                }
+
+            .option-input.radio {
+                border-radius: 50%;
+            }
+
+                .option-input.radio::after {
+                    border-radius: 50%;
+                }
+
+        /*/*/
+        textarea, input {
+            font-family: FontAwesome, "Open Sans", Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: inherit;
+        }
+
+        .att div:hover {
+            background-color: #c4ffab;
+        }
+
+        table tr, th {
+            text-align: center;
+        }
+    </style>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="width:1010px;">
+            <div class="modal-header">
+                <div class="form-group" style="margin-top:5%;" id="modal_bort">
+                    <div class="col-md-12 input-lg" id="parent">
+                        @*  <input type="hidden" id="message_lenght" value="@Model.Count()" />*@
+                        <select class="form-control selectpicker show-tick" data-show-subtext="true" data-live-search="true" data-actions-box="true" name="team" id="team" multiple data-max-options="100">
+                            @foreach (var item in Model)
+                            {
+                                <option id="@item.Id" value="@item.Id">@item.Name </option>
+                            }
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="margin-top:5%; display: none;" id="clone_pattern">
+                    <label class="control-label col-md-3" for="Customer_Desc" id="select_name">
+
+                    </label>
+                    <div class="col-md-1 input-lg" style="margin-left:-50px;">
+                        <input type="checkbox" id="manual" class="option-input radio" name="manual" title="მონიშნეთ რომ შეძლოთ ტექსტის დაწერა" />
+                    </div>
+                    <div class="col-md-5 input-lg">
+                        <textarea type="text" class="textbox" placeholder="&#xf075; დაწერეთ გასაგზავნი ტექსტი" style="display:none;" id="sms_text" value=""></textarea>
+                        <select class="form-control @*selectpicker*@ show-tick" data-show-subtext="true" data-live-search="true" id="selected" style="display:block">
+                            @foreach (var item in messages)
+                            {
+                                <option id="@item.Id" value="@item.Id">@item.Name</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="col-sm-1" id="tdate">
+                        @{Html.RenderPartial("~/Views/Shared/_DatetimeAntena.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+
+                    </div>
+                    <div class="modal-header">
+
+                    </div>
+                </div>
+
+                <div class="modal-header">
+
+                </div>
+                <div class="" style="overflow:auto;max-height: 300px;" id="height_id">
+                    <div class="form-group" id="clones_wrapper">
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="MessageType" class="control-label col-md-3">ტიპი:</label>
+                    <div class="col-md-5" id="message_types">
+                        @foreach (MessageType suit in (MessageType[])Enum.GetValues(typeof(MessageType)))
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="option-input radio" style="margin-top:-2px;" id="@suit.ToString()" value="@Html.Raw((int)suit)">
+                                    @suit.ToString()
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <input type="hidden" name="MessageType" id="MessageType" />
+                </div>
+
+
+            </div>
+            <div class="modal-footer" style="margin-top:10%">
+                <button type="button" class="btn btn-default  btn-warning" data-dismiss="modal">დახურვა</button>
+                <button type="button" id="send" class="btn btn-default  btn-success">გაგაზავნა</button>
+
+            </div>
+        </div>
+    </div>
+</div>

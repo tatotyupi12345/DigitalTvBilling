@@ -1,0 +1,279 @@
+﻿@*@model DigitalTVBilling.Models.ReturnedCard*@
+@model IPagedList<ReturnedCard>
+@using Newtonsoft.Json.Linq;
+@using System.Web.Script.Serialization;
+@using Newtonsoft.Json;
+@using Quartz
+@using PagedList
+@using PagedList.Mvc
+@using DigitalTVBilling.Helpers
+
+@using DigitalTVBilling.ListModels
+@{
+    //ViewBag.Title = "Index";
+    Page.Title = "გაუქმებული ბარათები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IPagedList<ReturnedCard> returned = ViewBag.ReturnedList;
+    List<CommisionDesc> comdescs = ViewBag.commDesc;
+    List<ReturnedCardAttachment> attachs = ViewBag.attachments;
+    List<Abonent> balance = ViewBag.returned_balance;
+    //var privilegies = ViewBag.ReturnedActive;
+    double Cash = ViewBag.Cash;
+    double Cashcashless = ViewBag.Cashcashless;
+    var sum = (decimal)returned.Select(s => s.commission_amount).Sum() + (decimal)ViewBag.sum_attamantes + (decimal)balance.Select(s => s.AbonentDetailInfo.CanceledCardAmount).Sum();
+}
+
+<head>
+    <script src="~/Static/Scripts/View/returned_index.js"></script>
+    <script src="~/Static/Scripts/View/returned_card.js"></script>
+    <script src="/Static/Scripts/bootstrap-checkbox-1.4.0/dist/js/bootstrap-checkbox.min.js" defer></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />
+
+    <style>
+        table thead tr th {
+            text-align: center;
+        }
+    </style>
+</head>
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    @*<script src="~/Static/Scripts/View/sell_attachs_index.js"></script>*@
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+    <script type="text/javascript">
+
+        $(function () {
+            $(".datepickers").datePickers({ prefix: "picker" });
+        });
+    </script>
+
+    <style type="text/css">
+        small {
+            font-weight: bold;
+        }
+
+        .approved {
+            background-color: #a4ff7e;
+        }
+
+        .approved_edited {
+            background-color: #e5fd00;
+        }
+
+        table tr:hover {
+            background-color: #c4ffab;
+        }
+    </style>
+
+}
+
+<div class="row">
+    @* <input value="@privilegies" type="hidden" id="return_privilegies" />*@
+    <div class="col-sm-4 pull-right">
+        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+    </div>
+    <div class="col-sm-1">
+        <h4>
+            <span class="label label-default" id="sumPrice">ნაღდი: @Cash </span>
+            <span class="label label-default" id="sumPrice">ნაღდი/უნაღდო: @Cashcashless </span>
+            <span class="label label-default" id="sumPrice">დარიცხვა:@sum </span>
+
+        </h4>
+    </div>
+    <div class="col-sm-1">
+        <button title="ფილტრაცის შეწყვეტა" type="button" class="btn btn-default btn-xs pull-right" id="remove_filter">
+            <span class="fa-stack">
+                <i class="fa fa-filter fa-stack-1x"></i>
+                <i class="fa fa-ban fa-stack-2x" style="color:red;opacity:0.5"></i>
+            </span>
+        </button>
+    </div>
+    <div class="col-sm-2" style="padding-right: 0px;">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon" id="filter_title" data-sign="text"><span>ძებნა:</span></span>
+            <input type="search" class="form-control" id="txt_filter" />
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="input-group input-group-sm pull-left">
+            <select class="form-control" id="drp_filter">
+                @*<option selected="selected" value="1"> </option>*@
+                <option value="1">აბონენტი</option>
+                <option value="2">ბარათის №</option>
+                <option value="3">პ/ნ</option>
+                <option value="4">ბორტი</option>
+                <option value="5">დილერები</option>
+            </select>
+        </div>
+    </div>
+
+
+
+</div>
+<div class="row" style="margin-top: 8px; overflow: scroll;">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th style="width: 15%;">
+                    თარიღი
+                </th>
+                <th style="width: 15%;">
+                    აბონენტი
+                </th>
+                <th style="width: 10%;">
+                    ტიპი
+                </th>
+                <th style="width: 8%;">
+                    ბარათის №
+                </th>
+                <th style="width: 8%;">
+                    პაკეტი
+                </th>
+                <th style="width: 10%;">
+                    პირადი №
+                </th>
+                <th style="width: 10%;">
+                    ბორტი
+                </th>
+                <th style="width: 12%;">
+                    გადახდის ტიპი
+                </th>
+                <th style="width: 10%;">
+                    დარიცხვა
+                </th>
+                <th style="width: 10%;">
+                    დაბრუნებული თანხა
+                </th>
+                <th style="width: 10%;">
+                    მიზეზი
+                </th>
+                <th style="width: 10%;">
+                    კომენტარი
+                </th>
+                <th style="width: 10%;">
+                    პრეტენზიული
+                </th>
+                <th style="width: 2%;">
+                    წაშლა
+                </th>
+                <th style="width: 2%;">
+
+                </th>
+            </tr>
+        </thead>
+        <tbody id="abonents_body">
+            @{int i = 0;}
+            @foreach (var item in returned)
+            {
+                string classname = "";
+                switch (item.approve)
+                {
+                    case 1:
+                        {
+                            classname = "approved";
+                        }
+                        break;
+
+
+                    default:
+                        break;
+                }
+                <tr data-id="@item.Id" data-card="@item.Id" class="@classname returne_card_cancles" id="returne_card_cancle">
+
+                    <td> @item.Tdate</td>
+                    <td class="returne_card_cancles_name"> @item.Card.Customer.Name @item.Card.Customer.LastName</td>
+                    <td>@Html.GetCustomerTypeDesc(item.Card.Customer.Type)</td>
+                    <td>@item.Card.CardNum</td>
+                    <td>
+                        @foreach (var pckg in item.Card.Subscribtions.Where(s => s.Status == true).FirstOrDefault().SubscriptionPackages)
+                        {
+                            @Html.Raw(pckg.Package.Name) <span>/</span>
+                        }
+
+                    </td>
+                    <td>@item.Card.Customer.Code</td>
+                    <td>
+                        <label class="changeBort" id="@item.card_id" style="cursor:pointer;">@item.User_bort.Name</label>
+                    </td>
+                    <td>
+                        @for (int j = 0; j < comdescs.Where(c => c.card_id == item.card_id).FirstOrDefault().commision_type.Count; j++)
+                        {
+                            if (comdescs.Where(c => c.card_id == item.card_id).FirstOrDefault().commision_type.Count > 0)
+                            {
+                                <label>@Utils.GetEnumDescription((CommissionStatus)comdescs.Where(c => c.card_id == item.card_id).FirstOrDefault().commision_type[j]) : @comdescs.Where(c => c.card_id == item.card_id).FirstOrDefault().amount[j] ლ </label><br />
+                            }
+                        }
+
+                    </td>
+                    <td>
+                        <label>
+                            საკომისიო: @item.commission_amount ლ
+                        </label>
+                        @if (attachs.Where(a => a.ReturnedCardsID == item.Id).Count() > 0)
+                        {
+                            <label class="returnedAttachment" id="@item.Id" style="color:blue; cursor:pointer;">
+                                მოწყობილობა: @attachs.Where(a => a.ReturnedCardsID == item.Id).Select(a => a.ReceiverAttachment.Price).Sum() ლ
+                            </label>
+                        }
+                        <label style="color:red" ;>
+                            ბალანსი : @balance.Where(b => b.UserID == item.Id).Select(s => s.AbonentDetailInfo.CanceledCardAmount).FirstOrDefault() ლ
+                        </label>
+
+                    </td>
+                    <td>@(Math.Round(item.returned_amount * 100) / 100)</td>
+                    <td>@Utils.GetEnumDescription((ReturnCardStatus)item.reason)</td>
+                    <td>@item.info</td>
+                    <td>@Utils.GetEnumDescription((PretentiousAbonentStatus)item.pretentious)</td>
+
+                    <td data-approve="@item.Id" id="data-approve-@item.Id">
+                        @if (item.approve == 1)
+                        {
+                            <span class="bg-success">OK</span>
+                        }
+                        else
+                        {
+                            <button class="btn btn-default btn-xs" type="button" onclick="record(@item.Id)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+                        }
+                    </td>
+                    @if (Utils.GetPermission("CANCEL_DELETE"))
+                    {
+
+                        <td><button class="btn btn-default btn-xs" type="button" onclick="deleteID(@item.Id)"><span class="glyphicon glyphicon-trash" style="color:red; font-size:16px;" aria-hidden="true"></span></button></td>
+                    }
+                </tr>
+            }
+            @if (returned.Count == 0)
+            {
+                <tr>
+                    <td colspan="8" style="text-align: center;">სია ცარიელია</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <div id="paging">
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+                 new
+                 {
+                     page,
+                     name = Request.QueryString["name"],
+                     dt_from = Request.QueryString["dt_from"],
+                     dt_to = Request.QueryString["dt_to"],
+                     drp_filter = Request.QueryString["drp_filter"],
+                 }),
+                     PagedListRenderOptions.ClassicPlusFirstAndLast)
+    </div>
+
+    <script type="text/javascript">
+
+    </script>
+
+
+
+</div>

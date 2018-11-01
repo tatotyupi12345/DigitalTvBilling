@@ -1,0 +1,50 @@
+﻿<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">SMS გაგზავნა</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row form-horizontal">
+                    <div class="col-md-12">
+                        <div class="form-group" id="reason">
+                            <label for="drp_reason" class="control-label col-md-2">მიზეზი:</label>
+                            <div class="col-md-6">
+                                <select class="form-control input-sm" id="drp_reason">
+                                    <option value=""></option>
+                                    @foreach (Reason template in (List<Reason>)ViewBag.Reasons)
+                                    {
+                                        <option value="@template.Id">@template.Name</option>
+                                    }
+                                    <option value="0">სხვა</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="sms_text">
+                            <div class="col-md-12">
+                                <textarea class="form-control input-sm" rows="3" autofocus></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $("#drp_reason").on("change", function () {
+                            if ($(this).find("option:selected").val() === "1") {
+                                $("#sms_text").removeClass("hide").addClass("show");
+                            } else {
+                                $("#sms_text").removeClass("show").addClass("hide");
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                <button type="button" class="btn btn-primary btn-xs" id="send">შენახვა</button>
+            </div>
+        </div>
+    </div>
+</div>
+

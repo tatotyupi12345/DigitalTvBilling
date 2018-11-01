@@ -1,0 +1,80 @@
+﻿@model UserType
+@{
+    ViewBag.AddGroup = Utils.GetPermission("GROUP_ADD");
+    ViewBag.EditGroup = Utils.GetPermission("GROUP_EDIT");
+}
+<div class="modal fade">
+    <div class="modal-dialog">
+        @using (Ajax.BeginForm("", null, new AjaxOptions
+                                         {
+                                             Url = Url.Action("NewType"),
+                                             OnSuccess = "onSuccessNewType",
+                                             HttpMethod = "POST"
+                                         }, new { @class = "form-horizontal", role = "form", id = "type_form", name="TypeForm" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">ახალი ჯგუფი</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            @Html.HiddenFor(m => m.Id)
+                            @Html.HiddenFor(model => model.Logging)
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-3" })
+                                <div class="col-md-7">
+                                    @if (Model.Id == 0)
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(model => model.Name, new { @class = "form-control input-sm", autofocus = "autofocus", data_tag = Model.Name })
+                                    }
+                                    @Html.ValidationMessageFor(model => model.Name)
+                                </div>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">პრივილეგიები</h3>
+                                </div>
+                                <div class="panel-body" style="padding-left: 5px;">
+                                    <div style="max-height: 250px; overflow-x: auto;">
+                                        <ul class="list-group checked-list-box">
+                                            @for (int i = 0; i < Model.UserPermissions.Count; i++)
+                                            {
+                                                <li class="list-group-item">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input id="UserPermissions_@Html.Raw(@i)__Sign" name="UserPermissions[@i].Sign" @if (Model.UserPermissions.ElementAt(i).Sign) { @Html.Raw("checked=\"checked\"")  } else { @Html.Raw("")  } type="checkbox" value="true">
+                                                            <input name="UserPermissions[@i].Sign" type="hidden" value="false">
+                                                            @Model.UserPermissions.ElementAt(i).Name
+                                                        </label>
+                                                    </div>
+                                                </li>
+                                                <input type="hidden" value="@Model.UserPermissions.ElementAt(i).Id" name="UserPermissions[@i].Id" />
+                                                <input type="hidden" value="@Model.UserPermissions.ElementAt(i).Name" name="UserPermissions[@i].Name" />
+                                                <input type="hidden" value="@Model.UserPermissions.ElementAt(i).Tag" name="UserPermissions[@i].Tag" />
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-xs" data-dismiss="modal">დახურვა</button>
+                    @if ((Model.Id > 0 && ViewBag.EditGroup) || (Model.Id == 0 && ViewBag.AddGroup))
+                    {
+                    <input type="submit" class="btn btn-primary btn-xs" value="შენახვა" />
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,84 @@
+﻿@model List<Card>
+<div class="well well-sm">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    <input type="hidden" id="cnt_@ViewBag.Count" value="@ViewBag.Count" />
+    <div class="row">
+        <input type="hidden" id="customer_type" value="@ViewBag.CustomerType" />
+        <input id="Cards_@Html.Raw(@ViewBag.Count)__CustomerId" name="Cards[@ViewBag.Count].CustomerId" type="hidden" value="@ViewBag.OrderId" />
+        <div class="col-md-9">
+            <div class="form-group">
+                <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__DocNum">ხელშეკრ. №:</label>
+                <div class="col-md-5">
+                    <input class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__DocNum" name="Cards[@ViewBag.Count].DocNum" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__CardNum">ბარათის №:</label>
+                <div class="col-md-8">
+                    <input class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__CardNum" name="Cards[@ViewBag.Count].CardNum" type="text" value="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__ReceiverId">რესივერი:</label>
+                <div class="col-md-8">
+                    <select class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__ReceiverId" name="Cards[@Html.Raw(@ViewBag.Count)].ReceiverId">
+                        <option value=""></option>
+                        @foreach (IdName item in (List<IdName>)ViewBag.Receivers)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__TowerId">ანძა:</label>
+                <div class="col-md-8">
+                    <select class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__TowerId" name="Cards[@Html.Raw(@ViewBag.Count)].TowerId">
+                        <option value=""></option>
+                        @foreach (IdName item in (List<IdName>)ViewBag.Towers)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-4" for="Cards_@Html.Raw(@ViewBag.Count)__HasFreeDays">უფასო დრეები:</label>
+                <div class="col-md-2">
+                    <input checked="checked" class="form-control input-sm" id="Cards_@Html.Raw(@ViewBag.Count)__HasFreeDays" name="Cards[@Html.Raw(@ViewBag.Count)].HasFreeDays" type="checkbox" value="true"><input name="Cards[@Html.Raw(@ViewBag.Count)].HasFreeDays" type="hidden" value="false">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <span onclick="onAddOrderSubscription(@ViewBag.Count)" style="cursor: pointer;">
+                <span class="glyphicon glyphicon-shopping-cart"></span>
+                <span>ახალი პაკეტი</span>
+            </span>
+        </div>
+        <div class="col-md-3">
+            <span onclick="onAddCardService(@ViewBag.Count)" style="cursor: pointer;">
+                <span class="glyphicon glyphicon-tasks"></span>
+                <span> მომსახურება</span>
+            </span>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+    <div class="row">
+        <div id="services_data_@ViewBag.Count">
+
+        </div>
+        <div id="packets_data_@ViewBag.Count">
+
+        </div>
+        <div class="col-md-12">
+        </div>
+    </div>
+</div>
+

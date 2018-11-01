@@ -1,0 +1,103 @@
+﻿@{
+    Page.Title = "რეპორტები";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.ReportExport = Utils.GetPermission("REPORT_EXPORT");
+    ViewBag.ReportShow = Utils.GetPermission("REPORT_SHOW");
+}
+
+@section head {
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/bootstrap-datepicker.ka.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/fina.datepickers.js"></script>
+    <script type="text/javascript" src="~/Static/Scripts/View/report.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/Static/Styles/datepicker3.css" />
+}
+
+<div class="row">
+    <div class="col-md-2" id="report_menu">
+        <div class="list-group">
+            @if (!ViewBag.ReportShow)
+            {
+            <a href="#" data-report="cards" class="list-group-item">სრული</a>
+            }
+            @if (ViewBag.ReportShow)
+            {
+            <a href="#" data-report="channels" class="list-group-item">არხები</a>
+            <a href="#" data-report="packages" class="list-group-item">პაკეტები</a>
+            <a href="#" data-report="backages_by_jurtype" class="list-group-item">არხები</a>
+            <a href="#" data-report="lostcards" class="list-group-item">გაუქმებული</a>
+            <a href="#" data-report="cards" class="list-group-item">სრული</a>
+            <a href="#" data-report="cards_by_abonents" class="list-group-item">ბარათები აბონენტებით</a>
+            <a href="#" data-report="cards_by_status" class="list-group-item">ბარათები სტატუსების მიხედვით</a>
+            <a href="#" data-report="payments" class="list-group-item">გადახდები</a>
+            <a href="#" data-report="charges" class="list-group-item">დარიცხვები</a>
+            <a href="#" data-report="charges_summary" class="list-group-item">დარიცხვები ჯამური</a>
+            <a href="#" data-report="balance_by_cards_summary" class="list-group-item">ბრუნვა ბარათებით ჯამური</a>
+            <a href="#" data-report="balance_by_abonents_summary" class="list-group-item">ბრუნვა აბონენტებით ჯამური</a>
+            <a href="#" data-report="cards_count" class="list-group-item">ბარათების რაოდენობა</a>
+            }
+        </div>
+@if (ViewBag.ReportShow)
+{
+        <div class="panel panel-default" id="cards_panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">მარეგულირებელი</h3>
+            </div>
+            <a href="#" data-report="mareg_channels" class="list-group-item">ფორმა 4_5</a>
+            <a href="#" data-report="form_1_1" class="list-group-item">ფორმა 1_1</a>
+            <a href="#" data-report="form_4_3" class="list-group-item">ფორმა 4_3</a>
+            <a href="#" data-report="form_4_4" class="list-group-item">ფორმა 4_4</a>
+        </div>
+        <div class="panel panel-default" id="cards_panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">ბუღალტერია</h3>
+            </div>
+            <a href="#" data-report="balance_by_cards_summary_accounting" class="list-group-item">ბრუნვა ბარათებით ჯამური</a>
+            <a href="#" data-report="balance_by_abonents_summary_accounting" class="list-group-item">ბრუნვა აბონენტებით ჯამური</a>
+        </div>
+}
+    </div>
+    <div class="col-md-10">
+        <div class="row">
+            <div class="well header-tooltip" style="padding: 5px;">
+                <div class="row">
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-default btn-xs" id="btn_refresh">
+                            <span class="glyphicon glyphicon-refresh"></span> განახლება
+                        </button>
+                        @if (ViewBag.ReportExport)
+                        {
+                            <button class="btn btn-default btn-xs" id="btn_excel">
+                                <span class="glyphicon glyphicon-print"></span> Excel
+                            </button>
+                        }
+                    </div>
+                    <div class="col-md-2" id="controls_area">
+
+                    </div>
+                    <div class="col-md-2" id="controls_area_add">
+
+                    </div>
+                    <div class="col-md-5 pull-right hide" id="datetime_area">
+                        @{Html.RenderPartial("~/Views/Shared/_DatetimePickers.cshtml", new ViewDataDictionary() { { "ID", "picker" } });}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div id="loading">
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr id="list_header"></tr>
+                    </thead>
+                    <tbody id="list_body"></tbody>
+                </table>
+            </div>
+            <ul id="paging_area"></ul>
+
+        </div>
+    </div>
+</div>
